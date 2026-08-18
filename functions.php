@@ -33,6 +33,14 @@ function puppy_market_assets() {
     $style_version = file_exists($style_path) ? filemtime($style_path) : '0.5.0';
     wp_enqueue_style('puppy-market-style', get_stylesheet_uri(), array(), $style_version);
 
+    $storefront_style_path = get_template_directory() . '/assets/storefront-v2.css';
+    wp_enqueue_style(
+        'puppy-market-storefront-v2',
+        get_template_directory_uri() . '/assets/storefront-v2.css',
+        array('puppy-market-style'),
+        file_exists($storefront_style_path) ? filemtime($storefront_style_path) : $style_version
+    );
+
     if (function_exists('is_product') && is_product()) {
         $pdp_script_path = get_template_directory() . '/assets/pdp.js';
         wp_enqueue_script(

@@ -3,7 +3,7 @@ Theme Name: Puppy Market
 Theme URI: https://example.com/puppy-market
 Author: Personal Studio
 Description: A warm, conversion-focused starter theme for a modern pet shop.
-Version: 0.2.0
+Version: 0.3.0
 Requires at least: 6.4
 Requires PHP: 8.0
 Text Domain: puppy-market
@@ -1122,8 +1122,10 @@ body.single-product div.product .woocommerce-tabs ul.tabs li.active { color: #ff
 .shop-by-pet .pet-strip a span.pet-image { width: min(180px, 100%) !important; height: auto !important; background-size: 700% 260% !important; background-position-y: 50% !important; aspect-ratio: 1; }
 .popular-links .popular-link-list .popular-image { width: min(230px, calc(100% - 16px)) !important; justify-self: center; height: auto !important; aspect-ratio: 1; display: block; max-width: none; border: 0 !important; border-radius: 50%; box-shadow: none !important; background-size: 600% 260% !important; background-position-y: 50% !important; }
 
-/* Final palette: white + cool gray + warm brown accent. */
-:root { --ink: #202124; --muted: #6b7280; --cream: #f5f6f7; --paper: #ffffff; --line: #e2e5e9; --green: #9a7654; --green-dark: #6f5138; --orange: #9a7654; --yellow: #eadfd2; --radius: 10px; --accent-soft: #f6f0ea; --gray-soft: #eef0f2; }
+/* Global commerce palette. Legacy variable names are kept as aliases so older
+   components inherit the cart/checkout design system without changing data or
+   template behavior. */
+:root { --ink: #17191b; --muted: #6b6e73; --cream: #f4f4f4; --paper: #ffffff; --line: #e4e5e6; --green: #1757c8; --green-dark: #0f47ad; --orange: #ff4b21; --yellow: #f0f5ff; --radius: 8px; --accent-soft: #f0f5ff; --gray-soft: #f8f8f8; --primary: #1757c8; --primary-dark: #0f47ad; --primary-soft: #f0f5ff; --checkout: #ff4b21; --checkout-dark: #d92d08; --sale: #cc2344; --success: #237532; --success-soft: #eef8e0; --canvas: #f4f4f4; --field-border: #74777a; }
 body { margin: 0; color: var(--ink); background: var(--cream); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.55; font-size: 14px; }
 
 .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 850; font-size: 23px; letter-spacing: -0.04em; white-space: nowrap; color: var(--ink); }
