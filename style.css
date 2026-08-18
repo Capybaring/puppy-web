@@ -3,7 +3,7 @@ Theme Name: Puppy Market
 Theme URI: https://example.com/puppy-market
 Author: Personal Studio
 Description: A warm, conversion-focused starter theme for a modern pet shop.
-Version: 0.1.0
+Version: 0.2.0
 Requires at least: 6.4
 Requires PHP: 8.0
 Text Domain: puppy-market
@@ -511,33 +511,14 @@ body.ipet-dialog-open { overflow: hidden; }
 .seasonal-section { padding-top: 8px; }
 .shop-by-pet, .popular-links { padding-top: 8px; }
 
-.pet-strip .pet-image { background-repeat: no-repeat; background-position-y: 50% !important; background-size: 700% auto !important; }
-.pet-strip .pet-image-1 { background-position: 0% 50% !important; }
-.pet-strip .pet-image-2 { background-position: 16.666% 50% !important; }
-.pet-strip .pet-image-3 { background-position: 33.333% 50% !important; }
-.pet-strip .pet-image-4 { background-position: 50% 50% !important; }
-.pet-strip .pet-image-5 { background-position: 66.666% 50% !important; }
-.pet-strip .pet-image-6 { background-position: 83.333% 50% !important; }
-.pet-strip .pet-image-7 { background-position: 100% 50% !important; }
+.pet-strip .pet-image { overflow: hidden; }
 .pet-strip strong { font-size: 14px; margin-top: 7px; white-space: nowrap; }
 
-.popular-image-1 { background-position-x: 0%; }
-.popular-image-2 { background-position-x: 20%; }
-.popular-image-3 { background-position-x: 40%; }
-.popular-image-4 { background-position-x: 60%; }
-.popular-image-5 { background-position-x: 80%; }
-.popular-image-6 { background-position-x: 100%; }
 .popular-link-list strong { margin-top: 7px; font-size: 14px; white-space: nowrap; }
 .popular-link-list a > span:not(.popular-image) { display: none; }
-.product-fallback { display: block; width: 100%; height: 100%; background-image: url('/wp-content/themes/puppy-market/assets/product-catalog.png'); background-repeat: no-repeat; background-position-y: 50%; background-size: 800% auto; }
-.product-fallback-1 { background-position-x: 0%; }
-.product-fallback-2 { background-position-x: 14.285%; }
-.product-fallback-3 { background-position-x: 28.571%; }
-.product-fallback-4 { background-position-x: 42.857%; }
 .woocommerce div.product div.images img { border-radius: 8px; background: #fff; display: block; width: 100%; height: 100%; object-fit: contain; }
 .ipet-product-gallery { width: 100% !important; float: none !important; }
 
-.ipet-detail-image .product-fallback { width: 100%; height: 100%; min-height: 380px; border-radius: 10px; }
 @media (max-width: 760px) {
   .pet-image { width: 104px; height: 104px; }
 }
@@ -565,13 +546,12 @@ body.ipet-dialog-open { overflow: hidden; }
 
 /* Bright photographic carousel and larger borderless category imagery. */
 .carousel-slide { display: none; align-items: center; justify-content: space-between; min-height: 0; padding: 34px 74px 40px 52px; position: relative; overflow: hidden; background-repeat: no-repeat !important; background-size: cover !important; height: clamp(300px, 30vw, 440px); background-color: transparent !important; }
-.carousel-slide:nth-child(1) { background-image: url('/wp-content/themes/puppy-market/assets/carousel-dog.png') !important; background-position: center !important; }
-.carousel-slide:nth-child(2) { background: #e5eadc; background-image: url('/wp-content/themes/puppy-market/assets/carousel-cat.png') !important; background-position: center !important; }
-.carousel-slide:nth-child(3) { background: #eadfd7; background-image: url('/wp-content/themes/puppy-market/assets/carousel-care.png') !important; background-position: center !important; }
+.carousel-slide { background-image: var(--puppy-slide-image, none) !important; background-position: center !important; }
+.carousel-slide.no-media { background-color: var(--gray-soft) !important; }
 
 .carousel-frame { position: relative; min-height: 0; overflow: hidden; border-radius: 8px; background: #d8e7ef; height: clamp(300px, 30vw, 440px); }
 
-.pet-strip a span.pet-image { background-image: url('/wp-content/themes/puppy-market/assets/pet-categories-square.png') !important; width: 180px !important; height: 180px !important; aspect-ratio: 1; border: 0 !important; box-shadow: none !important; }
+.pet-strip a span.pet-image { width: 180px !important; height: 180px !important; aspect-ratio: 1; border: 0 !important; box-shadow: none !important; }
 
 .popular-link-list a { display: grid; justify-content: space-between; padding: 3px 4px 6px; border: 0; border-radius: 8px; background: transparent; color: var(--ink); font-size: 13px; font-weight: 800; justify-items: center; min-width: 0; padding-left: 0; padding-right: 0; justify-self: center; width: 180px; }
 .popular-link-list .popular-image { width: 180px; height: 180px; aspect-ratio: 1; border: 0; box-shadow: none; }
@@ -1189,7 +1169,7 @@ body { margin: 0; color: var(--ink); background: var(--cream); font-family: Inte
 .pet-strip a:hover { border-color: #b8cfb7; background: transparent; transform: translateY(-2px); color: var(--green); }
 .popular-link-list a:hover { background: transparent; color: var(--green); transform: translateY(-2px); }
 .pet-image { display: block; width: 116px; height: 116px; border: 1px solid #d9e1e7; border-radius: 50%; background-color: #fff; background-repeat: no-repeat; background-position-y: 50%; background-size: 700% auto; box-shadow: 0 3px 10px rgba(32,33,36,.08); border-color: var(--line); }
-.popular-image { display: block; width: 116px; height: 116px; border: 1px solid #d9e1e7; border-radius: 50%; background-color: #fff; background-repeat: no-repeat; background-position-y: 50%; background-size: 600% 100%; box-shadow: 0 3px 10px rgba(32,33,36,.08); background-image: url('/wp-content/themes/puppy-market/assets/popular-categories-square.png'); border-color: var(--line); }
+.popular-image { display: block; width: 116px; height: 116px; overflow: hidden; border: 1px solid var(--line); border-radius: 50%; background-color: #fff; box-shadow: 0 3px 10px rgba(32,33,36,.08); }
 .popular-link-list span { color: var(--green); }
 .value-grid span { grid-row: span 2; color: var(--green); font-size: 22px; }
 .campaign-card { display: flex; align-items: center; justify-content: space-between; min-height: 132px; padding: 19px 25px; overflow: hidden; border-radius: 10px; background: var(--gray-soft); color: var(--ink); }
@@ -1649,7 +1629,6 @@ body.single-product { background: #fff; }
 .ipet-pdp-gallery-stage { position: relative; display: grid; min-height: 600px; place-items: center; overflow: hidden; border-radius: 10px; background: #f5f5f5; }
 .ipet-detail-image { display: grid; width: 100%; height: 100%; min-height: 600px; padding: 36px; place-items: center; border: 0; background: transparent; cursor: zoom-in; }
 .ipet-detail-image img { display: block; width: min(78%, 620px) !important; height: 520px !important; max-width: 100%; object-fit: contain; border: 0 !important; border-radius: 0 !important; background: transparent !important; }
-.ipet-detail-image .product-fallback { width: 72%; min-height: 480px; border-radius: 8px; }
 .ipet-pdp-badge { position: absolute; z-index: 2; top: 0; left: 0; padding: 8px 18px; border-radius: 10px 0 10px 0; color: #fff; background: #cf2347; font-size: 14px; font-weight: 750; }
 .ipet-pdp-wishlist { position: absolute; z-index: 2; top: 14px; right: 14px; display: grid; width: 48px; height: 48px; padding: 0; place-items: center; border: 2px solid #2463eb; border-radius: 50%; color: #2463eb; background: #fff; cursor: pointer; }
 .ipet-pdp-wishlist svg { width: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; }
@@ -2146,7 +2125,8 @@ body.woocommerce-checkout:not(.woocommerce-order-received) .ipet-checkout-mobile
   }
   body.woocommerce-checkout:not(.woocommerce-order-received) .ipet-checkout-mobile-total span { display: block !important; color: #707478 !important; font-size: 12px !important; }
   body.woocommerce-checkout:not(.woocommerce-order-received) .ipet-checkout-mobile-total strong { display: block !important; color: #17191b !important; font-size: 19px !important; }
-  body.woocommerce-checkout:not(.woocommerce-order-received) .ipet-checkout-mobile-button { min-width: 170px !important; min-height: 52px !important; padding: 0 24px !important; border: 0 !important; border-radius: 8px !important; color: #fff !important; background: linear-gradient(180deg, #ff5a2b 0%, #e8320c 100%) !important; font-size: 16px !important; font-weight: 750 !important; }
+body.woocommerce-checkout:not(.woocommerce-order-received) .ipet-checkout-mobile-button { min-width: 170px !important; min-height: 52px !important; padding: 0 24px !important; border: 0 !important; border-radius: 8px !important; color: #fff !important; background: linear-gradient(180deg, #ff5a2b 0%, #e8320c 100%) !important; font-size: 16px !important; font-weight: 750 !important; }
+
   body.woocommerce-checkout:not(.woocommerce-order-received) .header-dropdown,
   body.woocommerce-checkout:not(.woocommerce-order-received) .mega-menu { display: none !important; }
   body.woocommerce-checkout:not(.woocommerce-order-received) .wc-block-components-notices__snackbar {
@@ -2156,3 +2136,24 @@ body.woocommerce-checkout:not(.woocommerce-order-received) .ipet-checkout-mobile
     max-width: calc(100% - 48px) !important;
   }
 }
+
+/* Backend-managed editorial media. */
+.brand-text { display: inline-block; color: inherit; font-size: 28px; font-weight: 900; letter-spacing: -.05em; line-height: 1; }
+.carousel-slide { background-image: var(--puppy-slide-image, none) !important; }
+.carousel-slide.no-media { background-color: var(--gray-soft) !important; }
+.pet-image,
+.popular-image { position: relative; display: block; overflow: hidden; background: var(--gray-soft); }
+.pet-image img,
+.popular-image img,
+.category-image { display: block; width: 100%; height: 100%; object-fit: cover; }
+.category-image-placeholder { display: block; width: 100%; height: 100%; background: linear-gradient(135deg, var(--gray-soft), #fff); }
+.sequence-video-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sequence-video video { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: cover; }
+.care-feature-card.no-media { grid-template-columns: 1fr; }
+.care-feature-card.no-media .care-feature-copy { max-width: 760px; }
+.product-image-empty { background: linear-gradient(135deg, var(--gray-soft), #fff); }
+.footer-menu { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.footer-menu li { margin: 0; }
+.footer-menu a { color: inherit; }
+.puppy-filter-empty { margin: 8px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+.site-header .brand-logo, .site-footer .brand-logo { filter: none; }

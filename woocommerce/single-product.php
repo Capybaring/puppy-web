@@ -152,7 +152,7 @@ $puppy_promotion_text = get_theme_mod('puppy_market_pdp_promotion_text', 'Free s
                                 </div>
 
                                 <div class="ipet-pdp-reassurance">
-                                    <p><span aria-hidden="true">↻</span><strong>30-day easy returns</strong><a href="<?php echo esc_url(home_url('/returns/')); ?>">Details</a></p>
+                                    <p><span aria-hidden="true">↻</span><strong>30-day easy returns</strong><a href="<?php echo esc_url(puppy_market_page_url('returns')); ?>">Details</a></p>
                                     <p><span aria-hidden="true">✓</span><strong>Secure checkout</strong><small>Protected payment processing</small></p>
                                 </div>
 

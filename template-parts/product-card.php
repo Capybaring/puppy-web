@@ -7,7 +7,6 @@
  * - badge             (string)  overlay ribbon text, e.g. "Best seller" / "Sale"
  * - badges            (array)   extra overlay ribbon texts stacked below badge
  * - show_description  (bool)    show a trimmed short description line
- * - fallback_index    (int 1-4) placeholder art index when the product has no image
  * - card_class        (string)  extra class(es) added to the wrapper (ignored when bare)
  * - bare              (bool)    when true, output only the inner markup with no
  *                                <article> wrapper — use this inside a WooCommerce
@@ -25,7 +24,6 @@ if (!$puppy_card_product) return;
 
 $puppy_card_badge = isset($args['badge']) ? $args['badge'] : '';
 $puppy_card_show_description = !empty($args['show_description']);
-$puppy_card_fallback = isset($args['fallback_index']) ? absint($args['fallback_index']) : (($puppy_card_product->get_id() % 4) + 1);
 $puppy_card_class = isset($args['card_class']) ? ' ' . sanitize_html_class($args['card_class']) : '';
 $puppy_card_bare = !empty($args['bare']);
 
@@ -42,7 +40,7 @@ $puppy_card_badges = array_slice(array_unique($puppy_card_badges), 0, 3);
 ?>
 <?php if (!$puppy_card_bare) : ?><article class="product<?php echo esc_attr($puppy_card_class); ?>"><?php endif; ?>
   <div class="product-card-media">
-    <a href="<?php echo esc_url($puppy_card_url); ?>"><div class="product-image"><?php echo wp_kses_post($puppy_card_product->get_image('woocommerce_thumbnail', array('loading' => 'lazy')) ?: '<span class="product-fallback product-fallback-' . esc_attr($puppy_card_fallback) . '"></span>'); ?></div></a>
+    <a href="<?php echo esc_url($puppy_card_url); ?>"><div class="product-image"><?php echo wp_kses_post($puppy_card_product->get_image('woocommerce_thumbnail', array('loading' => 'lazy'))); ?></div></a>
     <?php if (!empty($puppy_card_badges)) : ?>
     <div class="product-card-badges">
       <?php foreach ($puppy_card_badges as $puppy_card_badge_text) : ?>

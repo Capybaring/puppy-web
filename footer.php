@@ -1,11 +1,13 @@
-<?php $shop_url = puppy_market_catalog_url(); ?>
+<?php
+$footer_tagline = get_theme_mod('puppy_market_footer_tagline', '');
+if (!$footer_tagline) $footer_tagline = get_bloginfo('description');
+?>
 <footer class="site-footer"><div class="container"><div class="footer-grid">
-    <div><a class="brand" href="<?php echo esc_url(home_url('/')); ?>"><img class="brand-logo" src="<?php echo esc_url(get_template_directory_uri() . '/assets/ipet-logo.png'); ?>" alt="iPet"></a><p>Thoughtfully chosen essentials to make life with your pets easier and happier.</p></div>
-    <div><h3>Shop</h3><p><a href="<?php echo esc_url($shop_url); ?>">Shop the store</a><br><a href="<?php echo esc_url(puppy_market_category_link('dog-food')); ?>">Dog Food</a><br><a href="<?php echo esc_url(puppy_market_category_link('cat-toys')); ?>">Cat Toys</a><br><a href="<?php echo esc_url(puppy_market_category_link('pet-toys')); ?>">Pet Toys</a><br><a href="<?php echo esc_url(puppy_market_catalog_url('new')); ?>">New Arrivals</a><br><a href="<?php echo esc_url(puppy_market_catalog_url('sale')); ?>">Deals</a></p></div>
-    <div><h3>Help</h3><p><a href="<?php echo esc_url(home_url('/contact/')); ?>">Contact us</a><br><a href="<?php echo esc_url(home_url('/shipping/')); ?>">Shipping</a><br><a href="<?php echo esc_url(home_url('/returns/')); ?>">Returns</a><br><a href="<?php echo esc_url(puppy_market_account_url()); ?>">Track an order</a></p></div>
-    <div><h3>About iPet</h3><p><a href="<?php echo esc_url(home_url('/about/')); ?>">About us</a><br><a href="<?php echo esc_url(home_url('/privacy-policy/')); ?>">Privacy policy</a></p></div>
-    <div><h3>Stay connected</h3><p>iPet Pet Life<br>Pet care tips every week</p></div>
-</div><div class="footer-payments" aria-label="Accepted payment methods"><span>Visa</span><span>Mastercard</span><span>Amex</span><span>PayPal</span><span>Apple Pay</span></div><div class="footer-bottom"><span>© <?php echo date('Y'); ?> iPet Pet Life</span><span>A personal WooCommerce storefront in progress</span></div></div></footer>
+    <div class="footer-brand"><a class="brand" href="<?php echo esc_url(home_url('/')); ?>"><?php echo wp_kses_post(puppy_market_brand_markup()); ?></a><?php if ($footer_tagline) : ?><p><?php echo esc_html($footer_tagline); ?></p><?php endif; ?></div>
+    <div><h3>Shop</h3><?php wp_nav_menu(array('theme_location' => 'footer_shop', 'container' => false, 'menu_class' => 'footer-menu', 'fallback_cb' => false)); ?></div>
+    <div><h3>Help</h3><?php wp_nav_menu(array('theme_location' => 'footer_help', 'container' => false, 'menu_class' => 'footer-menu', 'fallback_cb' => false)); ?></div>
+    <div><h3>About</h3><?php wp_nav_menu(array('theme_location' => 'footer_about', 'container' => false, 'menu_class' => 'footer-menu', 'fallback_cb' => false)); ?></div>
+</div><div class="footer-bottom"><span>© <?php echo esc_html(date_i18n('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?></span><span>Powered by WordPress and WooCommerce</span></div></div></footer>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   // Account/cart hover dropdowns only work with a mouse; on touch screens

@@ -20,7 +20,6 @@
                 $puppy_selected_brands = isset($_GET['puppy_brand']) ? array_map('sanitize_title', (array) wp_unslash($_GET['puppy_brand'])) : array();
                 $puppy_brand_taxonomy = puppy_market_brand_taxonomy();
                 $puppy_brand_terms = get_terms(array('taxonomy' => $puppy_brand_taxonomy, 'hide_empty' => true, 'number' => 8, 'orderby' => 'count', 'order' => 'DESC'));
-                $puppy_common_brands = puppy_market_common_brands();
                 $puppy_min_price = isset($_GET['puppy_min_price']) ? absint($_GET['puppy_min_price']) : '';
                 $puppy_max_price = isset($_GET['puppy_max_price']) ? absint($_GET['puppy_max_price']) : '';
                 $puppy_on_sale_only = !empty($_GET['puppy_on_sale']);
@@ -36,9 +35,7 @@
                         <fieldset class="sidebar-section puppy-filter-group"><legend>Brand</legend>
                             <?php if (!is_wp_error($puppy_brand_terms) && !empty($puppy_brand_terms)) : foreach ($puppy_brand_terms as $puppy_brand_term) : ?>
                                 <label class="puppy-filter-option"><input type="checkbox" name="puppy_brand[]" value="<?php echo esc_attr($puppy_brand_term->slug); ?>" <?php checked(in_array($puppy_brand_term->slug, $puppy_selected_brands, true)); ?>><span><?php echo esc_html($puppy_brand_term->name); ?></span><small><?php echo absint($puppy_brand_term->count); ?></small></label>
-                            <?php endforeach; else : ?>
-                                <?php foreach ($puppy_common_brands as $puppy_brand_slug => $puppy_brand_name) : ?><label class="puppy-filter-option"><input type="checkbox" name="puppy_brand[]" value="<?php echo esc_attr($puppy_brand_slug); ?>" <?php checked(in_array($puppy_brand_slug, $puppy_selected_brands, true)); ?>><span><?php echo esc_html($puppy_brand_name); ?></span></label><?php endforeach; ?>
-                            <?php endif; ?>
+                            <?php endforeach; else : ?><p class="puppy-filter-empty">Add product brands or tags in the WordPress dashboard.</p><?php endif; ?>
                         </fieldset>
                         <fieldset class="sidebar-section puppy-filter-group"><legend>Price</legend>
                             <div class="puppy-filter-price-row"><input type="number" min="0" inputmode="numeric" name="puppy_min_price" placeholder="Min" value="<?php echo esc_attr($puppy_min_price); ?>"><span>–</span><input type="number" min="0" inputmode="numeric" name="puppy_max_price" placeholder="Max" value="<?php echo esc_attr($puppy_max_price); ?>"></div>

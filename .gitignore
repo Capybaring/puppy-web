@@ -1,0 +1,11 @@
+.DS_Store
+.env
+.env.local
+backups/
+*.sql
+
+# Generated media and local render output.
+video-test/frames/
+video-test/renders/
+video-test/*.gif
+video-test/encode_frames

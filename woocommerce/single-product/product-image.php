@@ -3,7 +3,6 @@
 defined('ABSPATH') || exit;
 
 global $product;
-$puppy_fallback_index = absint(($product ? $product->get_id() : 1) % 4) + 1;
 $puppy_gallery_ids = $product ? array_values(array_unique(array_filter(array_merge(array($product->get_image_id()), $product->get_gallery_image_ids())))) : array();
 $puppy_main_id = !empty($puppy_gallery_ids) ? $puppy_gallery_ids[0] : 0;
 $puppy_main_full = $puppy_main_id ? wp_get_attachment_image_url($puppy_main_id, 'full') : '';
@@ -18,7 +17,7 @@ $puppy_main_full = $puppy_main_id ? wp_get_attachment_image_url($puppy_main_id, 
             <?php if ($puppy_main_id) : ?>
                 <?php echo wp_get_attachment_image($puppy_main_id, 'woocommerce_single', false, array('loading' => 'eager', 'fetchpriority' => 'high', 'data-pdp-main-image' => '', 'data-full' => esc_url($puppy_main_full))); ?>
             <?php else : ?>
-                <span class="product-fallback product-fallback-<?php echo esc_attr($puppy_fallback_index); ?>" aria-label="<?php echo esc_attr($product ? $product->get_name() : 'Product image'); ?>"></span>
+                <img class="woocommerce-placeholder wp-post-image" src="<?php echo esc_url(wc_placeholder_img_src('woocommerce_single')); ?>" alt="<?php echo esc_attr($product ? $product->get_name() : 'Product image'); ?>" loading="eager">
             <?php endif; ?>
         </button>
     </div>
@@ -39,7 +38,9 @@ $puppy_main_full = $puppy_main_id ? wp_get_attachment_image_url($puppy_main_id, 
     <?php endif; ?>
 </div>
 
-<dialog class="ipet-pdp-lightbox" data-pdp-lightbox aria-label="Product image preview">
-    <button type="button" class="ipet-pdp-lightbox-close" data-pdp-lightbox-close aria-label="Close image preview">×</button>
-    <img src="<?php echo esc_url($puppy_main_full); ?>" alt="<?php echo esc_attr($product ? $product->get_name() : 'Product image'); ?>" data-pdp-lightbox-image>
-</dialog>
+<?php if ($puppy_main_full) : ?>
+    <dialog class="ipet-pdp-lightbox" data-pdp-lightbox aria-label="Product image preview">
+        <button type="button" class="ipet-pdp-lightbox-close" data-pdp-lightbox-close aria-label="Close image preview">×</button>
+        <img src="<?php echo esc_url($puppy_main_full); ?>" alt="<?php echo esc_attr($product ? $product->get_name() : 'Product image'); ?>" data-pdp-lightbox-image>
+    </dialog>
+<?php endif; ?>

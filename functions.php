@@ -1,11 +1,24 @@
 <?php
 /** Puppy Market theme functions. */
 
+require_once get_template_directory() . '/inc/content-settings.php';
+
 function puppy_market_setup() {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
+    add_theme_support('custom-logo', array(
+        'height'      => 120,
+        'width'       => 420,
+        'flex-height' => true,
+        'flex-width'  => true,
+    ));
     add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption'));
-    register_nav_menus(array('primary' => __('Primary Menu', 'puppy-market')));
+    register_nav_menus(array(
+        'primary'      => __('Primary Menu', 'puppy-market'),
+        'footer_shop'  => __('Footer Shop Menu', 'puppy-market'),
+        'footer_help'  => __('Footer Help Menu', 'puppy-market'),
+        'footer_about' => __('Footer About Menu', 'puppy-market'),
+    ));
     add_theme_support('woocommerce');
 }
 add_action('after_setup_theme', 'puppy_market_setup');
@@ -47,8 +60,8 @@ function puppy_market_assets() {
             'email'       => is_user_logged_in() ? $current_user->user_email : '',
             'accountUrl'  => puppy_market_account_url(),
             'loginUrl'    => wp_login_url(wc_get_checkout_url()),
-            'privacyUrl'  => get_privacy_policy_url() ?: home_url('/privacy-policy/'),
-            'termsUrl'    => function_exists('wc_get_page_permalink') ? wc_get_page_permalink('terms') : home_url('/terms/'),
+            'privacyUrl'  => get_privacy_policy_url() ?: puppy_market_page_url('privacy-policy'),
+            'termsUrl'    => function_exists('wc_get_page_permalink') ? wc_get_page_permalink('terms') : puppy_market_page_url('terms'),
         ));
     }
 
@@ -196,54 +209,6 @@ function puppy_market_account_icon($name) {
     return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' . $paths . '</svg>';
 }
 
-/** Attachment ID of the imported test video, cached in an option so we don't query for it on every request. */
-function puppy_market_test_video_attachment_id() {
-    $cached = get_option('puppy_market_test_video_attachment_id');
-    if ($cached) return (int) $cached;
-
-    $existing = get_posts(array(
-        'post_type' => 'attachment',
-        'post_status' => 'inherit',
-        'posts_per_page' => 1,
-        'meta_key' => '_puppy_market_test_video',
-        'meta_value' => '1',
-        'fields' => 'ids',
-    ));
-    if (!empty($existing)) {
-        update_option('puppy_market_test_video_attachment_id', (int) $existing[0], false);
-        return (int) $existing[0];
-    }
-    return 0;
-}
-
-/** Copy the test video into WordPress Media Library once and cache its attachment ID. */
-function puppy_market_register_test_video_media() {
-    $attachment_id = puppy_market_test_video_attachment_id();
-    if ($attachment_id) return $attachment_id;
-
-    $upload = wp_upload_dir();
-    $source = get_template_directory() . '/assets/ipet-test.avi';
-    if (!file_exists($source) || !empty($upload['error']) || !wp_mkdir_p($upload['path']) || !is_writable($upload['path'])) return 0;
-    $filename = wp_unique_filename($upload['path'], 'ipet-test.avi');
-    $destination = trailingslashit($upload['path']) . $filename;
-    if (!copy($source, $destination)) return 0;
-    $attachment_id = wp_insert_attachment(array(
-        'post_title' => 'iPet Test Video',
-        'post_mime_type' => 'video/avi',
-        'post_status' => 'inherit',
-    ), $destination);
-    if (is_wp_error($attachment_id)) return 0;
-    update_post_meta($attachment_id, '_puppy_market_test_video', '1');
-    update_option('puppy_market_test_video_attachment_id', (int) $attachment_id, false);
-    return (int) $attachment_id;
-}
-add_action('init', 'puppy_market_register_test_video_media', 20);
-
-function puppy_market_test_video_url() {
-    $attachment_id = puppy_market_test_video_attachment_id();
-    return $attachment_id ? wp_get_attachment_url($attachment_id) : get_template_directory_uri() . '/assets/ipet-test.avi';
-}
-
 function puppy_market_woocommerce_labels() {
     if (!class_exists('WooCommerce')) return;
     add_filter('woocommerce_product_add_to_cart_text', function () { return 'Add to cart'; });
@@ -268,16 +233,6 @@ function puppy_market_product_byline() {
     echo '<p class="ipet-product-byline">By <a href="' . esc_url(home_url('/')) . '">iPet</a></p>';
 }
 add_action('woocommerce_single_product_summary', 'puppy_market_product_byline', 6);
-
-function puppy_market_product_size_picker() {
-    echo '<div class="ipet-size-picker"><div class="ipet-size-options">';
-    foreach (array('X-Small', 'Small', 'Medium', 'Large', 'X-Large', 'XX-Large') as $size) {
-        $selected = $size === 'Large' ? ' is-selected' : '';
-        echo '<button type="button" class="ipet-size-option' . esc_attr($selected) . '" aria-pressed="' . ($selected ? 'true' : 'false') . '">' . esc_html($size) . '</button>';
-    }
-    echo '</div></div>';
-}
-add_action('woocommerce_single_product_summary', 'puppy_market_product_size_picker', 25);
 
 // Keep category/SKU metadata out of the compact product hero.
 remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40);
@@ -353,195 +308,10 @@ function puppy_market_product_about_item() {
 add_filter('woocommerce_product_tabs', function ($tabs) { return array(); }, 99);
 
 
-/**
- * Shared fallback brand list, used by both the shop sidebar brand filter and
- * the homepage brand wall so the two don't drift out of sync. Prefers the
- * real product_brand/product_tag taxonomy where it has data; this list only
- * covers the case where that taxonomy is empty.
- */
-function puppy_market_common_brands() {
-    return array('purina' => 'Purina', 'friskies' => 'Friskies', 'royal-canin' => 'Royal Canin', 'whiskas' => 'Whiskas', 'hill-s' => "Hill's", 'blue-buffalo' => 'Blue Buffalo');
-}
-
 /** The taxonomy actually used for brand filtering — a real product_brand taxonomy if a plugin registered one, product_tag otherwise. */
 function puppy_market_brand_taxonomy() {
     return taxonomy_exists('product_brand') ? 'product_brand' : 'product_tag';
 }
-
-function puppy_market_category_definitions() {
-    return array(
-        'dog' => array('name' => 'Dogs', 'slug' => 'dog', 'parent' => 0),
-        'dog-food' => array('name' => 'Dog Food', 'slug' => 'dog-food', 'parent' => 0),
-        'puppy-food' => array('name' => 'Puppy Food', 'slug' => 'puppy-food', 'parent' => 0),
-        'dog-treats' => array('name' => 'Dog Treats', 'slug' => 'dog-treats', 'parent' => 0),
-        'dog-toys' => array('name' => 'Dog Toys', 'slug' => 'dog-toys', 'parent' => 0),
-        'dog-walk' => array('name' => 'Walking Gear', 'slug' => 'dog-walk', 'parent' => 0),
-        'dog-beds' => array('name' => 'Dog Beds & Crates', 'slug' => 'dog-beds', 'parent' => 0),
-        'dog-grooming' => array('name' => 'Dog Grooming', 'slug' => 'dog-grooming', 'parent' => 0),
-        'pet-care' => array('name' => 'Pet Care', 'slug' => 'pet-care', 'parent' => 0),
-        'cat' => array('name' => 'Cats', 'slug' => 'cat', 'parent' => 0),
-        'cat-food' => array('name' => 'Cat Food', 'slug' => 'cat-food', 'parent' => 0),
-        'kitten-food' => array('name' => 'Kitten Food', 'slug' => 'kitten-food', 'parent' => 0),
-        'cat-litter' => array('name' => 'Cat Litter', 'slug' => 'cat-litter', 'parent' => 0),
-        'cat-toys' => array('name' => 'Cat Toys', 'slug' => 'cat-toys', 'parent' => 0),
-        'cat-beds' => array('name' => 'Beds & Scratchers', 'slug' => 'cat-beds', 'parent' => 0),
-        'cat-scratchers' => array('name' => 'Cat Scratchers', 'slug' => 'cat-scratchers', 'parent' => 0),
-        'pet-toys' => array('name' => 'Pet Toys', 'slug' => 'pet-toys', 'parent' => 0),
-        'small-pets' => array('name' => 'Rabbits & Hamsters', 'slug' => 'small-pets', 'parent' => 0),
-        'small-pet-food' => array('name' => 'Small Pet Food', 'slug' => 'small-pet-food', 'parent' => 0),
-        'birds' => array('name' => 'Pet Birds', 'slug' => 'birds', 'parent' => 0),
-        'bird-food' => array('name' => 'Bird Food', 'slug' => 'bird-food', 'parent' => 0),
-        'aquarium' => array('name' => 'Aquarium Supplies', 'slug' => 'aquarium', 'parent' => 0),
-        'aquarium-food' => array('name' => 'Aquarium Food', 'slug' => 'aquarium-food', 'parent' => 0),
-        'reptiles' => array('name' => 'Reptile Supplies', 'slug' => 'reptiles', 'parent' => 0),
-        'reptile-food' => array('name' => 'Reptile Food', 'slug' => 'reptile-food', 'parent' => 0),
-        'reptile-habitat' => array('name' => 'Habitats & Environments', 'slug' => 'reptile-habitat', 'parent' => 0),
-    );
-}
-
-function puppy_market_ensure_product_categories() {
-    if (!taxonomy_exists('product_cat')) return;
-    if (get_option('puppy_market_category_schema') === '5') return;
-    $definitions = puppy_market_category_definitions();
-    $term_ids = array();
-    foreach ($definitions as $key => $definition) {
-        $term = get_term_by('slug', $definition['slug'], 'product_cat');
-        if (!$term) {
-            $term = get_term_by('name', $definition['name'], 'product_cat');
-        }
-        if (!$term || is_wp_error($term)) {
-            $inserted = wp_insert_term($definition['name'], 'product_cat', array('slug' => $definition['slug']));
-            if (is_wp_error($inserted)) continue;
-            $term = get_term($inserted['term_id'], 'product_cat');
-        }
-        if ($term && !is_wp_error($term)) {
-            if ($term->name !== $definition['name']) {
-                wp_update_term($term->term_id, 'product_cat', array('name' => $definition['name']));
-            }
-            $term_ids[$key] = absint($term->term_id);
-        }
-    }
-    foreach ($definitions as $key => $definition) {
-        if (empty($term_ids[$key])) continue;
-        $parent_id = $definition['parent'] && !empty($term_ids[$definition['parent']]) ? $term_ids[$definition['parent']] : 0;
-        if ((int) get_term($term_ids[$key], 'product_cat')->parent !== $parent_id) {
-            wp_update_term($term_ids[$key], 'product_cat', array('parent' => $parent_id));
-        }
-    }
-    update_option('puppy_market_category_schema', '5', false);
-}
-add_action('after_setup_theme', 'puppy_market_ensure_product_categories', 20);
-
-/** Content for the virtual policy/info pages. Each entry: title, intro
- *  paragraph, an array of [heading, body] sections, and the label/target for
- *  the closing call-to-action link. Structured like Chewy's help pages —
- *  short intro, then scannable headed sections rather than one long
- *  paragraph — and reuses the flat hairline-divider look from the cart and
- *  checkout pages instead of a separate card-in-a-card treatment. */
-function puppy_market_virtual_page_content() {
-    $shop_url = puppy_market_catalog_url();
-    return array(
-        'about' => array(
-            'title' => 'About iPet',
-            'intro' => 'iPet is an independent pet lifestyle shop. We keep the catalog small on purpose — food, toys, and everyday care essentials for dogs, cats, and other pets, chosen because they hold up to daily use, not because they filled a shelf.',
-            'sections' => array(
-                array('Why we started', 'Most pet retailers try to be everything at once. We wanted a shop that felt more like asking a knowledgeable friend what actually works — a shorter list of products we would use ourselves, organized so you can find what you need in a couple of clicks.'),
-                array('How we choose products', 'Every item we carry is reviewed for material quality, everyday practicality, and how it holds up over repeat use, not just how it photographs. We would rather list fewer products we can stand behind than pad the catalog.'),
-                array('What to expect', 'Free shipping on orders over $75, 365-day returns on eligible items, and a support team that actually reads your message. If something is not right, tell us — that is how the catalog gets better.'),
-            ),
-            'cta_label' => 'Shop the catalog',
-            'cta_url' => $shop_url,
-        ),
-        'contact' => array(
-            'title' => 'Contact us',
-            'intro' => 'Question about an order, a product, or something on the site that looks off? Here is the fastest way to reach us.',
-            'sections' => array(
-                array('Email support', 'For order questions, product questions, or anything account-related, email us and include your order number if you have one — it helps us answer faster.'),
-                array('Response time', 'We reply to most messages within one business day. During sale periods it can take a little longer; we will still get back to you.'),
-                array('Report a site issue', 'Found a broken link, a wrong price, or a page that will not load? Let us know what page you were on and what happened — screenshots help.'),
-            ),
-            'cta_label' => 'Browse the shop',
-            'cta_url' => $shop_url,
-        ),
-        'shipping' => array(
-            'title' => 'Shipping',
-            'intro' => 'Here is how shipping works on orders placed through iPet.',
-            'sections' => array(
-                array('Free shipping', 'Orders over $75 ship free. Orders under $75 have shipping calculated at checkout based on weight and destination.'),
-                array('Processing time', 'In-stock orders are packed and handed to the carrier within 1–2 business days of payment confirmation. You will get a confirmation email as soon as your order ships.'),
-                array('Delivery time', 'Once shipped, most orders arrive within 3–7 business days depending on your location and the carrier. Remote areas may take a little longer.'),
-                array('Tracking your order', 'A tracking link is included in your shipping confirmation email and is also available from your account under Orders.'),
-                array('Shipping restrictions', 'A small number of oversized items (large habitats, aquariums, and similar) may have limited delivery areas or additional handling time — this is noted on the product page when it applies.'),
-            ),
-            'cta_label' => 'Back to home',
-            'cta_url' => home_url('/'),
-        ),
-        'returns' => array(
-            'title' => 'Returns',
-            'intro' => 'We want you and your pet to be happy with every order. If something is not working out, here is how returns work.',
-            'sections' => array(
-                array('365-day return window', 'Most items can be returned within 365 days of delivery for a refund or exchange, as long as they are unused and in resalable condition.'),
-                array('What is not eligible', 'Opened food and treats, and any item marked as a final-sale clearance item on its product page, cannot be returned for hygiene and safety reasons.'),
-                array('How to start a return', 'Sign in to your account, open the order under Orders, and select the item you would like to return. We will email you a prepaid return label for eligible items.'),
-                array('Refund timing', 'Once we receive and inspect the returned item, refunds are issued to your original payment method within 5–7 business days.'),
-                array('Exchanges', 'Need a different size instead of a refund? Note it when you start the return and we will prioritize getting the replacement out to you.'),
-            ),
-            'cta_label' => 'Start a return in your account',
-            'cta_url' => puppy_market_account_url(),
-        ),
-        'privacy-policy' => array(
-            'title' => 'Privacy policy',
-            'intro' => 'This page explains what information iPet collects and how it is used. It applies to this website and to orders placed through it.',
-            'sections' => array(
-                array('Information we collect', 'Account details (name, email, password), order and delivery information (shipping address, items purchased), and basic usage data (pages viewed, device/browser type) used to keep the site working correctly.'),
-                array('How we use it', 'To process and ship orders, provide customer support, secure your account, and improve the site. We do not sell your personal information.'),
-                array('Payment information', 'Payment card details are handled directly by our payment processor and are not stored on iPet servers.'),
-                array('Sharing with service providers', 'We share only what is necessary with the providers that help us operate — for example, shipping carriers (to deliver your order) and payment processors (to complete checkout).'),
-                array('Cookies', 'We use cookies to keep you signed in, remember your cart, and understand how the site is used, so we can fix what is broken and improve what is not.'),
-                array('Your choices', 'You can review and update your account details at any time, or contact us to request a copy or deletion of your data, subject to what we are required to retain for orders, tax, and fraud-prevention purposes.'),
-            ),
-            'cta_label' => 'Contact us about privacy',
-            'cta_url' => home_url('/contact/'),
-        ),
-    );
-}
-
-function puppy_market_virtual_pages() {
-    if (!is_404()) return;
-    $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-    $slug = basename($path);
-    $pages = puppy_market_virtual_page_content();
-    if (!isset($pages[$slug])) return;
-    $page = $pages[$slug];
-    status_header(200);
-    nocache_headers();
-    get_header();
-    echo '<main id="main-content" class="content-shell"><div class="container content-card policy-page">';
-    echo '<p class="eyebrow">iPet · Pet life</p><h1>' . esc_html($page['title']) . '</h1>';
-    echo '<div class="entry-content"><p class="policy-intro">' . esc_html($page['intro']) . '</p>';
-    echo '<div class="policy-sections">';
-    foreach ($page['sections'] as $section) {
-        echo '<section class="policy-section"><h2>' . esc_html($section[0]) . '</h2><p>' . esc_html($section[1]) . '</p></section>';
-    }
-    echo '</div>';
-    echo '<a class="button" href="' . esc_url($page['cta_url']) . '">' . esc_html($page['cta_label']) . '</a>';
-    echo '</div></div></main>';
-    get_footer();
-    exit;
-}
-add_action('template_redirect', 'puppy_market_virtual_pages');
-
-function puppy_market_virtual_page_title($parts) {
-    if (!is_404()) return $parts;
-    $slug = basename(trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
-    $pages = puppy_market_virtual_page_content();
-    if (isset($pages[$slug])) {
-        $parts['title'] = $pages[$slug]['title'];
-        $parts['site'] = 'iPet';
-    }
-    return $parts;
-}
-add_filter('document_title_parts', 'puppy_market_virtual_page_title');
 
 function puppy_market_category_icon($name) {
     if (strpos($name, 'dog') !== false || strpos($name, 'puppy') !== false) return '🐶';
@@ -550,20 +320,6 @@ function puppy_market_category_icon($name) {
     if (strpos($name, 'care') !== false || strpos($name, 'groom') !== false) return '🧴';
     if (strpos($name, 'food') !== false || strpos($name, 'treat') !== false) return '🥣';
     return '🐾';
-}
-
-function puppy_market_category_link($name) {
-    $definitions = puppy_market_category_definitions();
-    if (isset($definitions[$name])) {
-        $term = get_term_by('slug', $definitions[$name]['slug'], 'product_cat');
-        if (!$term) $term = get_term_by('name', $definitions[$name]['name'], 'product_cat');
-    } else {
-        $term = get_term_by('name', $name, 'product_cat');
-    }
-    if ($term && !is_wp_error($term)) {
-        return get_term_link($term);
-    }
-    return puppy_market_catalog_url();
 }
 
 /**
