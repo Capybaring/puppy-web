@@ -140,10 +140,10 @@ function puppy_market_category_link($slug) {
 /** Render the thumbnail uploaded for a WooCommerce category. */
 function puppy_market_category_thumbnail($term, $size = 'medium', $class = '') {
     if (is_string($term)) $term = puppy_market_product_category($term);
-    if (!$term || is_wp_error($term)) return '<span class="category-image-placeholder" aria-hidden="true"></span>';
+    if (!$term || is_wp_error($term)) return '';
 
     $thumbnail_id = absint(get_term_meta($term->term_id, 'thumbnail_id', true));
-    if (!$thumbnail_id) return '<span class="category-image-placeholder" aria-hidden="true"></span>';
+    if (!$thumbnail_id) return '';
 
     $image = wp_get_attachment_image($thumbnail_id, $size, false, array(
         'class'   => trim('category-image ' . $class),
@@ -151,7 +151,7 @@ function puppy_market_category_thumbnail($term, $size = 'medium', $class = '') {
         'alt'     => $term->name,
     ));
 
-    return $image ?: '<span class="category-image-placeholder" aria-hidden="true"></span>';
+    return $image ?: '';
 }
 
 /** Get top-level categories in the order maintained by WooCommerce. */

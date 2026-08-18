@@ -37,7 +37,6 @@ $carousel_slides = array(
 
 $shop_by_categories = puppy_market_top_categories(7, false);
 $popular_categories = puppy_market_popular_categories(6);
-$quick_categories = array_slice($popular_categories, 0, 5);
 
 $brand_taxonomy = puppy_market_brand_taxonomy();
 $brand_terms = get_terms(array(
@@ -118,20 +117,6 @@ $care_image_id = puppy_market_media_id('puppy_market_home_care_image');
         </section>
     <?php endif; ?>
 
-    <?php if (!empty($quick_categories)) : ?>
-        <section class="section quick-links" aria-label="Popular searches">
-            <div class="container"><div class="quick-links-row">
-                <?php foreach ($quick_categories as $category) :
-                    $category_url = get_term_link($category);
-                    if (is_wp_error($category_url)) continue;
-                ?>
-                    <a href="<?php echo esc_url($category_url); ?>"><?php echo esc_html($category->name); ?></a>
-                <?php endforeach; ?>
-                <a href="<?php echo esc_url(puppy_market_catalog_url('sale')); ?>">Deals</a>
-            </div></div>
-        </section>
-    <?php endif; ?>
-
     <?php if (!empty($brand_terms)) : ?>
         <section class="section brand-wall" aria-label="Shop by brand">
             <div class="container"><div class="section-heading"><h2>Shop by brand</h2></div><div class="brand-wall-row">
@@ -206,7 +191,7 @@ $care_image_id = puppy_market_media_id('puppy_market_home_care_image');
             <div class="product-carousel-shell"><div class="product-carousel-viewport"><div class="product-carousel-track">
                 <?php $sale_products = function_exists('wc_get_products') ? wc_get_products(array('status' => 'publish', 'limit' => 8, 'on_sale' => true, 'orderby' => 'date', 'order' => 'DESC')) : array(); ?>
                 <?php if (!empty($sale_products)) : foreach ($sale_products as $sale_product) : ?>
-                    <?php get_template_part('template-parts/product-card', null, array('product' => $sale_product, 'show_description' => true)); ?>
+                    <?php get_template_part('template-parts/product-card', null, array('product' => $sale_product)); ?>
                 <?php endforeach; else : ?>
                     <article class="product product-empty-card"><div class="product-image product-image-empty" aria-hidden="true"></div><h3>No sale items yet</h3><p>Sale products will appear here when promotional pricing is added.</p><a class="button" href="<?php echo esc_url($shop_url); ?>">View all products</a></article>
                 <?php endif; ?>
