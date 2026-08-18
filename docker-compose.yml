@@ -1,0 +1,31 @@
+services:
+  db:
+    image: mariadb:11.4
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: wordpress_dev_password
+      MARIADB_ROOT_PASSWORD: root_dev_password
+    volumes:
+      - puppy_db:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "${WORDPRESS_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress_dev_password
+    volumes:
+      - puppy_wordpress:/var/www/html
+      - ./:/var/www/html/wp-content/themes/puppy-market
+
+volumes:
+  puppy_db:
+  puppy_wordpress:
