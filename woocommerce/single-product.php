@@ -53,6 +53,8 @@ $puppy_promotion_text = get_theme_mod('puppy_market_pdp_promotion_text', 'Free s
                 $puppy_stock_text = $product->is_in_stock() ? ($product->is_on_backorder(1) ? 'Available on backorder' : 'In stock') : 'Out of stock';
                 $puppy_eta_timestamp = strtotime('+3 weekdays', current_time('timestamp'));
                 $puppy_eta = $puppy_eta_timestamp ? date_i18n('D, M j', $puppy_eta_timestamp) : '';
+                $puppy_rating = (float) $product->get_average_rating();
+                $puppy_review_count = (int) $product->get_review_count();
             ?>
                 <article id="product-<?php the_ID(); ?>" <?php wc_product_class('ipet-pdp', $product); ?>>
                     <section class="ipet-pdp-main" aria-label="Product purchase information">
@@ -60,6 +62,9 @@ $puppy_promotion_text = get_theme_mod('puppy_market_pdp_promotion_text', 'Free s
                             <p class="ipet-pdp-kicker">iPet everyday essential</p>
                             <p class="ipet-pdp-mobile-title" role="heading" aria-level="1"><?php the_title(); ?></p>
                             <p class="ipet-pdp-brand">By <a href="<?php echo esc_url($puppy_brand_url); ?>"><?php echo esc_html($puppy_brand_name); ?></a></p>
+                            <?php if ($puppy_review_count > 0 && function_exists('wc_get_rating_html')) : ?>
+                                <div class="ipet-pdp-rating" aria-label="<?php echo esc_attr(sprintf('%1$s out of 5 stars from %2$d reviews', number_format_i18n($puppy_rating, 1), $puppy_review_count)); ?>"><strong><?php echo esc_html(number_format_i18n($puppy_rating, 1)); ?></strong><?php echo wp_kses_post(wc_get_rating_html($puppy_rating, $puppy_review_count)); ?><span><?php echo esc_html(number_format_i18n($puppy_review_count)); ?> reviews</span></div>
+                            <?php endif; ?>
                         </div>
                         <div class="ipet-pdp-gallery-column">
                             <?php woocommerce_show_product_images(); ?>
@@ -69,6 +74,9 @@ $puppy_promotion_text = get_theme_mod('puppy_market_pdp_promotion_text', 'Free s
                             <p class="ipet-pdp-kicker">iPet everyday essential</p>
                             <h1 id="ipet-pdp-title" class="product_title entry-title"><?php the_title(); ?></h1>
                             <p class="ipet-pdp-brand">By <a href="<?php echo esc_url($puppy_brand_url); ?>"><?php echo esc_html($puppy_brand_name); ?></a></p>
+                            <?php if ($puppy_review_count > 0 && function_exists('wc_get_rating_html')) : ?>
+                                <div class="ipet-pdp-rating" aria-label="<?php echo esc_attr(sprintf('%1$s out of 5 stars from %2$d reviews', number_format_i18n($puppy_rating, 1), $puppy_review_count)); ?>"><strong><?php echo esc_html(number_format_i18n($puppy_rating, 1)); ?></strong><?php echo wp_kses_post(wc_get_rating_html($puppy_rating, $puppy_review_count)); ?><span><?php echo esc_html(number_format_i18n($puppy_review_count)); ?> reviews</span></div>
+                            <?php endif; ?>
 
                             <?php if ($product->get_short_description()) : ?>
                                 <div class="ipet-pdp-summary-copy"><?php echo wp_kses_post(wpautop($product->get_short_description())); ?></div>
