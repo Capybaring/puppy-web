@@ -8,6 +8,7 @@
  * - badges            (array)   extra overlay ribbon texts stacked below badge
  * - show_description  (bool)    show a trimmed short description line
  * - show_details      (bool)    show brand, rating, saving and stock details
+ * - show_sale_label   (bool)    show the inline Sale label when no Sale badge exists
  * - card_class        (string)  extra class(es) added to the wrapper (ignored when bare)
  * - bare              (bool)    when true, output only the inner markup with no
  *                                <article> wrapper — use this inside a WooCommerce
@@ -26,6 +27,7 @@ if (!$puppy_card_product) return;
 $puppy_card_badge = isset($args['badge']) ? $args['badge'] : '';
 $puppy_card_show_description = !empty($args['show_description']);
 $puppy_card_show_details = !array_key_exists('show_details', $args) || !empty($args['show_details']);
+$puppy_card_show_sale_label = !array_key_exists('show_sale_label', $args) || !empty($args['show_sale_label']);
 $puppy_card_class = isset($args['card_class']) ? ' ' . sanitize_html_class($args['card_class']) : '';
 $puppy_card_bare = !empty($args['bare']);
 
@@ -81,7 +83,7 @@ if ($puppy_card_product->is_type('simple') && $puppy_card_product->is_on_sale() 
   <?php endif; ?>
   <div class="product-price-row">
     <span class="price"><?php echo wp_kses_post($puppy_card_product->get_price_html()); ?></span>
-    <?php if ($puppy_card_product->is_on_sale() && !in_array('Sale', $puppy_card_badges, true)) : ?><span class="deal-label">Sale</span><?php endif; ?>
+    <?php if ($puppy_card_show_sale_label && $puppy_card_product->is_on_sale() && !in_array('Sale', $puppy_card_badges, true)) : ?><span class="deal-label">Sale</span><?php endif; ?>
   </div>
   <?php if ($puppy_card_show_details && $puppy_card_saving_percent > 0) : ?><p class="product-card-saving">Save <?php echo absint($puppy_card_saving_percent); ?>% today</p><?php endif; ?>
   <?php if ($puppy_card_show_details) : ?>

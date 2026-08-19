@@ -191,7 +191,11 @@ $care_image_id = puppy_market_media_id('puppy_market_home_care_image');
             <div class="product-carousel-shell"><div class="product-carousel-viewport"><div class="product-carousel-track">
                 <?php $sale_products = function_exists('wc_get_products') ? wc_get_products(array('status' => 'publish', 'limit' => 8, 'on_sale' => true, 'orderby' => 'date', 'order' => 'DESC')) : array(); ?>
                 <?php if (!empty($sale_products)) : foreach ($sale_products as $sale_product) : ?>
-                    <?php get_template_part('template-parts/product-card', null, array('product' => $sale_product)); ?>
+                    <?php get_template_part('template-parts/product-card', null, array(
+                        'product'         => $sale_product,
+                        'card_class'      => 'best-seller-card',
+                        'show_sale_label' => false,
+                    )); ?>
                 <?php endforeach; else : ?>
                     <article class="product product-empty-card"><div class="product-image product-image-empty" aria-hidden="true"></div><h3>No sale items yet</h3><p>Sale products will appear here when promotional pricing is added.</p><a class="button" href="<?php echo esc_url($shop_url); ?>">View all products</a></article>
                 <?php endif; ?>
