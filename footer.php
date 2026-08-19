@@ -1,13 +1,82 @@
 <?php
 $footer_tagline = get_theme_mod('puppy_market_footer_tagline', '');
 if (!$footer_tagline) $footer_tagline = get_bloginfo('description');
+$footer_shop_url = puppy_market_catalog_url();
+$footer_account_url = puppy_market_account_url();
+$footer_contact_url = puppy_market_page_url('contact');
+$footer_about_url = puppy_market_page_url('about');
+$footer_shipping_url = puppy_market_page_url('shipping');
+$footer_returns_url = puppy_market_page_url('returns');
+$footer_privacy_url = get_privacy_policy_url();
+if (!$footer_privacy_url) $footer_privacy_url = puppy_market_page_url('privacy-policy');
 ?>
-<footer class="site-footer"><div class="container"><div class="footer-grid">
-    <div class="footer-brand"><a class="brand" href="<?php echo esc_url(home_url('/')); ?>"><?php echo wp_kses_post(puppy_market_brand_markup()); ?></a><?php if ($footer_tagline) : ?><p><?php echo esc_html($footer_tagline); ?></p><?php endif; ?></div>
-    <div><h3>Shop</h3><?php wp_nav_menu(array('theme_location' => 'footer_shop', 'container' => false, 'menu_class' => 'footer-menu', 'fallback_cb' => false)); ?></div>
-    <div><h3>Help</h3><?php wp_nav_menu(array('theme_location' => 'footer_help', 'container' => false, 'menu_class' => 'footer-menu', 'fallback_cb' => false)); ?></div>
-    <div><h3>About</h3><?php wp_nav_menu(array('theme_location' => 'footer_about', 'container' => false, 'menu_class' => 'footer-menu', 'fallback_cb' => false)); ?></div>
-</div><div class="footer-bottom"><span>© <?php echo esc_html(date_i18n('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?></span><span>Powered by WordPress and WooCommerce</span></div></div></footer>
+<footer class="site-footer">
+  <section class="footer-support" aria-label="Customer support">
+    <div class="container footer-support-inner">
+      <p class="footer-support-title"><strong>Our pet care team is here 24/7.</strong><span>Questions about an order or choosing the right product? We are happy to help.</span></p>
+      <a class="footer-support-link" href="<?php echo esc_url($footer_contact_url); ?>">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.7 3.8 9.4 8 7.6 9.8c1.3 2.8 3.7 5.2 6.5 6.5l1.8-1.8 4.2 2.7-.7 3.1c-.2.8-.9 1.3-1.7 1.3C9.3 21.6 2.4 14.7 2.4 6.3c0-.8.5-1.5 1.3-1.7z"></path></svg>
+        <span><small>Need help?</small><strong>Contact support</strong></span>
+      </a>
+      <a class="footer-support-link" href="<?php echo esc_url($footer_contact_url); ?>">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16v11H9l-5 3v-14Z"></path><path d="M8 10h8M8 13h5"></path></svg>
+        <span><small>Quick question?</small><strong>Chat with us</strong></span>
+      </a>
+      <a class="footer-back-top" href="#page-top"><span aria-hidden="true">↑</span> Back to top</a>
+    </div>
+  </section>
+
+  <div class="footer-main"><div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="<?php echo esc_url(home_url('/')); ?>"><?php echo wp_kses_post(puppy_market_brand_markup()); ?></a>
+        <?php if ($footer_tagline) : ?><p><?php echo esc_html($footer_tagline); ?></p><?php endif; ?>
+      </div>
+      <div><h3>Shop</h3>
+        <?php if (has_nav_menu('footer_shop')) : ?>
+          <?php wp_nav_menu(array('theme_location' => 'footer_shop', 'container' => false, 'menu_class' => 'footer-menu', 'fallback_cb' => false)); ?>
+        <?php else : ?>
+          <ul class="footer-menu"><li><a href="<?php echo esc_url($footer_shop_url); ?>">Shop all</a></li><li><a href="<?php echo esc_url(puppy_market_category_link('dog-food')); ?>">Dog essentials</a></li><li><a href="<?php echo esc_url(puppy_market_category_link('cat-food')); ?>">Cat essentials</a></li><li><a href="<?php echo esc_url(puppy_market_catalog_url('sale')); ?>">Sale</a></li></ul>
+        <?php endif; ?>
+      </div>
+      <div><h3>Help</h3>
+        <?php if (has_nav_menu('footer_help')) : ?>
+          <?php wp_nav_menu(array('theme_location' => 'footer_help', 'container' => false, 'menu_class' => 'footer-menu', 'fallback_cb' => false)); ?>
+        <?php else : ?>
+          <ul class="footer-menu"><li><a href="<?php echo esc_url($footer_contact_url); ?>">Contact us</a></li><li><a href="<?php echo esc_url($footer_shipping_url); ?>">Shipping</a></li><li><a href="<?php echo esc_url($footer_returns_url); ?>">Returns</a></li><li><a href="<?php echo esc_url($footer_account_url); ?>">My account</a></li></ul>
+        <?php endif; ?>
+      </div>
+      <div><h3>About</h3>
+        <?php if (has_nav_menu('footer_about')) : ?>
+          <?php wp_nav_menu(array('theme_location' => 'footer_about', 'container' => false, 'menu_class' => 'footer-menu', 'fallback_cb' => false)); ?>
+        <?php else : ?>
+          <ul class="footer-menu"><li><a href="<?php echo esc_url($footer_about_url); ?>">About us</a></li><li><a href="<?php echo esc_url($footer_privacy_url); ?>">Privacy</a></li><li><a href="<?php echo esc_url($footer_contact_url); ?>">Customer care</a></li></ul>
+        <?php endif; ?>
+      </div>
+      <div class="footer-connect"><h3>Stay connected</h3><p>Follow along for pet care tips, new arrivals and everyday favorites.</p>
+        <div class="footer-socials" aria-label="Social media">
+          <a class="footer-social footer-social-facebook" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4.2c-.5-.1-1.8-.2-3.4-.2C10.4 4 8 6 8 9.7V13H4v4h4v7h5v-7h3.7l.6-4H13V10c0-1.2.3-2 1-2Z"></path></svg></a>
+          <a class="footer-social footer-social-youtube" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12c0-3-.4-5-1-6-.8-1-2-1.2-9-1.2S3.8 5 3 6c-.6 1-1 3-1 6s.4 5 1 6c.8 1 2 1.2 9 1.2s8.2-.2 9-1.2c.6-1 1-3 1-6Z"></path><path class="footer-social-cutout" d="m10 9 5 3-5 3V9Z"></path></svg></a>
+          <a class="footer-social footer-social-instagram" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"></rect><circle class="footer-social-cutout" cx="12" cy="12" r="3.5"></circle><circle class="footer-social-cutout" cx="17.5" cy="6.8" r="1"></circle></svg></a>
+          <a class="footer-social footer-social-tiktok" href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h3c.3 2 1.5 3.4 4 4v3c-1.6 0-3-.5-4-1.2V16a6 6 0 1 1-6-6h1v3h-1a3 3 0 1 0 3 3V3Z"></path></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <nav class="footer-quick-links" aria-label="Footer links">
+      <span aria-label="Country">🌐 United States</span><a href="<?php echo esc_url($footer_about_url); ?>">About</a><a href="<?php echo esc_url($footer_contact_url); ?>">Help</a><a href="<?php echo esc_url($footer_shipping_url); ?>">Shipping</a><a href="<?php echo esc_url($footer_returns_url); ?>">Returns</a><a href="<?php echo esc_url($footer_privacy_url); ?>">Privacy</a><a href="<?php echo esc_url($footer_shop_url); ?>">Shop all</a>
+    </nav>
+
+    <div class="footer-reassurance" aria-label="Shopping reassurance">
+      <div><span aria-hidden="true">✓</span><strong>Secure checkout</strong><small>Protected payments</small></div>
+      <div><span aria-hidden="true">↗</span><strong>Fast shipping</strong><small>Free over $75</small></div>
+      <div><span aria-hidden="true">↩</span><strong>Easy returns</strong><small>Simple and convenient</small></div>
+      <div class="footer-payments"><strong>Ways to pay</strong><span>VISA</span><span>Mastercard</span><span>AMEX</span><span>PayPal</span></div>
+    </div>
+
+    <div class="footer-bottom"><span>© <?php echo esc_html(date_i18n('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?>. All rights reserved.</span><span>Powered by WordPress and WooCommerce</span></div>
+  </div></div>
+</footer>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   // Account/cart hover dropdowns only work with a mouse; on touch screens

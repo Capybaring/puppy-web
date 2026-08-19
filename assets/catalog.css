@@ -1,0 +1,41 @@
+/* Catalog-only overrides. This file is loaded exclusively on shop/category archives. */
+.shop-shell .category-hero > span { display: none; }
+
+/* Use the same shared product-card geometry as the homepage component. */
+.shop-shell .shop-results .woocommerce ul.products li.product {
+  padding: 12px;
+  border: 0;
+  border-radius: 12px;
+  background: #f2f3f5;
+  overflow: hidden;
+}
+.shop-shell .shop-results .woocommerce ul.products li.product:hover { border-color: transparent; background: #eceff3; }
+.shop-shell .shop-results .woocommerce ul.products li.product .product-card-media {
+  margin: -12px -12px 8px;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+}
+.shop-shell .shop-results .woocommerce ul.products li.product .product-image,
+.shop-shell .shop-results .woocommerce ul.products li.product a img {
+  width: 100%;
+  height: 230px;
+  margin: 0;
+  border-radius: 12px 12px 0 0;
+  object-fit: contain;
+  background: #fff;
+}
+
+/* Constrain both price inputs to the sidebar's actual content width. */
+.shop-shell .shop-sidebar .puppy-filter-price-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  width: 100%;
+  gap: 6px;
+}
+.shop-shell .shop-sidebar .puppy-filter-price-row input {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.shop-shell .shop-sidebar .puppy-context-filter legend { font-size: 17px; }

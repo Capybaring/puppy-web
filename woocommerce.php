@@ -9,7 +9,7 @@
         <?php endif; ?>
         <?php $puppy_categories = get_terms(array('taxonomy' => 'product_cat', 'hide_empty' => true, 'exclude' => array(get_option('default_product_cat')))); ?>
         <?php if (function_exists('is_product_category') && is_product_category()) : $puppy_term = get_queried_object(); ?>
-            <section class="category-hero"><div><p class="eyebrow">iPet featured category</p><h1><?php echo esc_html($puppy_term->name); ?></h1><p>Thoughtfully chosen essentials your pets will love using every day.</p></div><span><?php echo esc_html(puppy_market_category_icon($puppy_term->name)); ?></span></section>
+            <section class="category-hero"><div><p class="eyebrow">iPet featured category</p><h1><?php echo esc_html($puppy_term->name); ?></h1><p>Thoughtfully chosen essentials your pets will love using every day.</p></div></section>
         <?php elseif (function_exists('is_shop') && is_shop()) : ?>
             <section class="category-hero shop-hero"><div><p class="eyebrow">iPet shop</p><h1>Find something great for today</h1><p>Take your time browsing food, toys and everyday essentials by pet and need.</p></div><span>iP</span></section>
         <?php endif; ?>
@@ -23,10 +23,37 @@
                 $puppy_min_price = isset($_GET['puppy_min_price']) ? absint($_GET['puppy_min_price']) : '';
                 $puppy_max_price = isset($_GET['puppy_max_price']) ? absint($_GET['puppy_max_price']) : '';
                 $puppy_on_sale_only = !empty($_GET['puppy_on_sale']);
+                $puppy_filter_action = is_product_category() ? get_term_link($puppy_term) : puppy_market_catalog_url();
+                if (is_wp_error($puppy_filter_action)) $puppy_filter_action = puppy_market_catalog_url();
+                $puppy_context_children = is_product_category() ? get_terms(array(
+                    'taxonomy' => 'product_cat',
+                    'hide_empty' => true,
+                    'parent' => (int) $puppy_term->term_id,
+                )) : array();
+                $puppy_context_attributes = is_product_category() && function_exists('puppy_market_category_filter_attributes')
+                    ? puppy_market_category_filter_attributes($puppy_term)
+                    : array();
                 ?>
                 <aside class="shop-sidebar" aria-label="Product filters">
-                    <form class="puppy-filter-form" method="get" action="<?php echo esc_url(puppy_market_catalog_url()); ?>">
-                        <div class="sidebar-section sidebar-filter-heading"><h2>Filter products</h2><a class="sidebar-reset" href="<?php echo esc_url(puppy_market_catalog_url()); ?>">Clear filters</a></div>
+                    <form class="puppy-filter-form" method="get" action="<?php echo esc_url($puppy_filter_action); ?>">
+                        <div class="sidebar-section sidebar-filter-heading"><h2>Filter products</h2><a class="sidebar-reset" href="<?php echo esc_url($puppy_filter_action); ?>">Clear filters</a></div>
+                        <?php if (!is_wp_error($puppy_context_children) && !empty($puppy_context_children)) : ?>
+                        <fieldset class="sidebar-section puppy-filter-group puppy-context-filter"><legend><?php echo esc_html($puppy_term->name); ?> categories</legend>
+                            <?php foreach ($puppy_context_children as $puppy_child) : ?>
+                                <label class="puppy-filter-option"><input type="checkbox" name="puppy_category[]" value="<?php echo esc_attr($puppy_child->slug); ?>" <?php checked(in_array($puppy_child->slug, $puppy_selected_categories, true)); ?>><span><?php echo esc_html($puppy_child->name); ?></span><small><?php echo absint($puppy_child->count); ?></small></label>
+                            <?php endforeach; ?>
+                        </fieldset>
+                        <?php endif; ?>
+                        <?php foreach ($puppy_context_attributes as $puppy_attribute) :
+                            $puppy_attribute_key = 'puppy_attr_' . $puppy_attribute['taxonomy'];
+                            $puppy_selected_attribute_terms = isset($_GET[$puppy_attribute_key]) ? array_map('sanitize_title', (array) wp_unslash($_GET[$puppy_attribute_key])) : array();
+                        ?>
+                        <fieldset class="sidebar-section puppy-filter-group puppy-context-filter"><legend><?php echo esc_html($puppy_attribute['label']); ?></legend>
+                            <?php foreach ($puppy_attribute['terms'] as $puppy_attribute_term) : ?>
+                                <label class="puppy-filter-option"><input type="checkbox" name="<?php echo esc_attr($puppy_attribute_key); ?>[]" value="<?php echo esc_attr($puppy_attribute_term->slug); ?>" <?php checked(in_array($puppy_attribute_term->slug, $puppy_selected_attribute_terms, true)); ?>><span><?php echo esc_html($puppy_attribute_term->name); ?></span><small><?php echo absint($puppy_attribute_term->count); ?></small></label>
+                            <?php endforeach; ?>
+                        </fieldset>
+                        <?php endforeach; ?>
                         <fieldset class="sidebar-section puppy-filter-group"><legend>Pet type</legend>
                             <?php foreach ($puppy_categories as $sidebar_category) : if ((int) $sidebar_category->parent !== 0) continue; ?>
                                 <label class="puppy-filter-option"><input type="checkbox" name="puppy_category[]" value="<?php echo esc_attr($sidebar_category->slug); ?>" <?php checked(in_array($sidebar_category->slug, $puppy_selected_categories, true)); ?>><span><?php echo esc_html($sidebar_category->name); ?></span><small><?php echo absint($sidebar_category->count); ?></small></label>

@@ -52,6 +52,26 @@ function puppy_market_assets() {
         );
     }
 
+    // Catalog-only interactions. Do not load this script on the homepage,
+    // product detail, account, cart, checkout, header or footer-only pages.
+    if (function_exists('is_shop') && (is_shop() || is_product_category())) {
+        $catalog_style_path = get_template_directory() . '/assets/catalog.css';
+        wp_enqueue_style(
+            'puppy-market-catalog',
+            get_template_directory_uri() . '/assets/catalog.css',
+            array('puppy-market-storefront-v2'),
+            file_exists($catalog_style_path) ? filemtime($catalog_style_path) : $style_version
+        );
+        $catalog_script_path = get_template_directory() . '/assets/catalog.js';
+        wp_enqueue_script(
+            'puppy-market-catalog',
+            get_template_directory_uri() . '/assets/catalog.js',
+            array('jquery', 'wc-add-to-cart'),
+            file_exists($catalog_script_path) ? filemtime($catalog_script_path) : $style_version,
+            true
+        );
+    }
+
     if (function_exists('is_checkout') && is_checkout() && !is_wc_endpoint_url('order-received')) {
         $checkout_script_path = get_template_directory() . '/assets/checkout.js';
         wp_enqueue_script(
@@ -346,8 +366,39 @@ function puppy_market_account_url() {
     return function_exists('wc_get_page_permalink') ? wc_get_page_permalink('myaccount') : home_url('/');
 }
 
+/** Return only global attributes actually assigned to products in this category. */
+function puppy_market_category_filter_attributes($category) {
+    if (!$category || empty($category->term_id) || !function_exists('wc_get_attribute_taxonomies')) return array();
+    $product_ids = get_posts(array(
+        'post_type' => 'product', 'post_status' => 'publish', 'fields' => 'ids',
+        'posts_per_page' => -1, 'no_found_rows' => true,
+        'tax_query' => array(array(
+            'taxonomy' => 'product_cat', 'field' => 'term_id',
+            'terms' => array((int) $category->term_id), 'include_children' => true,
+        )),
+    ));
+    if (empty($product_ids)) return array();
+    $filters = array();
+    foreach (wc_get_attribute_taxonomies() as $attribute) {
+        $taxonomy = wc_attribute_taxonomy_name($attribute->attribute_name);
+        if (!taxonomy_exists($taxonomy)) continue;
+        $terms = get_terms(array(
+            'taxonomy' => $taxonomy, 'hide_empty' => true, 'object_ids' => $product_ids,
+            'number' => 12, 'orderby' => 'count', 'order' => 'DESC',
+        ));
+        if (!is_wp_error($terms) && !empty($terms)) {
+            $filters[] = array(
+                'taxonomy' => $taxonomy,
+                'label' => $attribute->attribute_label ?: wc_attribute_label($taxonomy),
+                'terms' => $terms,
+            );
+        }
+    }
+    return $filters;
+}
+
 function puppy_market_catalog_query($query) {
-    if (is_admin() || !$query->is_main_query() || !function_exists('is_shop') || !is_shop()) return;
+    if (is_admin() || !$query->is_main_query() || !function_exists('is_shop') || !(is_shop() || is_product_category())) return;
     $view = isset($_GET['catalog_view']) ? sanitize_key(wp_unslash($_GET['catalog_view'])) : '';
     if ($view === 'new') {
         $query->set('orderby', 'date');
@@ -370,6 +421,16 @@ function puppy_market_catalog_query($query) {
             $tax_query[] = array('taxonomy' => $brand_taxonomy, 'field' => 'slug', 'terms' => $selected_brands, 'operator' => 'IN');
         } else {
             $query->set('s', str_replace('-', ' ', sanitize_title(reset($selected_brands))));
+        }
+    }
+    if (function_exists('wc_get_attribute_taxonomies')) {
+        foreach (wc_get_attribute_taxonomies() as $attribute) {
+            $taxonomy = wc_attribute_taxonomy_name($attribute->attribute_name);
+            $key = 'puppy_attr_' . $taxonomy;
+            $selected_terms = isset($_GET[$key]) ? array_filter(array_map('sanitize_title', (array) wp_unslash($_GET[$key]))) : array();
+            if (!empty($selected_terms) && taxonomy_exists($taxonomy)) {
+                $tax_query[] = array('taxonomy' => $taxonomy, 'field' => 'slug', 'terms' => $selected_terms, 'operator' => 'IN');
+            }
         }
     }
     if (count($tax_query) > 1) $tax_query['relation'] = 'AND';
@@ -401,6 +462,11 @@ function puppy_market_catalog_query($query) {
     }
 }
 add_action('pre_get_posts', 'puppy_market_catalog_query');
+
+function puppy_market_hide_catalog_add_to_cart_notice($message) {
+    return function_exists('is_shop') && (is_shop() || is_product_category()) ? '' : $message;
+}
+add_filter('wc_add_to_cart_message_html', 'puppy_market_hide_catalog_add_to_cart_notice', 99);
 
 function puppy_market_catalog_title($title) {
     if (!function_exists('is_shop') || !is_shop() || empty($_GET['catalog_view'])) return $title;
