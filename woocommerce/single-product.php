@@ -64,6 +64,8 @@ $puppy_promotion_text = get_theme_mod('puppy_market_pdp_promotion_text', 'Free s
                             <p class="ipet-pdp-brand">By <a href="<?php echo esc_url($puppy_brand_url); ?>"><?php echo esc_html($puppy_brand_name); ?></a></p>
                             <?php if ($puppy_review_count > 0 && function_exists('wc_get_rating_html')) : ?>
                                 <div class="ipet-pdp-rating" aria-label="<?php echo esc_attr(sprintf('%1$s out of 5 stars from %2$d reviews', number_format_i18n($puppy_rating, 1), $puppy_review_count)); ?>"><strong><?php echo esc_html(number_format_i18n($puppy_rating, 1)); ?></strong><?php echo wp_kses_post(wc_get_rating_html($puppy_rating, $puppy_review_count)); ?><span><?php echo esc_html(number_format_i18n($puppy_review_count)); ?> reviews</span></div>
+                            <?php else : ?>
+                                <div class="ipet-pdp-rating is-empty" aria-label="This product has no reviews yet"><strong>0.0</strong><span class="ipet-pdp-empty-stars" aria-hidden="true">☆☆☆☆☆</span><a href="#reviews">Write the first review</a></div>
                             <?php endif; ?>
                         </div>
                         <div class="ipet-pdp-gallery-column">
@@ -76,6 +78,8 @@ $puppy_promotion_text = get_theme_mod('puppy_market_pdp_promotion_text', 'Free s
                             <p class="ipet-pdp-brand">By <a href="<?php echo esc_url($puppy_brand_url); ?>"><?php echo esc_html($puppy_brand_name); ?></a></p>
                             <?php if ($puppy_review_count > 0 && function_exists('wc_get_rating_html')) : ?>
                                 <div class="ipet-pdp-rating" aria-label="<?php echo esc_attr(sprintf('%1$s out of 5 stars from %2$d reviews', number_format_i18n($puppy_rating, 1), $puppy_review_count)); ?>"><strong><?php echo esc_html(number_format_i18n($puppy_rating, 1)); ?></strong><?php echo wp_kses_post(wc_get_rating_html($puppy_rating, $puppy_review_count)); ?><span><?php echo esc_html(number_format_i18n($puppy_review_count)); ?> reviews</span></div>
+                            <?php else : ?>
+                                <div class="ipet-pdp-rating is-empty" aria-label="This product has no reviews yet"><strong>0.0</strong><span class="ipet-pdp-empty-stars" aria-hidden="true">☆☆☆☆☆</span><a href="#reviews">Write the first review</a></div>
                             <?php endif; ?>
 
                             <?php if ($product->get_short_description()) : ?>
@@ -136,19 +140,17 @@ $puppy_promotion_text = get_theme_mod('puppy_market_pdp_promotion_text', 'Free s
 
                         <aside class="ipet-pdp-purchase-column" aria-label="Purchase options">
                             <div class="ipet-pdp-purchase-panel">
-                                <div class="ipet-pdp-purchase-mode is-selected">
-                                    <span class="ipet-pdp-radio" aria-hidden="true"></span>
-                                    <div>
-                                        <strong>Buy once</strong>
-                                        <div class="ipet-pdp-price" data-pdp-price><?php echo wp_kses_post($product->get_price_html()); ?></div>
-                                        <?php if ($product->is_on_sale()) : ?><small>Sale price applied</small><?php endif; ?>
-                                    </div>
+                                <div class="ipet-pdp-purchase-heading">
+                                    <div class="ipet-pdp-price" data-pdp-price><?php echo wp_kses_post($product->get_price_html()); ?></div>
+                                    <?php if ($product->is_on_sale()) : ?><span class="ipet-pdp-sale-note">Sale price applied</span><?php endif; ?>
                                 </div>
 
-                                <?php if ($product->is_on_sale()) : ?>
-                                    <div class="ipet-pdp-offer"><span aria-hidden="true">%</span><p><strong>Limited-time deal</strong><br>Sale pricing is already applied to this item.</p></div>
-                                <?php endif; ?>
-                                <div class="ipet-pdp-offer"><span aria-hidden="true">⌁</span><p><strong>Free shipping over $49</strong><br>Qualifying orders ship free.</p></div>
+                                <div class="ipet-pdp-offers">
+                                    <?php if ($product->is_on_sale()) : ?>
+                                        <div class="ipet-pdp-offer"><span aria-hidden="true">%</span><p><strong>Limited-time deal</strong><br>Sale pricing is already applied to this item.</p></div>
+                                    <?php endif; ?>
+                                    <div class="ipet-pdp-offer"><span aria-hidden="true">⌁</span><p><strong>Free shipping over $49</strong><br>Qualifying orders ship free.</p></div>
+                                </div>
 
                                 <div class="ipet-pdp-stock-row">
                                     <div><small>Availability</small><strong class="<?php echo $product->is_in_stock() ? 'is-in-stock' : 'is-out-of-stock'; ?>" data-pdp-stock><?php echo esc_html($puppy_stock_text); ?></strong></div>
@@ -162,6 +164,10 @@ $puppy_promotion_text = get_theme_mod('puppy_market_pdp_promotion_text', 'Free s
                                 <div class="ipet-pdp-reassurance">
                                     <p><span aria-hidden="true">↻</span><strong>30-day easy returns</strong><a href="<?php echo esc_url(puppy_market_page_url('returns')); ?>">Details</a></p>
                                     <p><span aria-hidden="true">✓</span><strong>Secure checkout</strong><small>Protected payment processing</small></p>
+                                </div>
+
+                                <div class="ipet-pdp-account-benefit">
+                                    <span aria-hidden="true">iP</span><div><strong>Make checkout easier</strong><p>Sign in to keep your order history and manage purchases in one place.</p><a href="<?php echo esc_url(puppy_market_account_url()); ?>">Sign in or create an account</a></div>
                                 </div>
 
                                 <div class="ipet-pdp-payments" aria-label="Accepted payment methods"><span>Visa</span><span>Mastercard</span><span>PayPal</span><span>Apple Pay</span></div>
