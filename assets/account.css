@@ -1,0 +1,1508 @@
+/**
+ * My Account
+ *
+ * This file is loaded only on WooCommerce account routes and after the theme
+ * styles. Every selector is page-scoped so the header, footer and shop pages
+ * keep their existing presentation.
+ */
+
+body.woocommerce-account {
+    --account-ink: #18202a;
+    --account-muted: #68727f;
+    --account-line: #dfe4ea;
+    --account-line-soft: #edf0f3;
+    --account-surface: #ffffff;
+    --account-canvas: #f5f7fa;
+    --account-primary: #185fc7;
+    --account-primary-hover: #104fa9;
+    --account-primary-soft: #edf4ff;
+    --account-success: #18794e;
+    --account-success-soft: #ebf8f1;
+    --account-danger: #a33b32;
+    --account-danger-soft: #fff1ef;
+    color: var(--account-ink);
+    background: var(--account-canvas) !important;
+    font-weight: 400;
+}
+
+body.woocommerce-account .entry-content > .woocommerce,
+body.woocommerce-account .entry-content > .woocommerce *,
+body.woocommerce-account .ipet-logout-dialog,
+body.woocommerce-account .ipet-logout-dialog * {
+    box-sizing: border-box;
+}
+
+/* Remove WooCommerce's float layout and theme card decoration. */
+body.woocommerce-account .content-shell {
+    padding: 42px 0 76px !important;
+    background: var(--account-canvas) !important;
+}
+
+body.woocommerce-account .content-shell > .container.content-card {
+    width: min(1320px, calc(100% - 48px)) !important;
+    max-width: none !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+body.woocommerce-account .content-shell .eyebrow {
+    display: none !important;
+}
+
+body.woocommerce-account .content-shell .content-card > h1,
+body.woocommerce-account .content-shell > .container.content-card > h1 {
+    max-width: none !important;
+    margin: 0 0 24px !important;
+    color: var(--account-ink) !important;
+    font-size: clamp(30px, 3vw, 40px) !important;
+    font-weight: 500 !important;
+    letter-spacing: -.035em !important;
+    line-height: 1.08 !important;
+}
+
+body.woocommerce-account .entry-content,
+body.woocommerce-account .entry-content > .woocommerce {
+    width: 100%;
+    min-width: 0;
+}
+
+body.woocommerce-account .entry-content > .woocommerce::before,
+body.woocommerce-account .entry-content > .woocommerce::after,
+body.woocommerce-account .woocommerce::before,
+body.woocommerce-account .woocommerce::after {
+    display: none !important;
+    content: none !important;
+}
+
+body.woocommerce-account .entry-content > .woocommerce {
+    display: grid !important;
+    grid-template-columns: 264px minmax(0, 1fr) !important;
+    gap: 24px !important;
+    align-items: start !important;
+}
+
+/* A light typography system. Bold is reserved for hierarchy, not body copy. */
+body.woocommerce-account .woocommerce-MyAccount-content,
+body.woocommerce-account .woocommerce-MyAccount-content p,
+body.woocommerce-account .woocommerce-MyAccount-content li,
+body.woocommerce-account .woocommerce-MyAccount-content td,
+body.woocommerce-account .woocommerce-MyAccount-content address,
+body.woocommerce-account .woocommerce-MyAccount-content label {
+    font-weight: 400;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content strong,
+body.woocommerce-account .woocommerce-MyAccount-content b {
+    font-weight: 500 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content h2,
+body.woocommerce-account .woocommerce-MyAccount-content h3,
+body.woocommerce-account .woocommerce-MyAccount-content h4,
+body.woocommerce-account .woocommerce-MyAccount-content legend {
+    color: var(--account-ink) !important;
+    font-weight: 500 !important;
+    letter-spacing: -.02em;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content h2 {
+    margin: 0 0 20px !important;
+    font-size: clamp(24px, 2.3vw, 30px) !important;
+    line-height: 1.2 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content h3 {
+    margin: 0 0 16px !important;
+    font-size: 20px !important;
+    line-height: 1.3 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content p {
+    margin: 0 0 16px !important;
+    color: var(--account-muted);
+    line-height: 1.65;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content a:not(.button):not(.woocommerce-button) {
+    color: var(--account-primary);
+    font-weight: 400;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content a:focus-visible,
+body.woocommerce-account .woocommerce-MyAccount-navigation a:focus-visible,
+body.woocommerce-account .entry-content > .woocommerce button:focus-visible,
+body.woocommerce-account .entry-content > .woocommerce input[type='submit']:focus-visible {
+    outline: 3px solid rgba(24, 95, 199, .25) !important;
+    outline-offset: 2px !important;
+}
+
+/* Account navigation */
+body.woocommerce-account.logged-in .entry-content > .woocommerce > .woocommerce-MyAccount-navigation,
+body.woocommerce-account.logged-in .entry-content > .woocommerce > .ipet-account-navigation {
+    position: sticky !important;
+    top: 24px !important;
+    grid-column: 1 !important;
+    float: none !important;
+    width: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    border: 1px solid var(--account-line) !important;
+    border-radius: 16px !important;
+    background: var(--account-surface) !important;
+    box-shadow: 0 8px 26px rgba(24, 32, 42, .04) !important;
+}
+
+body.admin-bar.woocommerce-account.logged-in .entry-content > .woocommerce > .woocommerce-MyAccount-navigation {
+    top: 56px !important;
+}
+
+body.woocommerce-account .ipet-account-profile {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    margin: 0 0 16px !important;
+    padding: 0 0 18px !important;
+    border-bottom: 1px solid var(--account-line-soft) !important;
+}
+
+body.woocommerce-account .ipet-account-avatar {
+    width: 52px;
+    height: 52px;
+    overflow: hidden;
+    border-radius: 50%;
+    background: var(--account-primary-soft);
+}
+
+body.woocommerce-account .ipet-account-avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+body.woocommerce-account .ipet-account-profile-copy {
+    min-width: 0;
+}
+
+body.woocommerce-account .ipet-account-profile-name,
+body.woocommerce-account .ipet-account-profile-copy > span {
+    display: block;
+    overflow: hidden;
+    color: var(--account-ink);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+body.woocommerce-account .ipet-account-profile-email {
+    margin-top: 3px;
+    color: var(--account-muted) !important;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+}
+
+body.woocommerce-account .ipet-account-profile-note {
+    margin-top: 5px;
+    color: var(--account-primary) !important;
+    font-size: 11px !important;
+    font-weight: 400 !important;
+}
+
+body.woocommerce-account .ipet-account-menu-toggle {
+    display: none;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-navigation ul,
+body.woocommerce-account .ipet-account-navigation ul {
+    display: grid !important;
+    gap: 4px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-navigation li,
+body.woocommerce-account .ipet-account-navigation li {
+    float: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-navigation li a,
+body.woocommerce-account .ipet-account-navigation li a {
+    position: relative !important;
+    display: flex !important;
+    min-height: 46px !important;
+    gap: 11px !important;
+    align-items: center !important;
+    padding: 0 12px !important;
+    border: 0 !important;
+    border-radius: 9px !important;
+    color: #4e5966 !important;
+    background: transparent !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 1.25 !important;
+    text-decoration: none !important;
+    transition: color .16s ease, background-color .16s ease;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-navigation li a::before,
+body.woocommerce-account .ipet-account-navigation li a::before {
+    display: none !important;
+    content: none !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-navigation li a:hover,
+body.woocommerce-account .woocommerce-MyAccount-navigation li.is-active a,
+body.woocommerce-account .ipet-account-navigation li a:hover,
+body.woocommerce-account .ipet-account-navigation li.is-active a {
+    color: var(--account-primary) !important;
+    background: var(--account-primary-soft) !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-navigation li.is-active a,
+body.woocommerce-account .ipet-account-navigation li.is-active a {
+    font-weight: 500 !important;
+}
+
+body.woocommerce-account .ipet-account-menu-icon {
+    display: grid;
+    width: 21px;
+    height: 21px;
+    flex: 0 0 21px;
+    place-items: center;
+}
+
+body.woocommerce-account .ipet-account-menu-icon svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-navigation li.woocommerce-MyAccount-navigation-link--customer-logout,
+body.woocommerce-account .ipet-account-navigation li.woocommerce-MyAccount-navigation-link--customer-logout {
+    margin-top: 10px !important;
+    padding-top: 10px !important;
+    border-top: 1px solid var(--account-line-soft) !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-navigation li.woocommerce-MyAccount-navigation-link--customer-logout a,
+body.woocommerce-account .ipet-account-navigation li.woocommerce-MyAccount-navigation-link--customer-logout a {
+    color: var(--account-danger) !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-navigation li.woocommerce-MyAccount-navigation-link--customer-logout a:hover,
+body.woocommerce-account .ipet-account-navigation li.woocommerce-MyAccount-navigation-link--customer-logout a:hover {
+    background: var(--account-danger-soft) !important;
+}
+
+/* Main account surface */
+body.woocommerce-account.logged-in .entry-content > .woocommerce > .woocommerce-MyAccount-content {
+    grid-column: 2 !important;
+    float: none !important;
+    width: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: clamp(24px, 3vw, 36px) !important;
+    border: 1px solid var(--account-line) !important;
+    border-radius: 16px !important;
+    color: var(--account-muted) !important;
+    background: var(--account-surface) !important;
+    box-shadow: 0 8px 26px rgba(24, 32, 42, .04) !important;
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+}
+
+/* Match the old dashboard :has() rule so this later file can replace it. */
+body.woocommerce-account.logged-in .entry-content > .woocommerce > .woocommerce-MyAccount-content:has(.ipet-account-dashboard) {
+    padding: clamp(24px, 3vw, 36px) !important;
+    border: 1px solid var(--account-line) !important;
+    border-radius: 16px !important;
+    background: var(--account-surface) !important;
+    box-shadow: 0 8px 26px rgba(24, 32, 42, .04) !important;
+}
+
+/* Dashboard */
+body.woocommerce-account .ipet-account-welcome {
+    margin: 0 0 28px !important;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--account-line-soft);
+}
+
+body.woocommerce-account .ipet-account-kicker,
+body.woocommerce-account .ipet-account-welcome > p,
+body.woocommerce-account .ipet-account-panel-heading p {
+    margin: 0 0 7px !important;
+    color: var(--account-primary) !important;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    letter-spacing: .06em !important;
+    text-transform: uppercase !important;
+}
+
+body.woocommerce-account .ipet-account-welcome h2 {
+    margin: 0 0 8px !important;
+    color: var(--account-ink) !important;
+    font-size: clamp(27px, 3vw, 34px) !important;
+    font-weight: 500 !important;
+    letter-spacing: -.035em !important;
+    line-height: 1.15 !important;
+}
+
+body.woocommerce-account .ipet-account-welcome > span {
+    color: var(--account-muted);
+    font-size: 15px;
+    font-weight: 400;
+}
+
+body.woocommerce-account .ipet-account-quick-actions {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    margin: 0 0 28px !important;
+    padding: 0 0 28px !important;
+    border-bottom: 1px solid var(--account-line-soft) !important;
+}
+
+body.woocommerce-account .ipet-account-quick-actions a {
+    display: grid !important;
+    min-width: 0 !important;
+    min-height: 92px !important;
+    grid-template-columns: 42px minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    column-gap: 13px !important;
+    align-content: center !important;
+    align-items: center !important;
+    padding: 16px !important;
+    border: 1px solid var(--account-line) !important;
+    border-radius: 12px !important;
+    color: var(--account-primary) !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+    transform: none !important;
+    transition: border-color .16s ease, background-color .16s ease, transform .16s ease !important;
+}
+
+body.woocommerce-account .ipet-account-quick-actions a:hover {
+    border-color: #a9bee0 !important;
+    background: var(--account-primary-soft) !important;
+    transform: translateY(-1px) !important;
+}
+
+body.woocommerce-account .ipet-account-quick-actions svg {
+    width: 28px !important;
+    height: 28px !important;
+    grid-row: 1 / span 2;
+    margin: 0 !important;
+}
+
+body.woocommerce-account .ipet-account-action-title {
+    align-self: end;
+    color: var(--account-ink) !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    line-height: 1.3;
+}
+
+body.woocommerce-account .ipet-account-quick-actions a > span:last-child {
+    align-self: start;
+    margin: 3px 0 0 !important;
+    color: var(--account-muted) !important;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    line-height: 1.35;
+}
+
+body.woocommerce-account .ipet-account-dashboard-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.45fr) minmax(260px, .8fr) !important;
+    gap: 16px !important;
+}
+
+body.woocommerce-account .ipet-account-panel {
+    min-width: 0;
+    padding: 22px !important;
+    border: 1px solid var(--account-line) !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+}
+
+body.woocommerce-account .ipet-account-panel-heading {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 14px !important;
+}
+
+body.woocommerce-account .ipet-account-panel-heading h3 {
+    margin: 0 !important;
+    color: var(--account-ink) !important;
+    font-size: 19px !important;
+    font-weight: 500 !important;
+}
+
+body.woocommerce-account .ipet-account-panel-heading > a {
+    color: var(--account-primary) !important;
+    font-size: 13px;
+    font-weight: 400 !important;
+    white-space: nowrap;
+}
+
+body.woocommerce-account .ipet-account-order-list {
+    display: grid;
+}
+
+body.woocommerce-account .ipet-account-order-row {
+    display: grid !important;
+    min-height: 70px;
+    grid-template-columns: 40px minmax(0, 1fr) auto auto;
+    gap: 11px;
+    align-items: center;
+    padding: 12px 0;
+    border-top: 1px solid var(--account-line-soft);
+    color: var(--account-ink) !important;
+    text-decoration: none !important;
+}
+
+body.woocommerce-account .ipet-account-order-icon {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    place-items: center;
+    border-radius: 10px;
+    color: var(--account-primary);
+    background: var(--account-primary-soft);
+}
+
+body.woocommerce-account .ipet-account-order-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+body.woocommerce-account .ipet-account-order-copy {
+    min-width: 0;
+}
+
+body.woocommerce-account .ipet-account-order-title,
+body.woocommerce-account .ipet-account-order-copy small {
+    display: block;
+}
+
+body.woocommerce-account .ipet-account-order-title {
+    color: var(--account-ink);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+body.woocommerce-account .ipet-account-order-copy small {
+    margin-top: 2px;
+    color: var(--account-muted);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+body.woocommerce-account .ipet-order-status,
+body.woocommerce-account mark.order-status {
+    display: inline-flex;
+    min-height: 27px;
+    align-items: center;
+    padding: 0 9px;
+    border-radius: 999px;
+    color: var(--account-success) !important;
+    background: var(--account-success-soft) !important;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+body.woocommerce-account .ipet-account-order-total {
+    color: var(--account-ink) !important;
+    font-size: 14px;
+    font-weight: 500 !important;
+    white-space: nowrap;
+}
+
+body.woocommerce-account .ipet-account-empty {
+    display: flex;
+    min-height: 210px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+    text-align: center;
+}
+
+body.woocommerce-account .ipet-account-empty > span {
+    display: grid;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 13px;
+    place-items: center;
+    border-radius: 50%;
+    color: var(--account-primary);
+    background: var(--account-primary-soft);
+}
+
+body.woocommerce-account .ipet-account-empty svg {
+    width: 25px;
+    height: 25px;
+}
+
+body.woocommerce-account .ipet-account-empty h4 {
+    margin: 0 0 5px !important;
+    font-size: 17px !important;
+    font-weight: 500 !important;
+}
+
+body.woocommerce-account .ipet-account-empty p {
+    max-width: 350px;
+    margin: 0 0 16px !important;
+}
+
+body.woocommerce-account .ipet-account-profile-panel dl {
+    margin: 0 0 20px;
+}
+
+body.woocommerce-account .ipet-account-profile-panel dl > div {
+    padding: 11px 0;
+    border-top: 1px solid var(--account-line-soft);
+}
+
+body.woocommerce-account .ipet-account-profile-panel dt {
+    color: var(--account-muted);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+body.woocommerce-account .ipet-account-profile-panel dd {
+    margin: 3px 0 0;
+    overflow-wrap: anywhere;
+    color: var(--account-ink);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/* Buttons: one height, one alignment, restrained font weight. */
+body.woocommerce-account .woocommerce-MyAccount-content .button,
+body.woocommerce-account .woocommerce-MyAccount-content button.button,
+body.woocommerce-account .woocommerce-MyAccount-content input.button,
+body.woocommerce-account .woocommerce-MyAccount-content .woocommerce-button,
+body.woocommerce-account .ipet-account-secondary-button,
+body.woocommerce-account:not(.logged-in) .entry-content > .woocommerce .button {
+    display: inline-flex !important;
+    min-height: 46px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 7px;
+    margin: 0 !important;
+    padding: 0 18px !important;
+    border: 1px solid var(--account-primary) !important;
+    border-radius: 9px !important;
+    color: #fff !important;
+    background: var(--account-primary) !important;
+    box-shadow: none !important;
+    font-family: inherit !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    text-shadow: none !important;
+    cursor: pointer;
+    transition: border-color .16s ease, background-color .16s ease !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content .button:hover,
+body.woocommerce-account .woocommerce-MyAccount-content button.button:hover,
+body.woocommerce-account .woocommerce-MyAccount-content input.button:hover,
+body.woocommerce-account .woocommerce-MyAccount-content .woocommerce-button:hover,
+body.woocommerce-account .ipet-account-secondary-button:hover,
+body.woocommerce-account:not(.logged-in) .entry-content > .woocommerce .button:hover {
+    border-color: var(--account-primary-hover) !important;
+    color: #fff !important;
+    background: var(--account-primary-hover) !important;
+}
+
+body.woocommerce-account .ipet-account-secondary-button {
+    color: var(--account-primary) !important;
+    background: #fff !important;
+}
+
+body.woocommerce-account .ipet-account-secondary-button:hover {
+    color: var(--account-primary-hover) !important;
+    background: var(--account-primary-soft) !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content .button + .button,
+body.woocommerce-account .woocommerce-MyAccount-content .woocommerce-button + .woocommerce-button {
+    margin-left: 8px !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content .woocommerce-button.view {
+    min-height: 36px !important;
+    padding: 0 13px !important;
+    font-size: 13px !important;
+}
+
+/* Forms */
+body.woocommerce-account .entry-content > .woocommerce form {
+    margin: 0;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form .form-row,
+body.woocommerce-account .woocommerce-MyAccount-content form .form-row {
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 0 17px !important;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form .form-row-first,
+body.woocommerce-account .entry-content > .woocommerce form .form-row-last {
+    width: calc(50% - 7px) !important;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form .form-row-first {
+    float: left !important;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form .form-row-last {
+    float: right !important;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form .form-row-wide,
+body.woocommerce-account .entry-content > .woocommerce form .clear {
+    clear: both;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form .form-row label {
+    display: block;
+    margin: 0 0 7px;
+    color: var(--account-ink) !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    line-height: 1.35;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form .required {
+    color: var(--account-danger);
+    font-weight: 400;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form .input-text,
+body.woocommerce-account .entry-content > .woocommerce form input[type='text'],
+body.woocommerce-account .entry-content > .woocommerce form input[type='email'],
+body.woocommerce-account .entry-content > .woocommerce form input[type='tel'],
+body.woocommerce-account .entry-content > .woocommerce form input[type='password'],
+body.woocommerce-account .entry-content > .woocommerce form input[type='number'],
+body.woocommerce-account .entry-content > .woocommerce form select,
+body.woocommerce-account .entry-content > .woocommerce form textarea,
+body.woocommerce-account .entry-content > .woocommerce .select2-container .select2-selection {
+    width: 100% !important;
+    min-height: 48px !important;
+    margin: 0 !important;
+    padding: 0 13px !important;
+    border: 1px solid #cdd4dc !important;
+    border-radius: 9px !important;
+    outline: 0 !important;
+    color: var(--account-ink) !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    font-family: inherit !important;
+    font-size: 15px !important;
+    font-weight: 400 !important;
+    line-height: 46px !important;
+    transition: border-color .16s ease, box-shadow .16s ease !important;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form textarea {
+    min-height: 120px !important;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    line-height: 1.5 !important;
+    resize: vertical;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form .input-text:focus,
+body.woocommerce-account .entry-content > .woocommerce form input:focus,
+body.woocommerce-account .entry-content > .woocommerce form select:focus,
+body.woocommerce-account .entry-content > .woocommerce form textarea:focus,
+body.woocommerce-account .entry-content > .woocommerce .select2-container--focus .select2-selection {
+    border-color: var(--account-primary) !important;
+    box-shadow: 0 0 0 3px rgba(24, 95, 199, .12) !important;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form .woocommerce-invalid .input-text,
+body.woocommerce-account .entry-content > .woocommerce form .woocommerce-invalid input,
+body.woocommerce-account .entry-content > .woocommerce form .woocommerce-invalid select {
+    border-color: var(--account-danger) !important;
+}
+
+body.woocommerce-account .entry-content > .woocommerce .select2-container .select2-selection__rendered {
+    padding: 0 !important;
+    line-height: 46px !important;
+}
+
+body.woocommerce-account .entry-content > .woocommerce .select2-container .select2-selection__arrow {
+    height: 46px !important;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form .password-input {
+    display: block;
+    width: 100%;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form .show-password-input {
+    top: 15px !important;
+    right: 14px !important;
+    color: var(--account-primary);
+    font-size: 0;
+    cursor: pointer;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form .show-password-input::after {
+    content: 'Show';
+    font-family: inherit !important;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form .show-password-input.display-password::after {
+    content: 'Hide';
+}
+
+body.woocommerce-account .entry-content > .woocommerce fieldset {
+    margin: 8px 0 22px !important;
+    padding: 22px 20px 4px !important;
+    border: 1px solid var(--account-line) !important;
+    border-radius: 12px !important;
+    background: #fafbfc !important;
+}
+
+body.woocommerce-account .entry-content > .woocommerce fieldset legend {
+    width: auto;
+    margin: 0;
+    padding: 0 8px !important;
+    border: 0 !important;
+    background: #fafbfc !important;
+    font-size: 15px !important;
+}
+
+body.woocommerce-account .woocommerce-form__label-for-checkbox {
+    display: inline-flex !important;
+    gap: 8px;
+    align-items: center;
+}
+
+body.woocommerce-account .entry-content > .woocommerce input[type='checkbox'],
+body.woocommerce-account .entry-content > .woocommerce input[type='radio'] {
+    width: 17px;
+    height: 17px;
+    margin: 0;
+    accent-color: var(--account-primary);
+}
+
+body.woocommerce-account .entry-content > .woocommerce em {
+    display: block;
+    margin-top: 6px;
+    color: var(--account-muted);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+body.woocommerce-account .entry-content > .woocommerce .woocommerce-password-strength {
+    margin-top: 8px;
+    padding: 8px 10px;
+    border: 1px solid #efd1cc;
+    border-radius: 8px;
+    color: #7d3831;
+    background: var(--account-danger-soft);
+    font-size: 12px;
+    font-weight: 400;
+    text-align: left;
+}
+
+body.woocommerce-account .entry-content > .woocommerce .woocommerce-password-strength.good {
+    border-color: #ead7a4;
+    color: #775c13;
+    background: #fff9e8;
+}
+
+body.woocommerce-account .entry-content > .woocommerce .woocommerce-password-strength.strong {
+    border-color: #bfe4d1;
+    color: #275d45;
+    background: var(--account-success-soft);
+}
+
+body.woocommerce-account .entry-content > .woocommerce .woocommerce-password-hint {
+    display: block;
+    margin-top: 7px;
+    color: var(--account-muted);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+/* Tables and order data */
+body.woocommerce-account .woocommerce-MyAccount-content .shop_table,
+body.woocommerce-account .woocommerce-MyAccount-content table.shop_table,
+body.woocommerce-account .woocommerce-MyAccount-content table.account-orders-table {
+    width: 100% !important;
+    margin: 0 0 22px !important;
+    border: 1px solid var(--account-line) !important;
+    border-spacing: 0 !important;
+    border-collapse: separate !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    font-size: 14px !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content table.shop_table thead,
+body.woocommerce-account .woocommerce-MyAccount-content table.account-orders-table thead {
+    background: #f7f9fb !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content table.shop_table th,
+body.woocommerce-account .woocommerce-MyAccount-content table.shop_table td,
+body.woocommerce-account .woocommerce-MyAccount-content table.account-orders-table th,
+body.woocommerce-account .woocommerce-MyAccount-content table.account-orders-table td {
+    padding: 15px 14px !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--account-line-soft) !important;
+    color: var(--account-ink);
+    background: transparent !important;
+    font-weight: 400 !important;
+    line-height: 1.45;
+    text-align: left;
+    vertical-align: middle;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content table.shop_table th,
+body.woocommerce-account .woocommerce-MyAccount-content table.account-orders-table th {
+    color: #4c5662;
+    font-size: 12px;
+    font-weight: 500 !important;
+    letter-spacing: .02em;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content table.shop_table tr:last-child td,
+body.woocommerce-account .woocommerce-MyAccount-content table.account-orders-table tr:last-child td {
+    border-bottom: 0 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content table.shop_table tfoot th,
+body.woocommerce-account .woocommerce-MyAccount-content table.shop_table tfoot td {
+    background: #fafbfc !important;
+}
+
+body.woocommerce-account .woocommerce-orders-table__cell-order-actions {
+    white-space: nowrap;
+}
+
+body.woocommerce-account .woocommerce-orders-table__cell-order-number a {
+    font-weight: 500 !important;
+    text-decoration: none;
+}
+
+body.woocommerce-account .woocommerce-table__product-name a {
+    color: var(--account-ink) !important;
+    font-weight: 400 !important;
+}
+
+body.woocommerce-account .woocommerce-table__product-name .wc-item-meta {
+    margin: 7px 0 0;
+    padding: 0;
+    color: var(--account-muted);
+    font-size: 12px;
+}
+
+body.woocommerce-account .woocommerce-table__product-name .wc-item-meta li {
+    margin: 2px 0;
+}
+
+body.woocommerce-account .woocommerce-order-details,
+body.woocommerce-account .woocommerce-customer-details {
+    margin: 0 0 28px;
+}
+
+body.woocommerce-account .woocommerce-order-details__title,
+body.woocommerce-account .woocommerce-column__title {
+    margin-bottom: 14px !important;
+}
+
+/* Addresses and payment methods */
+body.woocommerce-account .woocommerce-Addresses,
+body.woocommerce-account .u-columns.woocommerce-Addresses {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    margin: 0 !important;
+}
+
+body.woocommerce-account .woocommerce-Addresses::before,
+body.woocommerce-account .woocommerce-Addresses::after {
+    display: none !important;
+    content: none !important;
+}
+
+body.woocommerce-account .woocommerce-Address,
+body.woocommerce-account .woocommerce-Addresses .col-1,
+body.woocommerce-account .woocommerce-Addresses .col-2 {
+    float: none !important;
+    width: auto !important;
+    min-width: 0;
+    margin: 0 !important;
+    padding: 20px !important;
+    border: 1px solid var(--account-line) !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+}
+
+body.woocommerce-account .woocommerce-Address-title {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 13px !important;
+    padding: 0 0 12px;
+    border-bottom: 1px solid var(--account-line-soft);
+}
+
+body.woocommerce-account .woocommerce-Address-title h2,
+body.woocommerce-account .woocommerce-Address-title h3 {
+    float: none !important;
+    margin: 0 !important;
+    font-size: 18px !important;
+}
+
+body.woocommerce-account .woocommerce-Address-title .edit {
+    float: none !important;
+    font-size: 13px;
+    font-weight: 400 !important;
+}
+
+body.woocommerce-account .woocommerce-Address address,
+body.woocommerce-account .woocommerce-customer-details address {
+    padding: 0 !important;
+    border: 0 !important;
+    color: var(--account-muted);
+    font-style: normal;
+    line-height: 1.75;
+}
+
+body.woocommerce-account .woocommerce-customer-details address {
+    padding: 20px !important;
+    border: 1px solid var(--account-line) !important;
+    border-radius: 12px !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-paymentMethods .woocommerce-PaymentMethod--actions {
+    text-align: right;
+}
+
+body.woocommerce-account .woocommerce-PaymentMethod--default {
+    color: var(--account-success);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Notices and empty states */
+body.woocommerce-account .woocommerce-message,
+body.woocommerce-account .woocommerce-info,
+body.woocommerce-account .woocommerce-error {
+    position: relative;
+    display: block !important;
+    min-height: 54px;
+    margin: 0 0 20px !important;
+    padding: 15px 18px 15px 46px !important;
+    border: 1px solid #c9dcfa !important;
+    border-top: 1px solid #c9dcfa !important;
+    border-radius: 10px !important;
+    color: #31506f !important;
+    background: #f3f7fd !important;
+    box-shadow: none !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 1.55 !important;
+    list-style: none !important;
+}
+
+body.woocommerce-account .woocommerce-message::before,
+body.woocommerce-account .woocommerce-info::before,
+body.woocommerce-account .woocommerce-error::before {
+    position: absolute !important;
+    top: 15px !important;
+    left: 18px !important;
+    color: var(--account-primary) !important;
+    font-size: 16px !important;
+}
+
+body.woocommerce-account .woocommerce-info::before {
+    content: 'i' !important;
+}
+
+body.woocommerce-account .woocommerce-message {
+    border-color: #bfe4d1 !important;
+    color: #275d45 !important;
+    background: #f0faf5 !important;
+}
+
+body.woocommerce-account .woocommerce-message::before {
+    content: '✓' !important;
+    color: var(--account-success) !important;
+}
+
+body.woocommerce-account .woocommerce-error {
+    border-color: #f0c8c2 !important;
+    color: #7d3831 !important;
+    background: #fff5f3 !important;
+}
+
+body.woocommerce-account .woocommerce-error::before {
+    content: '!' !important;
+    color: var(--account-danger) !important;
+}
+
+body.woocommerce-account .woocommerce-message .button,
+body.woocommerce-account .woocommerce-info .button {
+    float: right;
+    min-height: 32px !important;
+    margin: -5px 0 -5px 16px !important;
+    padding: 0 11px !important;
+    font-size: 12px !important;
+}
+
+body.woocommerce-account .woocommerce-pagination {
+    margin-top: 22px;
+}
+
+body.woocommerce-account .woocommerce-pagination ul {
+    display: flex !important;
+    gap: 8px;
+    justify-content: flex-end;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+body.woocommerce-account .woocommerce-pagination li {
+    border: 0 !important;
+}
+
+body.woocommerce-account .woocommerce-pagination a,
+body.woocommerce-account .woocommerce-pagination span {
+    display: grid !important;
+    min-width: 38px;
+    height: 38px;
+    place-items: center;
+    padding: 0 11px !important;
+    border: 1px solid var(--account-line) !important;
+    border-radius: 8px;
+    color: var(--account-ink) !important;
+    background: #fff !important;
+    font-weight: 400 !important;
+}
+
+body.woocommerce-account .woocommerce-pagination .current {
+    border-color: var(--account-primary) !important;
+    color: #fff !important;
+    background: var(--account-primary) !important;
+}
+
+/* Logged-out account, login, register and password reset. */
+body.woocommerce-account:not(.logged-in) .content-shell > .container.content-card {
+    width: min(1100px, calc(100% - 48px)) !important;
+}
+
+body.woocommerce-account:not(.logged-in) .entry-content > .woocommerce {
+    display: block !important;
+}
+
+body.woocommerce-account:not(.logged-in) .content-shell .content-card > h1 {
+    text-align: center;
+}
+
+body.woocommerce-account:not(.logged-in) .u-columns.col2-set,
+body.woocommerce-account:not(.logged-in) #customer_login {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 20px !important;
+    margin: 0 !important;
+}
+
+body.woocommerce-account:not(.logged-in) .u-columns.col2-set::before,
+body.woocommerce-account:not(.logged-in) .u-columns.col2-set::after {
+    display: none !important;
+    content: none !important;
+}
+
+body.woocommerce-account:not(.logged-in) .u-column1,
+body.woocommerce-account:not(.logged-in) .u-column2,
+body.woocommerce-account:not(.logged-in) .col-1,
+body.woocommerce-account:not(.logged-in) .col-2 {
+    float: none !important;
+    width: auto !important;
+    min-width: 0;
+    margin: 0 !important;
+    padding: clamp(24px, 3vw, 34px) !important;
+    border: 1px solid var(--account-line) !important;
+    border-radius: 16px !important;
+    background: #fff !important;
+    box-shadow: 0 8px 26px rgba(24, 32, 42, .04);
+}
+
+body.woocommerce-account:not(.logged-in) .u-column1 > h2,
+body.woocommerce-account:not(.logged-in) .u-column2 > h2 {
+    margin: 0 0 22px !important;
+    color: var(--account-ink) !important;
+    font-size: 26px !important;
+    font-weight: 500 !important;
+}
+
+body.woocommerce-account .entry-content > .woocommerce form.login,
+body.woocommerce-account .entry-content > .woocommerce form.register,
+body.woocommerce-account .entry-content > .woocommerce form.lost_reset_password {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+body.woocommerce-account:not(.logged-in) form.lost_reset_password {
+    width: min(640px, 100%);
+    margin: 0 auto !important;
+    padding: clamp(24px, 4vw, 38px) !important;
+    border: 1px solid var(--account-line) !important;
+    border-radius: 16px !important;
+    background: #fff !important;
+}
+
+body.woocommerce-account .woocommerce-form-login__rememberme {
+    display: inline-flex !important;
+    min-height: 46px;
+    gap: 8px;
+    align-items: center;
+    margin: 0 14px 0 0 !important;
+}
+
+body.woocommerce-account .woocommerce-LostPassword {
+    margin: 14px 0 0 !important;
+    font-size: 13px;
+}
+
+body.woocommerce-account .woocommerce-privacy-policy-text {
+    margin-top: 3px;
+    color: var(--account-muted);
+    font-size: 12px;
+}
+
+/* Logout confirmation */
+body.woocommerce-account .ipet-logout-dialog[hidden] {
+    display: none !important;
+}
+
+body.woocommerce-account .ipet-logout-dialog {
+    position: fixed;
+    z-index: 1000000;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+}
+
+body.woocommerce-account .ipet-logout-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 32, .55);
+    backdrop-filter: blur(3px);
+}
+
+body.woocommerce-account .ipet-logout-modal {
+    position: relative;
+    z-index: 1;
+    width: min(430px, 100%);
+    padding: 30px;
+    border: 1px solid var(--account-line);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 24px 70px rgba(15, 23, 32, .22);
+    text-align: center;
+}
+
+body.woocommerce-account .ipet-logout-modal-icon {
+    display: grid;
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 15px;
+    place-items: center;
+    border-radius: 50%;
+    color: var(--account-danger);
+    background: var(--account-danger-soft);
+    font-size: 24px;
+    font-weight: 400;
+}
+
+body.woocommerce-account .ipet-logout-modal h2 {
+    margin: 0 0 9px;
+    color: var(--account-ink);
+    font-size: 23px;
+    font-weight: 500;
+}
+
+body.woocommerce-account .ipet-logout-modal p {
+    margin: 0;
+    color: var(--account-muted);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.55;
+}
+
+body.woocommerce-account .ipet-logout-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+body.woocommerce-account .ipet-logout-actions button,
+body.woocommerce-account .ipet-logout-actions a {
+    display: flex;
+    min-height: 46px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 15px;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+body.woocommerce-account .ipet-logout-cancel {
+    border: 1px solid var(--account-line);
+    color: var(--account-ink);
+    background: #fff;
+}
+
+body.woocommerce-account .ipet-logout-confirm {
+    border: 1px solid var(--account-danger);
+    color: #fff !important;
+    background: var(--account-danger);
+}
+
+body.ipet-dialog-open {
+    overflow: hidden;
+}
+
+@media (max-width: 1050px) {
+    body.woocommerce-account .entry-content > .woocommerce {
+        grid-template-columns: 224px minmax(0, 1fr) !important;
+        gap: 18px !important;
+    }
+
+    body.woocommerce-account.logged-in .entry-content > .woocommerce > .woocommerce-MyAccount-navigation,
+    body.woocommerce-account.logged-in .entry-content > .woocommerce > .ipet-account-navigation {
+        padding: 16px !important;
+    }
+
+    body.woocommerce-account .ipet-account-dashboard-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 767px) {
+    body.woocommerce-account .content-shell {
+        padding: 24px 0 52px !important;
+    }
+
+    body.woocommerce-account .content-shell > .container.content-card,
+    body.woocommerce-account:not(.logged-in) .content-shell > .container.content-card {
+        width: calc(100% - 24px) !important;
+    }
+
+    body.woocommerce-account .content-shell .content-card > h1,
+    body.woocommerce-account .content-shell > .container.content-card > h1 {
+        margin-bottom: 18px !important;
+        font-size: 29px !important;
+    }
+
+    body.woocommerce-account .entry-content > .woocommerce {
+        display: block !important;
+    }
+
+    body.woocommerce-account.logged-in .entry-content > .woocommerce > .woocommerce-MyAccount-navigation,
+    body.woocommerce-account.logged-in .entry-content > .woocommerce > .ipet-account-navigation {
+        position: static !important;
+        width: 100% !important;
+        margin: 0 0 14px !important;
+        padding: 14px !important;
+        border-radius: 13px !important;
+    }
+
+    body.woocommerce-account .ipet-account-profile {
+        margin-bottom: 10px !important;
+        padding-bottom: 12px !important;
+        border-bottom: 0 !important;
+    }
+
+    body.woocommerce-account .ipet-account-menu-toggle {
+        display: flex !important;
+        width: 100%;
+        min-height: 46px;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0;
+        padding: 0 12px;
+        border: 1px solid var(--account-line);
+        border-radius: 9px;
+        color: var(--account-ink);
+        background: #fff;
+        font: inherit;
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    body.woocommerce-account .ipet-account-menu-toggle svg {
+        width: 19px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        transition: transform .16s ease;
+    }
+
+    body.woocommerce-account .ipet-account-navigation.is-open .ipet-account-menu-toggle svg {
+        transform: rotate(180deg);
+    }
+
+    body.woocommerce-account .ipet-account-navigation ul {
+        display: none !important;
+        margin-top: 8px !important;
+    }
+
+    body.woocommerce-account .ipet-account-navigation.is-open ul {
+        display: grid !important;
+    }
+
+    body.woocommerce-account.logged-in .entry-content > .woocommerce > .woocommerce-MyAccount-content {
+        width: 100% !important;
+        padding: 22px !important;
+        border-radius: 13px !important;
+    }
+
+    body.woocommerce-account.logged-in .entry-content > .woocommerce > .woocommerce-MyAccount-content:has(.ipet-account-dashboard) {
+        padding: 22px !important;
+        border: 1px solid var(--account-line) !important;
+        border-radius: 13px !important;
+        background: var(--account-surface) !important;
+    }
+
+    body.woocommerce-account .ipet-account-quick-actions {
+        grid-template-columns: 1fr !important;
+    }
+
+    body.woocommerce-account .ipet-account-order-row {
+        grid-template-columns: 38px minmax(0, 1fr) auto;
+    }
+
+    body.woocommerce-account .ipet-account-order-total {
+        grid-column: 2;
+    }
+
+    body.woocommerce-account .ipet-order-status {
+        grid-column: 3;
+        grid-row: 1 / span 2;
+    }
+
+    body.woocommerce-account:not(.logged-in) .u-columns.col2-set,
+    body.woocommerce-account:not(.logged-in) #customer_login,
+    body.woocommerce-account .woocommerce-Addresses,
+    body.woocommerce-account .u-columns.woocommerce-Addresses {
+        grid-template-columns: 1fr !important;
+    }
+
+    body.woocommerce-account .woocommerce-MyAccount-content {
+        overflow-x: auto;
+    }
+
+    body.woocommerce-account .woocommerce-MyAccount-content table.shop_table,
+    body.woocommerce-account .woocommerce-MyAccount-content table.account-orders-table {
+        min-width: 640px;
+    }
+}
+
+@media (max-width: 520px) {
+    body.woocommerce-account .entry-content > .woocommerce form .form-row-first,
+    body.woocommerce-account .entry-content > .woocommerce form .form-row-last {
+        float: none !important;
+        width: 100% !important;
+    }
+
+    body.woocommerce-account .ipet-account-panel {
+        padding: 18px !important;
+    }
+
+    body.woocommerce-account .ipet-account-panel-heading {
+        align-items: flex-end;
+    }
+
+    body.woocommerce-account .ipet-account-order-row {
+        grid-template-columns: 36px minmax(0, 1fr);
+    }
+
+    body.woocommerce-account .ipet-order-status,
+    body.woocommerce-account .ipet-account-order-total {
+        grid-column: 2;
+        grid-row: auto;
+        justify-self: start;
+    }
+
+    body.woocommerce-account .ipet-logout-modal {
+        padding: 26px 20px 20px;
+    }
+
+    body.woocommerce-account .ipet-logout-actions {
+        grid-template-columns: 1fr;
+    }
+
+    body.woocommerce-account .woocommerce-message .button,
+    body.woocommerce-account .woocommerce-info .button {
+        float: none;
+        width: 100%;
+        margin: 10px 0 0 !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.woocommerce-account .entry-content > .woocommerce *,
+    body.woocommerce-account .entry-content > .woocommerce *::before,
+    body.woocommerce-account .entry-content > .woocommerce *::after,
+    body.woocommerce-account .ipet-logout-dialog *,
+    body.woocommerce-account .ipet-logout-dialog *::before,
+    body.woocommerce-account .ipet-logout-dialog *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}

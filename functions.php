@@ -93,15 +93,25 @@ function puppy_market_assets() {
         ));
     }
 
-    if (function_exists('is_account_page') && is_account_page() && is_user_logged_in()) {
-        $account_script_path = get_template_directory() . '/assets/account.js';
-        wp_enqueue_script(
+    if (function_exists('is_account_page') && is_account_page()) {
+        $account_style_path = get_template_directory() . '/assets/account.css';
+        wp_enqueue_style(
             'puppy-market-account',
-            get_template_directory_uri() . '/assets/account.js',
-            array(),
-            file_exists($account_script_path) ? filemtime($account_script_path) : $style_version,
-            true
+            get_template_directory_uri() . '/assets/account.css',
+            array('puppy-market-storefront-v2'),
+            file_exists($account_style_path) ? filemtime($account_style_path) : $style_version
         );
+
+        if (is_user_logged_in()) {
+            $account_script_path = get_template_directory() . '/assets/account.js';
+            wp_enqueue_script(
+                'puppy-market-account',
+                get_template_directory_uri() . '/assets/account.js',
+                array(),
+                file_exists($account_script_path) ? filemtime($account_script_path) : $style_version,
+                true
+            );
+        }
     }
 
     if (function_exists('is_cart') && is_cart()) {
@@ -220,6 +230,41 @@ function puppy_market_assets() {
     }
 }
 add_action('wp_enqueue_scripts', 'puppy_market_assets');
+
+/**
+ * The account area has a complete, page-scoped design system in account.css.
+ * Keep WooCommerce's stock CSS away from account routes so its floats, tables,
+ * form spacing and button rules cannot override that design.
+ */
+function puppy_market_account_disable_woocommerce_styles($styles) {
+    if (function_exists('is_account_page') && is_account_page()) {
+        return array();
+    }
+
+    return $styles;
+}
+add_filter('woocommerce_enqueue_styles', 'puppy_market_account_disable_woocommerce_styles', 20);
+
+function puppy_market_account_dequeue_block_styles() {
+    if (!function_exists('is_account_page') || !is_account_page()) {
+        return;
+    }
+
+    $account_default_style_handles = array(
+        'woocommerce-layout',
+        'woocommerce-smallscreen',
+        'woocommerce-general',
+        'woocommerce-blocktheme',
+        'wc-blocks-style',
+        'wc-blocks-vendors-style',
+        'wc-blocks-packages-style',
+    );
+
+    foreach ($account_default_style_handles as $style_handle) {
+        wp_dequeue_style($style_handle);
+    }
+}
+add_action('wp_enqueue_scripts', 'puppy_market_account_dequeue_block_styles', 100);
 
 /** A small, consistent SVG icon set for the WooCommerce account center. */
 function puppy_market_account_icon($name) {
@@ -487,3 +532,4 @@ function puppy_market_no_products_message() {
     echo '<div class="empty-state catalog-empty"><span>🐾</span><h2>No products in this category yet</h2><p>We are adding more essentials. Explore another category for now.</p><a class="button" href="' . esc_url(puppy_market_catalog_url()) . '">View all products</a></div>';
 }
 add_action('woocommerce_no_products_found', 'puppy_market_no_products_message');
+

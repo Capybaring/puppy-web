@@ -96,9 +96,6 @@ $puppy_cart_item_count = WC()->cart->get_cart_contents_count();
 												printf( '<a href="%s">%s</a>', esc_url( $product_permalink ), $thumbnail ); // PHPCS: XSS ok.
 											}
 											?>
-											<?php if ( $_product->is_on_sale() ) : ?>
-												<span class="puppy-cart-deal-badge">Deal</span>
-											<?php endif; ?>
 										</div>
 									</td>
 
@@ -291,9 +288,8 @@ $puppy_cart_item_count = WC()->cart->get_cart_contents_count();
 			foreach ( $puppy_recent as $puppy_rec_product ) :
 				get_template_part( 'template-parts/product-card', null, array(
 					'product'    => $puppy_rec_product,
-					'badge'      => $puppy_rec_product->is_on_sale() ? 'Sale' : '',
-					'card_class' => 'puppy-cart-recommendation',
-					'show_details' => false,
+					'badge'      => $puppy_rec_product->is_on_sale() ? 'Sale' : 'Best seller',
+					'card_class' => 'best-seller-card',
 				) );
 			endforeach;
 			?>

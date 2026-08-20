@@ -2,21 +2,24 @@
 .shop-shell .category-hero > span { display: none; }
 
 /* Use the same shared product-card geometry as the homepage component. */
-.shop-shell .shop-results .woocommerce ul.products li.product {
+.shop-shell .shop-results ul.products li.product {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
   padding: 12px;
   border: 0;
   border-radius: 12px;
   background: #f2f3f5;
   overflow: hidden;
 }
-.shop-shell .shop-results .woocommerce ul.products li.product:hover { border-color: transparent; background: #eceff3; }
-.shop-shell .shop-results .woocommerce ul.products li.product .product-card-media {
+.shop-shell .shop-results ul.products li.product:hover { border-color: transparent; background: #eceff3; }
+.shop-shell .shop-results ul.products li.product .product-card-media {
   margin: -12px -12px 8px;
   overflow: hidden;
   border-radius: 12px 12px 0 0;
 }
-.shop-shell .shop-results .woocommerce ul.products li.product .product-image,
-.shop-shell .shop-results .woocommerce ul.products li.product a img {
+.shop-shell .shop-results ul.products li.product .product-image,
+.shop-shell .shop-results ul.products li.product a img {
   width: 100%;
   height: 230px;
   margin: 0;
@@ -31,7 +34,7 @@
   font-weight: 500;
   letter-spacing: .03em;
 }
-.shop-shell .shop-results .woocommerce ul.products li.product h3 {
+.shop-shell .shop-results ul.products li.product h3 {
   min-height: 40px;
   margin: 3px 0 4px;
   font-size: 15px;
@@ -50,13 +53,13 @@
   margin: 1px 0;
   align-items: center;
 }
-.shop-shell .shop-results .woocommerce ul.products li.product .price,
-.shop-shell .shop-results .woocommerce ul.products li.product .price ins {
+.shop-shell .shop-results ul.products li.product .price,
+.shop-shell .shop-results ul.products li.product .price ins {
   margin: 0;
   font-size: 17px;
   font-weight: 650;
 }
-.shop-shell .shop-results .woocommerce ul.products li.product .price del { font-weight: 400; }
+.shop-shell .shop-results ul.products li.product .price del { font-weight: 400; }
 .shop-shell .shop-results .product-card-saving {
   min-height: 0;
   margin: 0;
@@ -68,23 +71,26 @@
   font-weight: 400;
   line-height: 1.25;
 }
-.shop-shell .shop-results .woocommerce ul.products li.product .product-cart-button {
-  display: inline-flex;
+.shop-shell .shop-results ul.products li.product a.product-cart-button.button {
+  display: inline-flex !important;
   width: 100%;
   min-height: 40px !important;
-  height: 40px;
-  align-items: center;
-  justify-content: center;
-  margin-top: 4px !important;
+  height: 40px !important;
+  max-height: 40px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 40px;
+  margin-top: auto !important;
   padding: 0 20px !important;
   border: 1.5px solid #e23a22 !important;
   color: #cf2f19 !important;
   background: #fff !important;
   font-weight: 500;
-  line-height: 1;
-  text-align: center;
+  line-height: 1.2 !important;
+  text-align: center !important;
+  white-space: nowrap;
 }
-.shop-shell .shop-results .woocommerce ul.products li.product .product-cart-button:hover {
+.shop-shell .shop-results ul.products li.product a.product-cart-button.button:hover {
   color: #fff !important;
   background: #df3b23 !important;
 }
@@ -105,14 +111,14 @@
 .shop-shell .shop-sidebar .puppy-context-filter legend { font-size: 17px; }
 
 @media (max-width: 760px) {
-  .shop-shell .shop-results .woocommerce ul.products li.product .product-image,
-  .shop-shell .shop-results .woocommerce ul.products li.product a img { height: 195px; }
+  .shop-shell .shop-results ul.products li.product .product-image,
+  .shop-shell .shop-results ul.products li.product a img { height: 195px; }
 }
 
 @media (max-width: 480px) {
-  .shop-shell .shop-results .woocommerce ul.products li.product .product-image,
-  .shop-shell .shop-results .woocommerce ul.products li.product a img { height: 155px; }
-  .shop-shell .shop-results .woocommerce ul.products li.product h3 {
+  .shop-shell .shop-results ul.products li.product .product-image,
+  .shop-shell .shop-results ul.products li.product a img { height: 155px; }
+  .shop-shell .shop-results ul.products li.product h3 {
     min-height: 38px;
     font-size: 13px;
   }

@@ -345,9 +345,9 @@ body.blog main.section > .container > article:first-of-type { border-top: 0; }
    ========================================================================== */
 
 :root {
-  --primary: #08246f;
+  --primary: #002999;
   --primary-dark: #183da6;
-  --primary-deep: #08246f;
+  --primary-deep: rgb(0, 43, 143);
   --primary-soft: #eaf2ff;
   --sky-soft: #dff1ff;
   --lime-soft: #ddffba;
@@ -951,29 +951,75 @@ body:not(.woocommerce-cart) .woocommerce ul.products li.product .product-cart-bu
   font-weight: 500;
 }
 body:not(.woocommerce-cart) .woocommerce ul.products li.product .product-cart-button:hover { color: #fff !important; background: #df3b23 !important; }
-body.woocommerce-cart .puppy-cart-recommendation {
-  flex-basis: 230px;
-  padding: 10px;
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card {
+  display: flex;
+  width: 230px;
+  min-width: 0;
+  flex: 0 0 230px;
+  flex-direction: column;
+  align-self: stretch;
+  margin: 0;
+  padding: 12px;
+  border: 0;
   border-radius: 12px;
   background: #f2f3f5;
   overflow: hidden;
+  scroll-snap-align: start;
 }
-body.woocommerce-cart .puppy-cart-recommendation .product-card-media { margin: -10px -10px 8px; }
-body.woocommerce-cart .puppy-cart-recommendation .product-image {
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card:hover { background: #eceff3; }
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-card-media {
+  margin: -12px -12px 8px;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+}
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-image {
   width: auto;
   height: 230px;
+  margin-bottom: 0;
   border-radius: 12px 12px 0 0;
   background: #fff;
 }
-body.woocommerce-cart .puppy-cart-recommendation .product-image img { object-fit: contain; }
-body.woocommerce-cart .puppy-cart-recommendation .product-cart-button {
-  margin-top: 4px;
-  border: 1.5px solid #e23a22;
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-image img { object-fit: contain; }
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-card-brand {
+  min-height: 0;
+  margin: 4px 0 2px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .03em;
+}
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card h3 {
+  min-height: 40px;
+  margin: 3px 0 4px;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.32;
+}
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card h3 a { font-weight: inherit; }
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-card-rating { min-height: 20px; gap: 5px; font-weight: 400; }
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-card-rating strong { font-weight: 500; }
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-card-rating.is-empty { display: none; }
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-price-row { min-height: 28px; margin: 1px 0; align-items: center; }
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .price,
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .price ins { font-size: 17px; font-weight: 650; }
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .price del { font-weight: 400; }
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-card-saving { min-height: 0; margin: 0; font-weight: 500; }
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-card-availability {
+  min-height: 0;
+  margin: 2px 0 4px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-cart-button {
+  width: 100%;
+  min-height: 40px;
+  margin-top: auto;
+  border: 1.5px solid #e23a22 !important;
   color: #cf2f19 !important;
-  background: #fff;
+  background: #fff !important;
   font-weight: 500;
 }
-body.woocommerce-cart .puppy-cart-recommendation .product-cart-button:hover { color: #fff !important; background: #df3b23; }
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-cart-button:hover { color: #fff !important; background: #df3b23 !important; }
+body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-card-badge { font-weight: 600; }
 
 /* Small supporting text stays regular; prominent headings retain emphasis. */
 body.home .sequence-copy p,
@@ -1025,8 +1071,8 @@ body.home .product > p { font-weight: 400; }
   body.home .product-carousel-shell .product-image,
   body:not(.woocommerce-cart) .woocommerce ul.products li.product .product-image,
   body:not(.woocommerce-cart) .woocommerce ul.products li.product a img { height: 195px; }
-  body.woocommerce-cart .puppy-cart-recommendation .product-image { height: 195px; }
-  body.woocommerce-cart .puppy-cart-recommendation { flex-basis: 195px; }
+  body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-image { height: 195px; }
+  body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card { width: 195px; flex-basis: 195px; }
 }
 
 @media (max-width: 480px) {
@@ -1040,8 +1086,15 @@ body.home .product > p { font-weight: 400; }
   body.home .product-carousel-shell .product-image,
   body:not(.woocommerce-cart) .woocommerce ul.products li.product .product-image,
   body:not(.woocommerce-cart) .woocommerce ul.products li.product a img { height: 155px; }
-  body.woocommerce-cart .puppy-cart-recommendation .product-image { height: 155px; }
-  body.woocommerce-cart .puppy-cart-recommendation { flex-basis: 155px; }
+  body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card {
+    width: 155px;
+    flex-basis: 155px;
+    padding: 9px;
+  }
+  body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-card-media { margin: -9px -9px 8px; }
+  body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-image { height: 155px; }
+  body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card h3 { min-height: 38px; font-size: 13px; }
+  body.woocommerce-cart .puppy-cart-recommendations-rail .best-seller-card .product-card-availability { font-size: 11px; }
   body.home .product h3 { min-height: 38px; font-size: 13px; }
   body.home .product-card-availability { font-size: 11px; }
 }
