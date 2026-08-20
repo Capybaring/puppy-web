@@ -8,6 +8,7 @@
  * - badges            (array)   extra overlay ribbon texts stacked below badge
  * - show_description  (bool)    show a trimmed short description line
  * - show_details      (bool)    show brand, rating, saving and stock details
+ * - show_reviews      (bool)    show the rating/review row
  * - show_sale_label   (bool)    show the inline Sale label when no Sale badge exists
  * - card_class        (string)  extra class(es) added to the wrapper (ignored when bare)
  * - bare              (bool)    when true, output only the inner markup with no
@@ -27,6 +28,7 @@ if (!$puppy_card_product) return;
 $puppy_card_badge = isset($args['badge']) ? $args['badge'] : '';
 $puppy_card_show_description = !empty($args['show_description']);
 $puppy_card_show_details = !array_key_exists('show_details', $args) || !empty($args['show_details']);
+$puppy_card_show_reviews = !array_key_exists('show_reviews', $args) || !empty($args['show_reviews']);
 $puppy_card_show_sale_label = !array_key_exists('show_sale_label', $args) || !empty($args['show_sale_label']);
 $puppy_card_class = isset($args['card_class']) ? ' ' . sanitize_html_class($args['card_class']) : '';
 $puppy_card_bare = !empty($args['bare']);
@@ -72,13 +74,13 @@ if ($puppy_card_product->is_type('simple') && $puppy_card_product->is_on_sale() 
   <?php if ($puppy_card_show_details && $puppy_card_brand_name) : ?><p class="product-card-brand"><?php echo esc_html($puppy_card_brand_name); ?></p><?php endif; ?>
   <h3><a href="<?php echo esc_url($puppy_card_url); ?>"><?php echo esc_html($puppy_card_product->get_name()); ?></a></h3>
   <?php if ($puppy_card_show_description) : ?><p><?php echo esc_html(wp_trim_words($puppy_card_product->get_short_description() ?: $puppy_card_product->get_description(), 10)); ?></p><?php endif; ?>
-  <?php if ($puppy_card_show_details && $puppy_card_review_count > 0 && function_exists('wc_get_rating_html')) : ?>
+  <?php if ($puppy_card_show_details && $puppy_card_show_reviews && $puppy_card_review_count > 0 && function_exists('wc_get_rating_html')) : ?>
     <div class="product-card-rating" aria-label="<?php echo esc_attr(sprintf('%1$s out of 5 stars from %2$d reviews', number_format_i18n($puppy_card_rating, 1), $puppy_card_review_count)); ?>">
       <strong><?php echo esc_html(number_format_i18n($puppy_card_rating, 1)); ?></strong>
       <?php echo wp_kses_post(wc_get_rating_html($puppy_card_rating, $puppy_card_review_count)); ?>
       <span><?php echo esc_html(number_format_i18n($puppy_card_review_count)); ?></span>
     </div>
-  <?php elseif ($puppy_card_show_details) : ?>
+  <?php elseif ($puppy_card_show_details && $puppy_card_show_reviews) : ?>
     <div class="product-card-rating is-empty"><span class="product-card-empty-stars" aria-hidden="true">★★★★★</span><span>No reviews yet</span></div>
   <?php endif; ?>
   <div class="product-price-row">

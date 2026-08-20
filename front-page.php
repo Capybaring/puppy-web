@@ -8,6 +8,51 @@ $contact_url = puppy_market_page_url('contact');
 $shipping_url = puppy_market_page_url('shipping');
 $returns_url = puppy_market_page_url('returns');
 
+$assurance_title = get_theme_mod('puppy_market_assurance_title', 'Shop with confidence');
+$assurance_text = get_theme_mod(
+    'puppy_market_assurance_text',
+    'Clear support, protected checkout and straightforward help before and after every order.'
+);
+$assurance_button_text = get_theme_mod('puppy_market_assurance_button_text', 'Contact us');
+$assurance_button_url = puppy_market_setting_url('puppy_market_assurance_button_url', $contact_url);
+
+$assurance_service_defaults = array(
+    1 => array(
+        'icon'        => 'support',
+        'title'       => 'Customer support',
+        'description' => 'Helpful answers before and after every order.',
+        'url'         => $contact_url,
+    ),
+    2 => array(
+        'icon'        => 'business',
+        'title'       => 'Business & wholesale',
+        'description' => 'Support for stores, clinics and professional buyers.',
+        'url'         => $contact_url . '#business-support',
+    ),
+    3 => array(
+        'icon'        => 'shipping',
+        'title'       => 'Tracked delivery',
+        'description' => 'Clear shipping updates from checkout to your door.',
+        'url'         => $shipping_url,
+    ),
+    4 => array(
+        'icon'        => 'returns',
+        'title'       => 'Simple returns',
+        'description' => 'Straightforward help for eligible returns.',
+        'url'         => $returns_url,
+    ),
+);
+
+$assurance_services = array();
+foreach ($assurance_service_defaults as $service_index => $service_default) {
+    $assurance_services[] = array(
+        'icon'        => $service_default['icon'],
+        'title'       => get_theme_mod('puppy_market_service_' . $service_index . '_title', $service_default['title']),
+        'description' => get_theme_mod('puppy_market_service_' . $service_index . '_description', $service_default['description']),
+        'url'         => puppy_market_setting_url('puppy_market_service_' . $service_index . '_url', $service_default['url']),
+    );
+}
+
 $carousel_slides = array(
     array(
         'image'    => puppy_market_image_url('puppy_market_home_slide_1_image'),
@@ -86,14 +131,29 @@ $care_image_id = puppy_market_media_id('puppy_market_home_care_image');
         </div>
     </section>
 
-    <section class="section value-strip" aria-label="iPet member perks and services">
+    <section class="section value-strip" aria-label="Shopping protection and support services">
         <div class="container"><div class="value-strip-inner">
-            <div class="value-strip-membership"><strong>iPet member perks</strong><p>Free shipping on every order, plus rewards on repeat purchases.</p><a class="button button-light" href="<?php echo esc_url($shop_url); ?>">Learn more</a></div>
+            <div class="value-strip-membership value-strip-assurance">
+                <span class="assurance-shield" aria-hidden="true"><?php echo wp_kses_post(puppy_market_service_icon('shield')); ?></span>
+                <div class="assurance-copy">
+                    <p class="eyebrow">Service assurance</p>
+                    <strong><?php echo esc_html($assurance_title); ?></strong>
+                    <p><?php echo esc_html($assurance_text); ?></p>
+                </div>
+                <a class="button button-light" href="<?php echo esc_url($assurance_button_url); ?>"><?php echo esc_html($assurance_button_text); ?></a>
+            </div>
+
             <div class="value-strip-services">
-                <a href="<?php echo esc_url($contact_url); ?>"><span aria-hidden="true">☎</span><strong>24/7 customer care</strong></a>
-                <a href="<?php echo esc_url($contact_url); ?>"><span aria-hidden="true">💬</span><strong>Chat with our pet care team</strong></a>
-                <a href="<?php echo esc_url($shipping_url); ?>"><span aria-hidden="true">🚚</span><strong>Fast, reliable shipping</strong></a>
-                <a href="<?php echo esc_url($returns_url); ?>"><span aria-hidden="true">↩</span><strong>365-day easy returns</strong></a>
+                <?php foreach ($assurance_services as $assurance_service) : ?>
+                    <a href="<?php echo esc_url($assurance_service['url']); ?>">
+                        <span class="service-icon" aria-hidden="true"><?php echo wp_kses_post(puppy_market_service_icon($assurance_service['icon'])); ?></span>
+                        <span class="service-copy">
+                            <strong><?php echo esc_html($assurance_service['title']); ?></strong>
+                            <small><?php echo esc_html($assurance_service['description']); ?></small>
+                        </span>
+                        <span class="service-arrow" aria-hidden="true">→</span>
+                    </a>
+                <?php endforeach; ?>
             </div>
         </div></div>
     </section>
@@ -138,9 +198,13 @@ $care_image_id = puppy_market_media_id('puppy_market_home_care_image');
 
     <section class="section best-sellers">
         <div class="container"><div class="section-heading"><h2>Best sellers</h2><a href="<?php echo esc_url($shop_url); ?>">Shop all →</a></div><div class="best-sellers-grid">
-            <?php $best_sellers = function_exists('wc_get_products') ? wc_get_products(array('status' => 'publish', 'limit' => 4, 'orderby' => 'date', 'order' => 'DESC')) : array(); ?>
+            <?php $best_sellers = function_exists('wc_get_products') ? wc_get_products(array('status' => 'publish', 'limit' => 5, 'orderby' => 'date', 'order' => 'DESC')) : array(); ?>
             <?php if (!empty($best_sellers)) : foreach ($best_sellers as $best_seller) : ?>
-                <?php get_template_part('template-parts/product-card', null, array('product' => $best_seller, 'badge' => $best_seller->is_on_sale() ? 'Sale' : 'Best seller', 'card_class' => 'best-seller-card')); ?>
+                <?php get_template_part('template-parts/product-card', null, array(
+                    'product'         => $best_seller,
+                    'card_class'      => 'best-seller-card',
+                    'show_sale_label' => false,
+                )); ?>
             <?php endforeach; else : ?>
                 <article class="best-sellers-empty"><strong>Customer favorites are coming soon.</strong><p>Popular pet essentials will appear here as products are added.</p></article>
             <?php endif; ?>
@@ -302,3 +366,4 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 <?php get_footer(); ?>
+

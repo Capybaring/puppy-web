@@ -69,6 +69,150 @@ function puppy_market_customize_register($wp_customize) {
         'section'     => 'puppy_market_store_text',
         'type'        => 'textarea',
     ));
+
+    $wp_customize->add_section('puppy_market_home_assurance', array(
+        'title'       => __('Homepage service assurance', 'puppy-market'),
+        'description' => __('Edit the assurance card and the four fixed service controls. Icons and layout stay theme-managed.', 'puppy-market'),
+        'priority'    => 37,
+    ));
+
+    $assurance_fields = array(
+        'puppy_market_assurance_title' => array(
+            'label'    => __('Assurance card title', 'puppy-market'),
+            'default'  => __('Shop with confidence', 'puppy-market'),
+            'type'     => 'text',
+            'sanitize' => 'sanitize_text_field',
+        ),
+        'puppy_market_assurance_text' => array(
+            'label'    => __('Assurance card description', 'puppy-market'),
+            'default'  => __('Clear support, protected checkout and straightforward help before and after every order.', 'puppy-market'),
+            'type'     => 'textarea',
+            'sanitize' => 'sanitize_textarea_field',
+        ),
+        'puppy_market_assurance_button_text' => array(
+            'label'    => __('Assurance button text', 'puppy-market'),
+            'default'  => __('Contact us', 'puppy-market'),
+            'type'     => 'text',
+            'sanitize' => 'sanitize_text_field',
+        ),
+        'puppy_market_assurance_button_url' => array(
+            'label'       => __('Assurance button URL', 'puppy-market'),
+            'description' => __('Leave blank to use the Contact page.', 'puppy-market'),
+            'default'     => '',
+            'type'        => 'url',
+            'sanitize'    => 'esc_url_raw',
+        ),
+    );
+
+    foreach ($assurance_fields as $setting_id => $field) {
+        $wp_customize->add_setting($setting_id, array(
+            'default'           => $field['default'],
+            'sanitize_callback' => $field['sanitize'],
+            'transport'         => 'refresh',
+        ));
+        $wp_customize->add_control($setting_id, array(
+            'label'       => $field['label'],
+            'description' => isset($field['description']) ? $field['description'] : '',
+            'section'     => 'puppy_market_home_assurance',
+            'type'        => $field['type'],
+        ));
+    }
+
+    $service_defaults = array(
+        1 => array('Customer support', 'Helpful answers before and after every order.'),
+        2 => array('Business & wholesale', 'Support for stores, clinics and professional buyers.'),
+        3 => array('Tracked delivery', 'Clear shipping updates from checkout to your door.'),
+        4 => array('Simple returns', 'Straightforward help for eligible returns.'),
+    );
+
+    foreach ($service_defaults as $service_index => $service_default) {
+        $title_setting = 'puppy_market_service_' . $service_index . '_title';
+        $description_setting = 'puppy_market_service_' . $service_index . '_description';
+        $url_setting = 'puppy_market_service_' . $service_index . '_url';
+
+        $wp_customize->add_setting($title_setting, array(
+            'default'           => $service_default[0],
+            'sanitize_callback' => 'sanitize_text_field',
+            'transport'         => 'refresh',
+        ));
+        $wp_customize->add_control($title_setting, array(
+            'label'   => sprintf(__('Service %d title', 'puppy-market'), $service_index),
+            'section' => 'puppy_market_home_assurance',
+            'type'    => 'text',
+        ));
+
+        $wp_customize->add_setting($description_setting, array(
+            'default'           => $service_default[1],
+            'sanitize_callback' => 'sanitize_textarea_field',
+            'transport'         => 'refresh',
+        ));
+        $wp_customize->add_control($description_setting, array(
+            'label'   => sprintf(__('Service %d description', 'puppy-market'), $service_index),
+            'section' => 'puppy_market_home_assurance',
+            'type'    => 'textarea',
+        ));
+
+        $wp_customize->add_setting($url_setting, array(
+            'default'           => '',
+            'sanitize_callback' => 'esc_url_raw',
+            'transport'         => 'refresh',
+        ));
+        $wp_customize->add_control($url_setting, array(
+            'label'       => sprintf(__('Service %d URL', 'puppy-market'), $service_index),
+            'description' => __('Leave blank to use the theme default page.', 'puppy-market'),
+            'section'     => 'puppy_market_home_assurance',
+            'type'        => 'url',
+        ));
+    }
+
+    $wp_customize->add_section('puppy_market_contact_page', array(
+        'title'       => __('Contact page', 'puppy-market'),
+        'description' => __('Contact details used by the Contact Us page and its form.', 'puppy-market'),
+        'priority'    => 38,
+    ));
+
+    $contact_fields = array(
+        'puppy_market_contact_email' => array(
+            'label'    => __('Customer support email', 'puppy-market'),
+            'default'  => sanitize_email(get_option('admin_email')),
+            'type'     => 'email',
+            'sanitize' => 'sanitize_email',
+        ),
+        'puppy_market_business_email' => array(
+            'label'       => __('Business and wholesale email', 'puppy-market'),
+            'description' => __('Leave blank to use the customer support email.', 'puppy-market'),
+            'default'     => '',
+            'type'        => 'email',
+            'sanitize'    => 'sanitize_email',
+        ),
+        'puppy_market_contact_phone' => array(
+            'label'       => __('Support phone', 'puppy-market'),
+            'description' => __('Optional. Leave blank to hide the phone contact method.', 'puppy-market'),
+            'default'     => '',
+            'type'        => 'text',
+            'sanitize'    => 'sanitize_text_field',
+        ),
+        'puppy_market_contact_response_text' => array(
+            'label'    => __('Response promise', 'puppy-market'),
+            'default'  => __('We will review your request and follow up as soon as possible.', 'puppy-market'),
+            'type'     => 'textarea',
+            'sanitize' => 'sanitize_textarea_field',
+        ),
+    );
+
+    foreach ($contact_fields as $setting_id => $field) {
+        $wp_customize->add_setting($setting_id, array(
+            'default'           => $field['default'],
+            'sanitize_callback' => $field['sanitize'],
+            'transport'         => 'refresh',
+        ));
+        $wp_customize->add_control($setting_id, array(
+            'label'       => $field['label'],
+            'description' => isset($field['description']) ? $field['description'] : '',
+            'section'     => 'puppy_market_contact_page',
+            'type'        => $field['type'],
+        ));
+    }
 }
 add_action('customize_register', 'puppy_market_customize_register');
 
@@ -182,16 +326,25 @@ function puppy_market_popular_categories($limit = 6) {
     ));
     return is_wp_error($terms) ? array() : $terms;
 }
-
-/** Minimal dynamic menu used only until an administrator assigns a real menu. */
-function puppy_market_primary_menu_fallback($args = array()) {
-    $categories = puppy_market_top_categories(6, false);
-    echo '<ul class="nav-menu">';
-    foreach ($categories as $category) {
-        $url = get_term_link($category);
-        if (is_wp_error($url)) continue;
-        echo '<li><a href="' . esc_url($url) . '">' . esc_html($category->name) . '</a></li>';
-    }
-    echo '<li><a href="' . esc_url(puppy_market_catalog_url()) . '">' . esc_html__('Shop all', 'puppy-market') . '</a></li>';
-    echo '</ul>';
+/** Return a backend-managed URL, or the supplied page URL when the field is blank. */
+function puppy_market_setting_url($setting_id, $fallback = '') {
+    $url = trim((string) get_theme_mod($setting_id, ''));
+    return $url !== '' ? $url : $fallback;
 }
+
+/** Small fixed SVG set for service assurance and contact surfaces. */
+function puppy_market_service_icon($name) {
+    $icons = array(
+        'shield'   => '<path d="M12 3 19 6v5c0 4.7-2.8 8-7 10-4.2-2-7-5.3-7-10V6Z"/><path d="m8.7 12.1 2.1 2.1 4.6-4.7"/>',
+        'support'  => '<path d="M5 13v-2a7 7 0 0 1 14 0v2"/><path d="M5 12H3.8A1.8 1.8 0 0 0 2 13.8v2.4A1.8 1.8 0 0 0 3.8 18H6v-6Z"/><path d="M19 12h1.2a1.8 1.8 0 0 1 1.8 1.8v2.4a1.8 1.8 0 0 1-1.8 1.8H18v-6Z"/><path d="M18 18c-.7 2-2.4 3-5 3"/>',
+        'business' => '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5h8v2"/><path d="M3 12h18"/><path d="M10 12v2h4v-2"/>',
+        'shipping' => '<path d="M3 6h11v10H3Z"/><path d="M14 10h3.5l3.5 3.5V16h-7Z"/><circle cx="7" cy="18" r="1.8"/><circle cx="18" cy="18" r="1.8"/>',
+        'returns'  => '<path d="M8 7H4l3-3"/><path d="M4 7a8 8 0 1 1-1 8"/><path d="M12 9v4l2.5 1.5"/>',
+        'mail'     => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>',
+        'phone'    => '<path d="M7.2 3.5 10 7l-2 2.4a15.5 15.5 0 0 0 6.6 6.6l2.4-2 3.5 2.8-.8 3.2c-.2.8-1 1.4-1.8 1.3C9.8 20.2 3.8 14.2 2.7 6.1c-.1-.8.5-1.6 1.3-1.8Z"/>',
+    );
+
+    $paths = isset($icons[$name]) ? $icons[$name] : $icons['shield'];
+    return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' . $paths . '</svg>';
+}
+

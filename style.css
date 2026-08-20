@@ -158,7 +158,7 @@ h1 { margin-top: 0; max-width: 530px; margin-bottom: 18px; font-size: clamp(38px
 
 @media (max-width: 800px) {
   .header-main { flex-wrap: wrap; gap: 15px; }
-  .search { order: 3; flex-basis: 100%; }
+  .site-header .search { order: 3; flex-basis: 100%; }
   .header-actions { margin-left: auto; }
   .nav { gap: 16px; overflow-x: auto; white-space: nowrap; }
   .mega-menu { display: none; }
@@ -448,7 +448,7 @@ body.ipet-dialog-open { overflow: hidden; }
 
 /* Refined, mature storefront direction */
 
-.search input { min-width: 0; flex: 1; border: 0; padding: 11px 15px; font: inherit; outline: 0; background: transparent; }
+.site-header .search input { min-width: 0; flex: 1; border: 0; padding: 11px 15px; font: inherit; outline: 0; background: transparent; }
 
 .header-actions { display: flex; gap: 16px; align-items: center; font-size: 14px; white-space: nowrap; }
 .header-actions strong { display: block; font-size: 13px; }
@@ -1134,9 +1134,9 @@ body { margin: 0; color: var(--ink); background: var(--cream); font-family: Inte
 .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: var(--green); font-size: 17px; color: #fff; }
 .header-icon { display: grid; place-items: center; width: 25px; height: 25px; border: 1px solid rgba(255,255,255,.65); border-radius: 50%; color: var(--green); font-size: 16px; line-height: 1; border-color: var(--line); }
 
-.search button { border: 0; padding: 0 18px; color: #fff; background: var(--green); cursor: pointer; font-weight: 700; }
+.site-header .search button { border: 0; padding: 0 18px; color: #fff; background: var(--green); cursor: pointer; font-weight: 700; }
 .product-cart-button { margin-top: 10px; background: var(--green); color: #fff; }
-.search button:hover, .button:hover, .product-cart-button:hover { background: var(--green-dark); }
+.site-header .search button:hover, .button:hover, .product-cart-button:hover { background: var(--green-dark); }
 .woocommerce a.button:hover, .woocommerce button.button:hover, .woocommerce input.button:hover { color: #fff; background: var(--green-dark); }
 .nav { display: flex; gap: 16px; padding: 9px 0 10px; font-size: 13px; font-weight: 700; justify-content: space-between; color: var(--ink); padding-bottom: 11px; align-items: center; }
 .nav a:hover { color: var(--green); }
@@ -1465,7 +1465,7 @@ body.single-product .woocommerce-tabs { display: none !important; }
 
 /* Phase 1 (Chewy-style density pass): replace pill-shaped buttons/controls with
    compact, boxy corners. Colors are untouched — this only affects shape/density. */
-.search { flex: 1; display: flex; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); overflow: hidden; border-color: #d5ebf4; }
+.site-header .search { flex: 1; display: flex; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); overflow: hidden; border-color: #d5ebf4; }
 .button { display: inline-flex; align-items: center; justify-content: center; width: fit-content; border-radius: 6px; padding: 13px 22px; color: #fff; background: var(--green); font-weight: 800; }
 .badge { position: absolute; top: 24px; left: 24px; padding: 4px 8px; border-radius: 6px; color: #fff; background: var(--green); font-size: 11px; font-weight: 850; }
 .deal-label { padding: 3px 7px; border-radius: 6px; color: #fff; background: var(--green); font-size: 10px; font-weight: 850; }
@@ -2159,3 +2159,4 @@ body.woocommerce-checkout:not(.woocommerce-order-received) .ipet-checkout-mobile
 .footer-menu a { color: inherit; }
 .puppy-filter-empty { margin: 8px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
 .site-header .brand-logo, .site-footer .brand-logo { filter: none; }
+

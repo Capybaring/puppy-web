@@ -287,9 +287,10 @@ $puppy_cart_item_count = WC()->cart->get_cart_contents_count();
 			$puppy_recent = wc_get_products( array( 'status' => 'publish', 'limit' => 8, 'orderby' => 'date', 'order' => 'DESC' ) );
 			foreach ( $puppy_recent as $puppy_rec_product ) :
 				get_template_part( 'template-parts/product-card', null, array(
-					'product'    => $puppy_rec_product,
-					'badge'      => $puppy_rec_product->is_on_sale() ? 'Sale' : 'Best seller',
-					'card_class' => 'best-seller-card',
+					'product'         => $puppy_rec_product,
+					'card_class'      => 'puppy-cart-recommendation',
+					'show_sale_label' => false,
+					'show_reviews'    => false,
 				) );
 			endforeach;
 			?>

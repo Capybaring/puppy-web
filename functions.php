@@ -14,7 +14,7 @@ function puppy_market_setup() {
     ));
     add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption'));
     register_nav_menus(array(
-        'primary'      => __('Primary Menu', 'puppy-market'),
+        'primary'      => __('Header Category Menu', 'puppy-market'),
         'footer_shop'  => __('Footer Shop Menu', 'puppy-market'),
         'footer_help'  => __('Footer Help Menu', 'puppy-market'),
         'footer_about' => __('Footer About Menu', 'puppy-market'),
@@ -48,6 +48,17 @@ function puppy_market_assets() {
             get_template_directory_uri() . '/assets/pdp.js',
             array('jquery'),
             file_exists($pdp_script_path) ? filemtime($pdp_script_path) : $style_version,
+            true
+        );
+    }
+
+    if (is_search()) {
+        $search_script_path = get_template_directory() . '/assets/search.js';
+        wp_enqueue_script(
+            'puppy-market-product-search',
+            get_template_directory_uri() . '/assets/search.js',
+            class_exists('WooCommerce') ? array('jquery', 'wc-cart-fragments') : array('jquery'),
+            file_exists($search_script_path) ? filemtime($search_script_path) : $style_version,
             true
         );
     }
@@ -522,14 +533,218 @@ function puppy_market_catalog_title($title) {
 }
 add_filter('woocommerce_page_title', 'puppy_market_catalog_title');
 
+/**
+ * Taxonomies whose terms should be searchable from the storefront search box.
+ * WooCommerce categories, tags, brands and all registered global attributes
+ * are included automatically.
+ */
+function puppy_market_product_search_taxonomies() {
+    $taxonomies = array('product_cat', 'product_tag');
+
+    if (taxonomy_exists('product_brand')) {
+        $taxonomies[] = 'product_brand';
+    }
+
+    if (function_exists('wc_get_attribute_taxonomies')) {
+        foreach (wc_get_attribute_taxonomies() as $attribute) {
+            $taxonomy = wc_attribute_taxonomy_name($attribute->attribute_name);
+            if (taxonomy_exists($taxonomy)) $taxonomies[] = $taxonomy;
+        }
+    }
+
+    return array_values(array_unique(array_filter(array_map('sanitize_key', $taxonomies))));
+}
+
+/**
+ * Resolve matching product IDs across names, descriptions, parent/variation
+ * SKUs, product categories, brands and global attribute terms.
+ */
+function puppy_market_product_search_ids($search_term) {
+    global $wpdb;
+
+    $search_term = trim(wp_strip_all_tags((string) $search_term));
+    if ($search_term === '') return array();
+
+    $taxonomies = puppy_market_product_search_taxonomies();
+    $taxonomy_placeholders = implode(', ', array_fill(0, count($taxonomies), '%s'));
+    $like = '%' . $wpdb->esc_like($search_term) . '%';
+    $prefix = $wpdb->esc_like($search_term) . '%';
+    $slug_like = '%' . $wpdb->esc_like(sanitize_title($search_term)) . '%';
+
+    $sql = "
+        SELECT products.ID,
+               MIN(
+                   CASE
+                       WHEN products.post_title = %s THEN 0
+                       WHEN products.post_title LIKE %s THEN 1
+                       WHEN sku.meta_value = %s THEN 2
+                       WHEN products.post_title LIKE %s THEN 3
+                       ELSE 4
+                   END
+               ) AS puppy_relevance
+        FROM {$wpdb->posts} AS products
+        LEFT JOIN {$wpdb->postmeta} AS sku
+               ON sku.post_id = products.ID
+              AND sku.meta_key = '_sku'
+        LEFT JOIN {$wpdb->term_relationships} AS relationships
+               ON relationships.object_id = products.ID
+        LEFT JOIN {$wpdb->term_taxonomy} AS taxonomy
+               ON taxonomy.term_taxonomy_id = relationships.term_taxonomy_id
+        LEFT JOIN {$wpdb->terms} AS terms
+               ON terms.term_id = taxonomy.term_id
+        WHERE products.post_type = 'product'
+          AND products.post_status = 'publish'
+          AND (
+               products.post_title LIKE %s
+               OR products.post_excerpt LIKE %s
+               OR products.post_content LIKE %s
+               OR sku.meta_value LIKE %s
+               OR EXISTS (
+                   SELECT 1
+                   FROM {$wpdb->posts} AS variations
+                   INNER JOIN {$wpdb->postmeta} AS variation_sku
+                           ON variation_sku.post_id = variations.ID
+                          AND variation_sku.meta_key = '_sku'
+                   WHERE variations.post_parent = products.ID
+                     AND variations.post_type = 'product_variation'
+                     AND variation_sku.meta_value LIKE %s
+               )
+               OR (
+                   taxonomy.taxonomy IN ({$taxonomy_placeholders})
+                   AND (terms.name LIKE %s OR terms.slug LIKE %s)
+               )
+          )
+        GROUP BY products.ID
+        ORDER BY puppy_relevance ASC, products.post_date DESC
+        LIMIT 500
+    ";
+
+    $parameters = array(
+        $search_term,
+        $prefix,
+        $search_term,
+        $like,
+        $like,
+        $like,
+        $like,
+        $like,
+        $like,
+    );
+    $parameters = array_merge($parameters, $taxonomies, array($like, $slug_like));
+
+    $prepared_sql = $wpdb->prepare($sql, $parameters);
+    return array_values(array_filter(array_map('absint', (array) $wpdb->get_col($prepared_sql))));
+}
+
+/** Restrict the public storefront search to published WooCommerce products. */
 function puppy_market_search_products($query) {
     if (is_admin() || !$query->is_main_query() || !$query->is_search()) return;
-    $query->set('post_type', array('post', 'page', 'product'));
+
+    $product_ids = puppy_market_product_search_ids($query->get('s'));
+
+    $query->set('post_type', 'product');
+    $query->set('post_status', 'publish');
+    $query->set('posts_per_page', 12);
+    $query->set('ignore_sticky_posts', true);
+    $query->set('has_password', false);
+    $query->set('post__in', !empty($product_ids) ? $product_ids : array(0));
+    $query->set('orderby', 'post__in');
+    $query->set('puppy_market_product_search', true);
 }
 add_action('pre_get_posts', 'puppy_market_search_products');
+
+/**
+ * Matching has already been resolved to post__in above. Remove WordPress's
+ * title/content-only search fragment while keeping the original search term
+ * available to the template and pagination links.
+ */
+function puppy_market_product_search_sql($search, $query) {
+    if (!is_admin() && $query->get('puppy_market_product_search')) return '';
+    return $search;
+}
+add_filter('posts_search', 'puppy_market_product_search_sql', 99, 2);
 
 function puppy_market_no_products_message() {
     echo '<div class="empty-state catalog-empty"><span>🐾</span><h2>No products in this category yet</h2><p>We are adding more essentials. Explore another category for now.</p><a class="button" href="' . esc_url(puppy_market_catalog_url()) . '">View all products</a></div>';
 }
 add_action('woocommerce_no_products_found', 'puppy_market_no_products_message');
+/** Redirect the Contact Us form back to its page with a safe status value. */
+function puppy_market_contact_form_redirect($status) {
+    $redirect_url = wp_get_referer();
+    if (!$redirect_url) $redirect_url = puppy_market_page_url('contact');
 
+    $redirect_url = remove_query_arg('contact_status', $redirect_url);
+    $redirect_url = add_query_arg('contact_status', sanitize_key($status), $redirect_url) . '#contact-form';
+    wp_safe_redirect($redirect_url);
+    exit;
+}
+
+/** Process the Contact Us page form and deliver it to the configured address. */
+function puppy_market_handle_contact_form() {
+    $nonce = isset($_POST['puppy_contact_nonce'])
+        ? sanitize_text_field(wp_unslash($_POST['puppy_contact_nonce']))
+        : '';
+
+    if (!$nonce || !wp_verify_nonce($nonce, 'puppy_market_contact_form')) {
+        puppy_market_contact_form_redirect('invalid');
+    }
+
+    // Quietly accept honeypot submissions without sending mail.
+    $honeypot = isset($_POST['company_website'])
+        ? trim((string) wp_unslash($_POST['company_website']))
+        : '';
+    if ($honeypot !== '') puppy_market_contact_form_redirect('success');
+
+    $name = isset($_POST['contact_name'])
+        ? sanitize_text_field(wp_unslash($_POST['contact_name']))
+        : '';
+    $email = isset($_POST['contact_email'])
+        ? sanitize_email(wp_unslash($_POST['contact_email']))
+        : '';
+    $order_number = isset($_POST['order_number'])
+        ? sanitize_text_field(wp_unslash($_POST['order_number']))
+        : '';
+    $topic = isset($_POST['contact_topic'])
+        ? sanitize_key(wp_unslash($_POST['contact_topic']))
+        : 'other';
+    $message = isset($_POST['contact_message'])
+        ? sanitize_textarea_field(wp_unslash($_POST['contact_message']))
+        : '';
+
+    $topic_labels = array(
+        'order'    => 'Order help',
+        'shipping' => 'Shipping',
+        'returns'  => 'Returns',
+        'product'  => 'Product question',
+        'business' => 'Business & wholesale',
+        'other'    => 'Other',
+    );
+
+    if (!isset($topic_labels[$topic])) $topic = 'other';
+    if ($name === '' || !is_email($email) || $message === '') {
+        puppy_market_contact_form_redirect('invalid');
+    }
+
+    $support_email = sanitize_email(get_theme_mod('puppy_market_contact_email', get_option('admin_email')));
+    $business_email = sanitize_email(get_theme_mod('puppy_market_business_email', ''));
+    $recipient = $topic === 'business' && is_email($business_email) ? $business_email : $support_email;
+
+    if (!is_email($recipient)) puppy_market_contact_form_redirect('error');
+
+    $subject = sprintf('[%s] %s request from %s', wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES), $topic_labels[$topic], $name);
+    $mail_body = implode("\n", array(
+        'Name: ' . $name,
+        'Email: ' . $email,
+        'Topic: ' . $topic_labels[$topic],
+        'Order number: ' . ($order_number !== '' ? $order_number : 'Not provided'),
+        '',
+        'Message:',
+        substr($message, 0, 5000),
+    ));
+    $headers = array('Reply-To: ' . $name . ' <' . $email . '>');
+
+    $sent = wp_mail($recipient, $subject, $mail_body, $headers);
+    puppy_market_contact_form_redirect($sent ? 'success' : 'error');
+}
+add_action('admin_post_nopriv_puppy_market_contact', 'puppy_market_handle_contact_form');
+add_action('admin_post_puppy_market_contact', 'puppy_market_handle_contact_form');

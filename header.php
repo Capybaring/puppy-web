@@ -48,7 +48,8 @@
   <div class="container header-main">
     <a class="brand" href="<?php echo esc_url(home_url('/')); ?>"><?php echo wp_kses_post(puppy_market_brand_markup()); ?></a>
     <form class="search" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
-      <input type="search" name="s" placeholder="Search" value="<?php echo esc_attr(get_search_query()); ?>" aria-label="Search products">
+      <input type="hidden" name="post_type" value="product">
+      <input type="search" name="s" placeholder="Search" value="<?php echo esc_attr(get_search_query()); ?>" aria-label="Search products" required>
       <button type="submit" aria-label="Submit search">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <circle cx="10.8" cy="10.8" r="6.8"></circle>
@@ -110,12 +111,17 @@
       </div>
     </div>
   </div>
-  <nav class="container nav" aria-label="Primary navigation">
-    <?php wp_nav_menu(array(
-        'theme_location' => 'primary',
-        'container'      => false,
-        'menu_class'     => 'nav-menu',
-        'fallback_cb'    => 'puppy_market_primary_menu_fallback',
-    )); ?>
-  </nav>
+  <?php if (has_nav_menu('primary')) : ?>
+    <nav class="container nav" aria-label="Primary navigation">
+      <?php wp_nav_menu(array(
+          'theme_location' => 'primary',
+          'container'      => false,
+          'menu_class'     => 'nav-menu',
+          'fallback_cb'    => false,
+          'depth'          => 3,
+      )); ?>
+    </nav>
+  <?php endif; ?>
 </header>
+
+
