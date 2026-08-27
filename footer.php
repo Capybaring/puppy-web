@@ -192,8 +192,11 @@ document.addEventListener('DOMContentLoaded', function () {
       productId = addToCartField && addToCartField.value;
     }
     if (productId) {
+      // wc-ajax only needs product_id. Keeping add-to-cart here also
+      // activates WooCommerce's classic form handler, which can add the
+      // item twice and queue its default success notice.
       payload.set('product_id', productId);
-      if (!payload.has('add-to-cart')) payload.set('add-to-cart', productId);
+      payload.delete('add-to-cart');
     }
     var endpoint = window.wc_add_to_cart_params && window.wc_add_to_cart_params.wc_ajax_url
       ? window.wc_add_to_cart_params.wc_ajax_url.replace('%%endpoint%%', 'add_to_cart')
