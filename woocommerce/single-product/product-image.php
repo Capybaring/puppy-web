@@ -12,9 +12,6 @@ $puppy_main_image_id = 'ipet-pdp-main-image-' . ($product ? absint($product->get
 <div class="woocommerce-product-gallery images ipet-product-gallery" data-columns="1" data-pdp-gallery style="opacity:1;">
     <div class="ipet-pdp-gallery-stage" data-pdp-gallery-stage>
         <?php if ($product && $product->is_on_sale()) : ?><span class="ipet-pdp-badge">Deal</span><?php endif; ?>
-        <button type="button" class="ipet-pdp-wishlist" data-pdp-wishlist aria-pressed="false" aria-label="Add to wishlist">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21.4l7.8-7.8 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
-        </button>
         <?php if ($puppy_gallery_count > 1) : ?>
             <button type="button" class="ipet-gallery-arrow ipet-gallery-prev" data-pdp-gallery-prev aria-label="Previous product image"><span aria-hidden="true">‹</span></button>
             <button type="button" class="ipet-gallery-arrow ipet-gallery-next" data-pdp-gallery-next aria-label="Next product image"><span aria-hidden="true">›</span></button>

@@ -55,6 +55,12 @@ $puppy_promotion_text = get_theme_mod('puppy_market_pdp_promotion_text', 'Free s
                 $puppy_eta = $puppy_eta_timestamp ? date_i18n('D, M j', $puppy_eta_timestamp) : '';
                 $puppy_rating = (float) $product->get_average_rating();
                 $puppy_review_count = (int) $product->get_review_count();
+                $puppy_show_rating = function_exists('wc_review_ratings_enabled')
+                    && wc_review_ratings_enabled()
+                    && method_exists($product, 'get_reviews_allowed')
+                    && $product->get_reviews_allowed()
+                    && $puppy_review_count > 0
+                    && function_exists('wc_get_rating_html');
             ?>
                 <article id="product-<?php the_ID(); ?>" <?php wc_product_class('ipet-pdp', $product); ?>>
                     <section class="ipet-pdp-main" aria-label="Product purchase information">
@@ -62,10 +68,8 @@ $puppy_promotion_text = get_theme_mod('puppy_market_pdp_promotion_text', 'Free s
                             <p class="ipet-pdp-kicker">iPet everyday essential</p>
                             <p class="ipet-pdp-mobile-title" role="heading" aria-level="1"><?php the_title(); ?></p>
                             <p class="ipet-pdp-brand">By <a href="<?php echo esc_url($puppy_brand_url); ?>"><?php echo esc_html($puppy_brand_name); ?></a></p>
-                            <?php if ($puppy_review_count > 0 && function_exists('wc_get_rating_html')) : ?>
+                            <?php if ($puppy_show_rating) : ?>
                                 <div class="ipet-pdp-rating" aria-label="<?php echo esc_attr(sprintf('%1$s out of 5 stars from %2$d reviews', number_format_i18n($puppy_rating, 1), $puppy_review_count)); ?>"><strong><?php echo esc_html(number_format_i18n($puppy_rating, 1)); ?></strong><?php echo wp_kses_post(wc_get_rating_html($puppy_rating, $puppy_review_count)); ?><span><?php echo esc_html(number_format_i18n($puppy_review_count)); ?> reviews</span></div>
-                            <?php else : ?>
-                                <div class="ipet-pdp-rating is-empty" aria-label="This product has no reviews yet"><strong>0.0</strong><span class="ipet-pdp-empty-stars" aria-hidden="true">☆☆☆☆☆</span><a href="#reviews">Write the first review</a></div>
                             <?php endif; ?>
                         </div>
                         <div class="ipet-pdp-gallery-column">
@@ -76,10 +80,8 @@ $puppy_promotion_text = get_theme_mod('puppy_market_pdp_promotion_text', 'Free s
                             <p class="ipet-pdp-kicker">iPet everyday essential</p>
                             <h1 id="ipet-pdp-title" class="product_title entry-title"><?php the_title(); ?></h1>
                             <p class="ipet-pdp-brand">By <a href="<?php echo esc_url($puppy_brand_url); ?>"><?php echo esc_html($puppy_brand_name); ?></a></p>
-                            <?php if ($puppy_review_count > 0 && function_exists('wc_get_rating_html')) : ?>
+                            <?php if ($puppy_show_rating) : ?>
                                 <div class="ipet-pdp-rating" aria-label="<?php echo esc_attr(sprintf('%1$s out of 5 stars from %2$d reviews', number_format_i18n($puppy_rating, 1), $puppy_review_count)); ?>"><strong><?php echo esc_html(number_format_i18n($puppy_rating, 1)); ?></strong><?php echo wp_kses_post(wc_get_rating_html($puppy_rating, $puppy_review_count)); ?><span><?php echo esc_html(number_format_i18n($puppy_review_count)); ?> reviews</span></div>
-                            <?php else : ?>
-                                <div class="ipet-pdp-rating is-empty" aria-label="This product has no reviews yet"><strong>0.0</strong><span class="ipet-pdp-empty-stars" aria-hidden="true">☆☆☆☆☆</span><a href="#reviews">Write the first review</a></div>
                             <?php endif; ?>
 
                             <?php if ($product->get_short_description()) : ?>

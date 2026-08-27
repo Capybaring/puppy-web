@@ -64,7 +64,7 @@
     if (galleryStage && galleryThumbs.length > 1) {
       var pointerStart = null;
       galleryStage.addEventListener('pointerdown', function (event) {
-        if (event.pointerType === 'mouse' || event.target.closest('.ipet-gallery-arrow, .ipet-pdp-wishlist')) return;
+        if (event.pointerType === 'mouse' || event.target.closest('.ipet-gallery-arrow')) return;
         pointerStart = { x: event.clientX, y: event.clientY };
       });
       galleryStage.addEventListener('pointerup', function (event) {
@@ -88,20 +88,6 @@
       });
       lightbox.querySelector('[data-pdp-lightbox-close]').addEventListener('click', function () { lightbox.close(); });
       lightbox.addEventListener('click', function (event) { if (event.target === lightbox) lightbox.close(); });
-    }
-
-    var wishlist = root.querySelector('[data-pdp-wishlist]');
-    if (wishlist) {
-      var wishlistKey = 'ipet-wishlist-' + (root.id || 'product');
-      var saved = window.localStorage && localStorage.getItem(wishlistKey) === '1';
-      wishlist.classList.toggle('is-active', saved);
-      wishlist.setAttribute('aria-pressed', saved ? 'true' : 'false');
-      wishlist.addEventListener('click', function () {
-        saved = !saved;
-        wishlist.classList.toggle('is-active', saved);
-        wishlist.setAttribute('aria-pressed', saved ? 'true' : 'false');
-        if (window.localStorage) localStorage.setItem(wishlistKey, saved ? '1' : '0');
-      });
     }
 
     var variationForm = root.querySelector('form.variations_form');

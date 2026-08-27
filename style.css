@@ -1632,9 +1632,6 @@ body.single-product { background: #fff; }
 .ipet-detail-image { display: grid; width: 100%; height: 100%; min-height: 600px; padding: 36px; place-items: center; border: 0; background: transparent; cursor: zoom-in; }
 .ipet-detail-image img { display: block; width: min(78%, 620px) !important; height: 520px !important; max-width: 100%; object-fit: contain; border: 0 !important; border-radius: 0 !important; background: transparent !important; }
 .ipet-pdp-badge { position: absolute; z-index: 2; top: 0; left: 0; padding: 8px 18px; border-radius: 10px 0 10px 0; color: #fff; background: #cf2347; font-size: 14px; font-weight: 750; }
-.ipet-pdp-wishlist { position: absolute; z-index: 2; top: 14px; right: 14px; display: grid; width: 48px; height: 48px; padding: 0; place-items: center; border: 2px solid #2463eb; border-radius: 50%; color: #2463eb; background: #fff; cursor: pointer; }
-.ipet-pdp-wishlist svg { width: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; }
-.ipet-pdp-wishlist.is-active svg { fill: currentColor; }
 .ipet-product-gallery .ipet-gallery-thumbs { display: flex; gap: 10px; margin: 12px 0 0; overflow-x: auto; }
 .ipet-product-gallery .ipet-gallery-thumb { width: 68px; height: 68px; flex: 0 0 68px; padding: 5px; border: 2px solid #ddd; border-radius: 8px; background: #fff; }
 .ipet-product-gallery .ipet-gallery-thumb.is-active,
@@ -1773,7 +1770,6 @@ body.single-product { background: #fff; }
   .ipet-pdp-gallery-stage, .ipet-detail-image { min-height: 0; height: auto; aspect-ratio: 1; }
   .ipet-detail-image { padding: 24px; }
   .ipet-detail-image img { width: 82% !important; height: 82% !important; }
-  .ipet-pdp-wishlist { width: 40px; height: 40px; }
   .ipet-product-gallery .ipet-gallery-thumbs { scroll-snap-type: x mandatory; }
   .ipet-product-gallery .ipet-gallery-thumb { scroll-snap-align: start; }
   .ipet-pdp-summary-copy { margin-top: 0; }
@@ -2159,4 +2155,3 @@ body.woocommerce-checkout:not(.woocommerce-order-received) .ipet-checkout-mobile
 .footer-menu a { color: inherit; }
 .puppy-filter-empty { margin: 8px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
 .site-header .brand-logo, .site-footer .brand-logo { filter: none; }
-
