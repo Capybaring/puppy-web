@@ -193,10 +193,10 @@ $care_image_id = puppy_market_media_id('puppy_market_home_care_image');
 
     <section class="trust-strip" aria-label="Shopping reassurance">
         <div class="container"><div class="trust-strip-grid">
-            <div class="trust-item"><span class="trust-icon" aria-hidden="true">↗</span><div><strong>Free shipping</strong><p>On orders over $75</p></div></div>
-            <div class="trust-item"><span class="trust-icon" aria-hidden="true">↩</span><div><strong>365-day returns</strong><p>Easy returns on eligible items</p></div></div>
+            <div class="trust-item"><span class="trust-icon" aria-hidden="true">↗</span><div><strong>Free shipping</strong><p>Your order ships free over $75</p></div></div>
+            <div class="trust-item"><span class="trust-icon" aria-hidden="true">↩</span><div><strong>Easy returns</strong><p>Your eligible items have 365-day returns</p></div></div>
             <div class="trust-item"><span class="trust-icon" aria-hidden="true">✓</span><div><strong>Secure checkout</strong><p>Your payment is protected</p></div></div>
-            <div class="trust-item"><span class="trust-icon" aria-hidden="true">✦</span><div><strong>Pet support</strong><p>Here when you need us</p></div></div>
+            <div class="trust-item"><span class="trust-icon" aria-hidden="true">✦</span><div><strong>Pet support</strong><p>Your questions are handled with care</p></div></div>
         </div></div>
     </section>
 
@@ -354,8 +354,8 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(function (data) {
           if (data && data.error) throw new Error('add-to-cart-failed');
           button.textContent = 'Added to cart';
-          showToast('Added to cart', false);
           if (cartLink) cartLink.textContent = (parseInt(cartLink.textContent, 10) || 0) + 1;
+          if (window.jQuery) window.jQuery(document.body).trigger('added_to_cart', [data.fragments || {}, data.cart_hash || '', window.jQuery(button)]);
           window.setTimeout(function () { button.textContent = 'Add to cart'; button.classList.remove('is-loading'); }, 1500);
         })
         .catch(function () {

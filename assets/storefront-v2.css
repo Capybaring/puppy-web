@@ -467,7 +467,10 @@ body.home .trust-item + .trust-item { border-left: 1px solid var(--line); }
 body.home .trust-icon { width: 44px; height: 44px; color: #fff; background: var(--primary); }
 
 body.home .best-sellers { padding-top: 42px; padding-bottom: 42px; }
-body.home .best-sellers-grid { gap: 24px; }
+body.home .best-sellers-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
 body.home .product,
 body.home .best-sellers-empty { padding: 0; border: 0; border-radius: 0; background: #fff; }
 body.home .product:hover { border-color: transparent; }
@@ -3380,5 +3383,344 @@ body.home .value-strip-services > a:hover > .service-icon {
 
   .ipet-policy-cta .button {
     width: 100%;
+  }
+}
+
+/* Chewy-inspired add-to-cart confirmation drawer. */
+body.ipet-cart-drawer-open {
+  overflow: hidden;
+}
+
+.ipet-cart-drawer-shell {
+  position: fixed;
+  /* WordPress's logged-in admin bar uses z-index: 99999. */
+  z-index: 1000000;
+  inset: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.ipet-cart-drawer-shell.is-open {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.ipet-cart-drawer-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: rgba(20, 28, 38, .46);
+  opacity: 0;
+  transition: opacity .24s ease;
+  cursor: default;
+}
+
+.ipet-cart-drawer-shell.is-open .ipet-cart-drawer-overlay {
+  opacity: 1;
+}
+
+.ipet-cart-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  width: clamp(540px, 43vw, 760px);
+  height: 100%;
+  flex-direction: column;
+  color: var(--ink);
+  background: #fff;
+  box-shadow: -16px 0 44px rgba(16, 31, 51, .18);
+  font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  transform: translateX(102%);
+  transition: transform .28s cubic-bezier(.22, .8, .24, 1);
+}
+
+.ipet-cart-drawer-shell.is-open .ipet-cart-drawer {
+  transform: translateX(0);
+}
+
+.ipet-cart-drawer-header {
+  position: relative;
+  display: flex;
+  min-height: 74px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px 28px 17px;
+  border-bottom: 1px solid var(--line);
+}
+
+.ipet-cart-drawer-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  color: #176b31;
+  font-size: 19px;
+  font-weight: 400;
+  letter-spacing: -.01em;
+  line-height: 1.35;
+}
+
+.ipet-cart-drawer-header h2 > span {
+  font-size: 21px;
+  line-height: 1;
+}
+
+.ipet-cart-drawer-close {
+  position: absolute;
+  top: 3px;
+  right: 22px;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  padding: 0;
+  border: 2px solid #e6e8eb;
+  border-radius: 50%;
+  color: #1c2025;
+  background: #fff;
+  font-size: 34px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ipet-cart-drawer-close:hover,
+.ipet-cart-drawer-close:focus-visible {
+  border-color: #b8bec7;
+  color: #1c2025;
+  background: #fff;
+}
+
+.ipet-cart-drawer-body {
+  padding: 26px 30px 34px;
+  overflow-y: auto;
+  transition: opacity .16s ease;
+}
+
+.ipet-cart-drawer-shell.is-loading .ipet-cart-drawer-body {
+  opacity: .58;
+}
+
+.ipet-cart-drawer-item {
+  display: grid;
+  min-height: 168px;
+  grid-template-columns: 148px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+  padding-bottom: 28px;
+  color: var(--ink) !important;
+  text-decoration: none;
+}
+
+.ipet-cart-drawer-image {
+  display: grid;
+  width: 148px;
+  height: 148px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #f5f6f7;
+}
+
+.ipet-cart-drawer-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  object-fit: contain;
+}
+
+.ipet-cart-drawer-item-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 5px;
+}
+
+.ipet-cart-drawer-item-copy strong {
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.ipet-cart-drawer-item-copy > span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.ipet-cart-drawer-item-copy .amount {
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.ipet-cart-drawer-summary {
+  padding: 27px 0 24px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.ipet-cart-drawer-shipping {
+  margin: 0 0 11px;
+  color: #282d33;
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.ipet-cart-drawer-shipping strong {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.ipet-cart-drawer-progress {
+  height: 11px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dceaf8;
+}
+
+.ipet-cart-drawer-progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
+  transition: width .35s ease;
+}
+
+.ipet-cart-drawer-subtotal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 16px;
+  color: #42474d;
+  font-size: 16px;
+}
+
+.ipet-cart-drawer-subtotal > strong {
+  font-weight: 400;
+}
+
+.ipet-cart-drawer-subtotal > span,
+.ipet-cart-drawer-subtotal .amount {
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.ipet-cart-drawer-actions {
+  display: grid;
+  grid-template-columns: minmax(170px, .85fr) minmax(260px, 1.65fr);
+  gap: 14px;
+  padding-top: 24px;
+}
+
+.ipet-cart-drawer-actions a {
+  display: flex;
+  min-height: 62px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 400;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* Keep every drawer label regular even when WooCommerce outputs <strong>. */
+.ipet-cart-drawer h2,
+.ipet-cart-drawer strong,
+.ipet-cart-drawer b,
+.ipet-cart-drawer .amount,
+.ipet-cart-drawer-actions a {
+  font-weight: 400 !important;
+}
+
+/* The drawer replaces WooCommerce's small link injected below product cards. */
+.product .added_to_cart.wc-forward,
+li.product .added_to_cart.wc-forward {
+  display: none !important;
+}
+
+.ipet-cart-drawer-view {
+  border: 2px solid var(--primary);
+  color: var(--primary) !important;
+  background: #fff;
+}
+
+.ipet-cart-drawer-view:hover {
+  color: var(--primary-dark) !important;
+  background: var(--primary-soft);
+}
+
+.ipet-cart-drawer-checkout {
+  border: 2px solid transparent;
+  color: #fff !important;
+  background: linear-gradient(180deg, #ff5a20 0%, #ed330b 100%);
+}
+
+.ipet-cart-drawer-checkout:hover {
+  color: #fff !important;
+  background: linear-gradient(180deg, #f04c17 0%, #d92d08 100%);
+}
+
+@media (max-width: 760px) {
+  .ipet-cart-drawer {
+    width: 100%;
+  }
+
+  .ipet-cart-drawer-header {
+    min-height: 66px;
+    padding: 14px 18px 15px;
+  }
+
+  .ipet-cart-drawer-header h2 {
+    font-size: 18px;
+  }
+
+  .ipet-cart-drawer-close {
+    top: 4px;
+    right: 12px;
+    width: 42px;
+    height: 42px;
+    font-size: 29px;
+  }
+
+  .ipet-cart-drawer-body {
+    padding: 22px 18px 28px;
+  }
+
+  .ipet-cart-drawer-item {
+    min-height: 120px;
+    grid-template-columns: 104px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .ipet-cart-drawer-image {
+    width: 104px;
+    height: 104px;
+  }
+
+  .ipet-cart-drawer-item-copy strong {
+    font-size: 16px;
+  }
+
+  .ipet-cart-drawer-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .ipet-cart-drawer-actions a {
+    min-height: 56px;
   }
 }

@@ -9,6 +9,8 @@ $footer_shipping_url = puppy_market_page_url('shipping');
 $footer_returns_url = puppy_market_page_url('returns');
 $footer_privacy_url = get_privacy_policy_url();
 if (!$footer_privacy_url) $footer_privacy_url = puppy_market_page_url('privacy-policy');
+$footer_cart_url = function_exists('wc_get_cart_url') ? wc_get_cart_url() : puppy_market_page_url('cart');
+$footer_checkout_url = function_exists('wc_get_checkout_url') ? wc_get_checkout_url() : puppy_market_page_url('checkout');
 ?>
 <footer class="site-footer">
   <section class="footer-support" aria-label="Customer support">
@@ -77,6 +79,32 @@ if (!$footer_privacy_url) $footer_privacy_url = puppy_market_page_url('privacy-p
     <div class="footer-bottom"><span>© <?php echo esc_html(date_i18n('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?>. All rights reserved.</span><span>Powered by WordPress and WooCommerce</span></div>
   </div></div>
 </footer>
+<?php if (class_exists('WooCommerce')) : ?>
+  <div class="ipet-cart-drawer-shell" data-cart-drawer aria-hidden="true">
+    <button class="ipet-cart-drawer-overlay" type="button" data-cart-drawer-close tabindex="-1" aria-label="Close cart panel"></button>
+    <aside class="ipet-cart-drawer" role="dialog" aria-modal="true" aria-labelledby="ipet-cart-drawer-title" aria-busy="false">
+      <header class="ipet-cart-drawer-header">
+        <h2 id="ipet-cart-drawer-title"><span aria-hidden="true">✓</span> Added to Cart</h2>
+        <button class="ipet-cart-drawer-close" type="button" data-cart-drawer-close data-cart-drawer-close-button aria-label="Close cart panel"><span aria-hidden="true">×</span></button>
+      </header>
+      <div class="ipet-cart-drawer-body">
+        <a class="ipet-cart-drawer-item" data-cart-drawer-item-link href="<?php echo esc_url($footer_cart_url); ?>">
+          <span class="ipet-cart-drawer-image"><img data-cart-drawer-image src="<?php echo esc_url(function_exists('wc_placeholder_img_src') ? wc_placeholder_img_src('woocommerce_thumbnail') : ''); ?>" alt=""></span>
+          <span class="ipet-cart-drawer-item-copy"><strong data-cart-drawer-name>Item added to your cart</strong><span data-cart-drawer-meta>Updating cart details…</span></span>
+        </a>
+        <section class="ipet-cart-drawer-summary" aria-label="Cart summary">
+          <p class="ipet-cart-drawer-shipping"><strong data-cart-drawer-shipping-amount>Checking your cart…</strong><span data-cart-drawer-shipping-copy></span></p>
+          <div class="ipet-cart-drawer-progress" data-cart-drawer-progress role="progressbar" aria-label="Free shipping progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+          <div class="ipet-cart-drawer-subtotal"><strong data-cart-drawer-subtotal-label>Subtotal:</strong><span data-cart-drawer-subtotal>—</span></div>
+        </section>
+        <div class="ipet-cart-drawer-actions">
+          <a class="ipet-cart-drawer-view" href="<?php echo esc_url($footer_cart_url); ?>">View Cart</a>
+          <a class="ipet-cart-drawer-checkout" href="<?php echo esc_url($footer_checkout_url); ?>">Proceed to Checkout</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+<?php endif; ?>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   // Account/cart hover dropdowns only work with a mouse; on touch screens
@@ -118,11 +146,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!data || data.error) throw new Error('add-to-cart-failed');
         var quantity = parseInt(payload.get('quantity') || '1', 10);
         if (cartCount) { var current = parseInt(cartCount.textContent, 10) || 0; cartCount.textContent = current + quantity; }
-        toast.textContent = 'Added to cart';
-        toast.classList.remove('is-error');
-        toast.classList.add('is-visible');
-        window.clearTimeout(window.ipetToastTimer);
-        window.ipetToastTimer = window.setTimeout(function () { toast.classList.remove('is-visible'); }, 2600);
         if (window.jQuery) window.jQuery(document.body).trigger('added_to_cart', [data.fragments, data.cart_hash, button]);
       })
       .catch(function () {

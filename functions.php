@@ -82,6 +82,19 @@ function puppy_market_assets() {
         file_exists($storefront_style_path) ? filemtime($storefront_style_path) : $style_version
     );
 
+    $cart_drawer_script_path = get_template_directory() . '/assets/cart-drawer.js';
+    wp_enqueue_script(
+        'puppy-market-cart-drawer',
+        get_template_directory_uri() . '/assets/cart-drawer.js',
+        array('jquery'),
+        file_exists($cart_drawer_script_path) ? filemtime($cart_drawer_script_path) : $style_version,
+        true
+    );
+    wp_localize_script('puppy-market-cart-drawer', 'puppyCartDrawerData', array(
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'action'  => 'puppy_market_cart_drawer',
+    ));
+
     if (function_exists('is_product') && is_product()) {
         $pdp_script_path = get_template_directory() . '/assets/pdp.js';
         wp_enqueue_script(
@@ -285,6 +298,76 @@ function puppy_market_assets() {
     }
 }
 add_action('wp_enqueue_scripts', 'puppy_market_assets');
+
+/**
+ * Return the current cart state used by the site-wide add-to-cart drawer.
+ */
+function puppy_market_cart_drawer_data() {
+    if (!function_exists('WC')) {
+        wp_send_json_error(array('message' => 'WooCommerce is unavailable.'), 503);
+    }
+
+    if (!WC()->cart && function_exists('wc_load_cart')) {
+        wc_load_cart();
+    }
+
+    $cart = WC()->cart;
+    if (!$cart) {
+        wp_send_json_error(array('message' => 'The cart could not be loaded.'), 503);
+    }
+
+    $requested_product_id = isset($_GET['product_id']) ? absint(wp_unslash($_GET['product_id'])) : 0;
+    $selected_item = null;
+    $cart_items = array_reverse($cart->get_cart(), true);
+
+    foreach ($cart_items as $cart_item) {
+        $cart_product_id = !empty($cart_item['variation_id']) ? absint($cart_item['variation_id']) : absint($cart_item['product_id']);
+        if (!$requested_product_id || $requested_product_id === $cart_product_id || $requested_product_id === absint($cart_item['product_id'])) {
+            $selected_item = $cart_item;
+            break;
+        }
+    }
+
+    $item_data = null;
+    if ($selected_item && !empty($selected_item['data'])) {
+        $product = $selected_item['data'];
+        $parent_product = !empty($selected_item['product_id']) ? wc_get_product($selected_item['product_id']) : null;
+        $image_id = $product->get_image_id();
+        if (!$image_id && $parent_product) $image_id = $parent_product->get_image_id();
+        $image_url = $image_id ? wp_get_attachment_image_url($image_id, 'woocommerce_thumbnail') : wc_placeholder_img_src('woocommerce_thumbnail');
+        $quantity = max(1, absint($selected_item['quantity']));
+        $product_page_id = !empty($selected_item['product_id']) ? absint($selected_item['product_id']) : $product->get_id();
+
+        $item_data = array(
+            'name'       => $product->get_name(),
+            'image_url'  => $image_url,
+            'url'        => get_permalink($product_page_id),
+            'meta_html'  => sprintf(
+                'Quantity: %1$d · %2$s',
+                $quantity,
+                $cart->get_product_subtotal($product, $quantity)
+            ),
+        );
+    }
+
+    $free_shipping_threshold = 49.0;
+    $subtotal_value = (float) $cart->get_subtotal();
+    $remaining = max(0, $free_shipping_threshold - $subtotal_value);
+    $progress = $free_shipping_threshold > 0 ? min(100, max(0, ($subtotal_value / $free_shipping_threshold) * 100)) : 100;
+
+    wp_send_json_success(array(
+        'count'         => absint($cart->get_cart_contents_count()),
+        'subtotal_html' => $cart->get_cart_subtotal(),
+        'shipping'      => array(
+            'qualified'     => $remaining <= 0,
+            'remaining_html'=> wc_price($remaining),
+            'progress'      => round($progress, 2),
+        ),
+        'item'          => $item_data,
+    ));
+}
+add_action('wp_ajax_puppy_market_cart_drawer', 'puppy_market_cart_drawer_data');
+add_action('wp_ajax_nopriv_puppy_market_cart_drawer', 'puppy_market_cart_drawer_data');
 
 /**
  * The account area has a complete, page-scoped design system in account.css.

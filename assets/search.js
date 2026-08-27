@@ -261,7 +261,6 @@
 
         button.textContent = 'Added to cart';
         updateCartCount();
-        showToast('Added to cart', false);
 
         if (window.jQuery) {
           window.jQuery(document.body).trigger('added_to_cart', [
