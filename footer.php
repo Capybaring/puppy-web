@@ -198,20 +198,35 @@ document.addEventListener('DOMContentLoaded', function () {
     var endpoint = window.wc_add_to_cart_params && window.wc_add_to_cart_params.wc_ajax_url
       ? window.wc_add_to_cart_params.wc_ajax_url.replace('%%endpoint%%', 'add_to_cart')
       : window.location.origin + '/?wc-ajax=add_to_cart';
+    function showAddToCartError() {
+      toast.textContent = 'Could not add item. Please try again.';
+      toast.classList.add('is-error', 'is-visible');
+      window.setTimeout(function () { toast.classList.remove('is-visible'); }, 2600);
+    }
+    var addToCartConfirmed = false;
     fetch(endpoint, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }, body: payload.toString() })
-      .then(function (response) { return response.json(); })
+      .then(function (response) {
+        if (!response.ok) throw new Error('add-to-cart-request-failed');
+        return response.json();
+      })
       .then(function (data) {
-        if (!data || data.error) throw new Error('add-to-cart-failed');
+        if (!data || data.error) {
+          showAddToCartError();
+          return;
+        }
+        addToCartConfirmed = true;
         toast.classList.remove('is-error', 'is-visible');
-        var quantity = parseInt(payload.get('quantity') || '1', 10);
-        if (cartCount) { var current = parseInt(cartCount.textContent, 10) || 0; cartCount.textContent = current + quantity; }
-        // Reuse the same success drawer opened by homepage product cards.
-        if (window.jQuery) window.jQuery(document.body).trigger('added_to_cart', [data.fragments, data.cart_hash, button]);
+        try {
+          var quantity = parseInt(payload.get('quantity') || '1', 10);
+          if (cartCount) { var current = parseInt(cartCount.textContent, 10) || 0; cartCount.textContent = current + quantity; }
+          // Reuse the same success drawer opened by homepage product cards.
+          if (window.jQuery) window.jQuery(document.body).trigger('added_to_cart', [data.fragments, data.cart_hash, button]);
+        } catch (interfaceError) {
+          if (window.console && window.console.error) window.console.error('Cart updated, but the confirmation interface failed.', interfaceError);
+        }
       })
       .catch(function () {
-        toast.textContent = 'Could not add item. Please try again.';
-        toast.classList.add('is-error', 'is-visible');
-        window.setTimeout(function () { toast.classList.remove('is-visible'); }, 2600);
+        if (!addToCartConfirmed) showAddToCartError();
       })
       .finally(function () {
         form.classList.remove('is-loading');
