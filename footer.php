@@ -184,6 +184,17 @@ document.addEventListener('DOMContentLoaded', function () {
     var button = form.querySelector('.single_add_to_cart_button');
     if (button) { button.disabled = true; button.textContent = 'Adding…'; }
     var payload = new URLSearchParams(new FormData(form));
+    // WooCommerce stores the product ID on the submit button, but
+    // FormData(form) does not include submit-button values.
+    var productId = button && (button.value || button.getAttribute('value'));
+    if (!productId) {
+      var addToCartField = form.querySelector('[name="add-to-cart"]');
+      productId = addToCartField && addToCartField.value;
+    }
+    if (productId) {
+      payload.set('product_id', productId);
+      if (!payload.has('add-to-cart')) payload.set('add-to-cart', productId);
+    }
     var endpoint = window.wc_add_to_cart_params && window.wc_add_to_cart_params.wc_ajax_url
       ? window.wc_add_to_cart_params.wc_ajax_url.replace('%%endpoint%%', 'add_to_cart')
       : window.location.origin + '/?wc-ajax=add_to_cart';
@@ -191,8 +202,10 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(function (response) { return response.json(); })
       .then(function (data) {
         if (!data || data.error) throw new Error('add-to-cart-failed');
+        toast.classList.remove('is-error', 'is-visible');
         var quantity = parseInt(payload.get('quantity') || '1', 10);
         if (cartCount) { var current = parseInt(cartCount.textContent, 10) || 0; cartCount.textContent = current + quantity; }
+        // Reuse the same success drawer opened by homepage product cards.
         if (window.jQuery) window.jQuery(document.body).trigger('added_to_cart', [data.fragments, data.cart_hash, button]);
       })
       .catch(function () {
