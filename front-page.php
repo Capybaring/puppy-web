@@ -7,6 +7,7 @@ $shop_url = puppy_market_catalog_url();
 $contact_url = puppy_market_page_url('contact');
 $shipping_url = puppy_market_page_url('shipping');
 $returns_url = puppy_market_page_url('returns');
+$pet_care_url = puppy_market_category_link('pet-care');
 
 $assurance_title = get_theme_mod('puppy_market_assurance_title', 'Shop with confidence');
 $assurance_text = get_theme_mod(
@@ -84,8 +85,34 @@ $carousel_slides = array(
     ),
 );
 
-$shop_by_categories = puppy_market_top_categories(7, false);
-$popular_categories = puppy_market_popular_categories(6);
+$manual_shop_for_ids = puppy_market_ordered_theme_mod_ids('puppy_market_home_shop_for_', 7);
+$shop_by_categories = !empty($manual_shop_for_ids)
+    ? puppy_market_ordered_product_categories('puppy_market_home_shop_for_', 7)
+    : puppy_market_top_categories(7, false);
+
+$manual_popular_category_ids = puppy_market_ordered_theme_mod_ids('puppy_market_home_popular_category_', 6);
+$popular_categories = !empty($manual_popular_category_ids)
+    ? puppy_market_ordered_product_categories('puppy_market_home_popular_category_', 6)
+    : puppy_market_popular_categories(6);
+
+$manual_best_seller_ids = puppy_market_ordered_theme_mod_ids('puppy_market_home_best_seller_', 5);
+$best_sellers = array();
+
+if (!empty($manual_best_seller_ids) && function_exists('wc_get_product')) {
+    foreach ($manual_best_seller_ids as $manual_best_seller_id) {
+        $manual_best_seller = wc_get_product($manual_best_seller_id);
+        if ($manual_best_seller && $manual_best_seller->get_status() === 'publish') {
+            $best_sellers[] = $manual_best_seller;
+        }
+    }
+} elseif (function_exists('wc_get_products')) {
+    $best_sellers = wc_get_products(array(
+        'status'  => 'publish',
+        'limit'   => 5,
+        'orderby' => 'date',
+        'order'   => 'DESC',
+    ));
+}
 
 $brand_taxonomy = puppy_market_brand_taxonomy();
 $brand_terms = get_terms(array(
@@ -202,7 +229,6 @@ $care_image_id = puppy_market_media_id('puppy_market_home_care_image');
 
     <section class="section best-sellers">
         <div class="container"><div class="section-heading"><h2>Best sellers</h2><a href="<?php echo esc_url($shop_url); ?>">Shop all →</a></div><div class="best-sellers-grid">
-            <?php $best_sellers = function_exists('wc_get_products') ? wc_get_products(array('status' => 'publish', 'limit' => 5, 'orderby' => 'date', 'order' => 'DESC')) : array(); ?>
             <?php if (!empty($best_sellers)) : foreach ($best_sellers as $best_seller) : ?>
                 <?php get_template_part('template-parts/product-card', null, array(
                     'product'         => $best_seller,
@@ -274,7 +300,7 @@ $care_image_id = puppy_market_media_id('puppy_market_home_care_image');
     <section class="section care-feature">
         <div class="container"><div class="care-feature-card<?php echo $care_image_id ? ' has-media' : ' no-media'; ?>">
             <?php if ($care_image_id) : ?><div class="care-feature-image"><?php echo wp_get_attachment_image($care_image_id, 'large', false, array('alt' => 'Pet care essentials')); ?></div><?php endif; ?>
-            <div class="care-feature-copy"><p class="eyebrow">A happier routine</p><h2>Small care moments add up.</h2><p>Make everyday pet care easier with simple food, play and grooming essentials chosen for the way you live together.</p><a class="button" href="<?php echo esc_url($shop_url); ?>">Explore pet care →</a></div>
+            <div class="care-feature-copy"><p class="eyebrow">A happier routine</p><h2>Small care moments add up.</h2><p>Make everyday pet care easier with simple food, play and grooming essentials chosen for the way you live together.</p><a class="button" href="<?php echo esc_url($pet_care_url); ?>">Explore pet care →</a></div>
         </div></div>
     </section>
 </main>

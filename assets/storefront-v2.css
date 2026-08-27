@@ -1131,6 +1131,8 @@ body.home .product-showcase .best-seller-card .product-image img {
 .footer-socials { display: flex; flex-wrap: wrap; gap: 10px; }
 .site-footer .footer-social { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 50%; color: #fff !important; }
 .site-footer .footer-social:hover { color: #fff !important; text-decoration: none; transform: translateY(-2px); }
+.site-footer .footer-social.is-disabled { opacity: .55; cursor: default; }
+.site-footer .footer-social.is-disabled:hover { transform: none; }
 .footer-social svg { width: 23px; height: 23px; fill: currentColor; stroke: none; }
 .footer-social .footer-social-cutout { fill: #fff; stroke: #fff; stroke-width: 1.5; }
 .footer-social-facebook { background: #1877f2; }
@@ -3722,5 +3724,51 @@ li.product .added_to_cart.wc-forward {
 
   .ipet-cart-drawer-actions a {
     min-height: 56px;
+  }
+}
+
+/* Homepage lower product rail: keep the promotion and product cards aligned. */
+body.home .product-showcase .product h3 {
+  height: 2.64em;
+  min-height: 2.64em;
+  max-height: 2.64em;
+  overflow: hidden;
+}
+
+body.home .product-showcase .product h3 a {
+  display: -webkit-box;
+  overflow: hidden;
+  line-height: inherit;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+@media (min-width: 761px) {
+  body.home .product-showcase-layout {
+    align-items: stretch;
+  }
+
+  body.home .product-showcase .summer-promo-card {
+    height: 100%;
+    min-height: 0;
+    align-self: stretch;
+    box-sizing: border-box;
+  }
+
+  body.home .product-showcase .product-carousel-shell,
+  body.home .product-showcase .product-carousel-viewport,
+  body.home .product-showcase .product-carousel-track {
+    height: 100%;
+  }
+
+  body.home .product-showcase .product-carousel-track {
+    align-items: stretch;
+  }
+
+  body.home .product-showcase .product-carousel-track .product {
+    height: auto;
+    align-self: stretch;
   }
 }

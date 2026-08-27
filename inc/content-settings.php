@@ -165,10 +165,193 @@ function puppy_market_customize_register($wp_customize) {
         ));
     }
 
+    $wp_customize->add_section('puppy_market_home_product_sections', array(
+        'title'       => __('Homepage product sections', 'puppy-market'),
+        'description' => __('Choose items in the exact order they should appear. Leave every position in a group empty to keep its automatic selection. Once one position is selected, empty positions in that group are skipped.', 'puppy-market'),
+        'priority'    => 38,
+    ));
+
+    $empty_choice = array(0 => __('— Empty / automatic when all are empty —', 'puppy-market'));
+    $top_category_choices = $empty_choice;
+    $all_category_choices = $empty_choice;
+
+    if (taxonomy_exists('product_cat')) {
+        $customizer_categories = get_terms(array(
+            'taxonomy'   => 'product_cat',
+            'hide_empty' => false,
+            'orderby'    => 'name',
+            'order'      => 'ASC',
+            'exclude'    => array(absint(get_option('default_product_cat'))),
+        ));
+
+        if (!is_wp_error($customizer_categories)) {
+            foreach ($customizer_categories as $customizer_category) {
+                $category_id = absint($customizer_category->term_id);
+                $depth = count(get_ancestors($category_id, 'product_cat', 'taxonomy'));
+                $category_label = str_repeat('— ', $depth) . $customizer_category->name;
+                $all_category_choices[$category_id] = $category_label;
+                if (absint($customizer_category->parent) === 0) {
+                    $top_category_choices[$category_id] = $customizer_category->name;
+                }
+            }
+        }
+    }
+
+    $product_choices = $empty_choice;
+    if (post_type_exists('product')) {
+        $customizer_product_ids = get_posts(array(
+            'post_type'      => 'product',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+            'fields'         => 'ids',
+            'no_found_rows'  => true,
+        ));
+
+        foreach ($customizer_product_ids as $customizer_product_id) {
+            $product_choices[absint($customizer_product_id)] = sprintf(
+                '%1$s (#%2$d)',
+                get_the_title($customizer_product_id),
+                absint($customizer_product_id)
+            );
+        }
+    }
+
+    $homepage_position_groups = array(
+        array(
+            'prefix'  => 'puppy_market_home_shop_for_',
+            'label'   => __('Shop for', 'puppy-market'),
+            'count'   => 7,
+            'choices' => $top_category_choices,
+        ),
+        array(
+            'prefix'  => 'puppy_market_home_best_seller_',
+            'label'   => __('Best sellers', 'puppy-market'),
+            'count'   => 5,
+            'choices' => $product_choices,
+        ),
+        array(
+            'prefix'  => 'puppy_market_home_popular_category_',
+            'label'   => __('Popular categories', 'puppy-market'),
+            'count'   => 6,
+            'choices' => $all_category_choices,
+        ),
+    );
+
+    foreach ($homepage_position_groups as $homepage_position_group) {
+        for ($position = 1; $position <= $homepage_position_group['count']; $position++) {
+            $setting_id = $homepage_position_group['prefix'] . $position;
+            $wp_customize->add_setting($setting_id, array(
+                'default'           => 0,
+                'sanitize_callback' => 'absint',
+                'transport'         => 'refresh',
+            ));
+            $wp_customize->add_control($setting_id, array(
+                'label'   => sprintf(__('%1$s — position %2$d', 'puppy-market'), $homepage_position_group['label'], $position),
+                'section' => 'puppy_market_home_product_sections',
+                'type'    => 'select',
+                'choices' => $homepage_position_group['choices'],
+            ));
+        }
+    }
+
+    $wp_customize->add_section('puppy_market_footer_social', array(
+        'title'       => __('Footer social links', 'puppy-market'),
+        'description' => __('The four platform icons always remain visible. Leave a URL empty to show its icon without making it clickable.', 'puppy-market'),
+        'priority'    => 40,
+    ));
+
+    $footer_social_fields = array(
+        'puppy_market_footer_social_title' => array(
+            'label'    => __('Section title', 'puppy-market'),
+            'default'  => __('Stay connected', 'puppy-market'),
+            'type'     => 'text',
+            'sanitize' => 'sanitize_text_field',
+        ),
+        'puppy_market_footer_social_description' => array(
+            'label'    => __('Section description', 'puppy-market'),
+            'default'  => __('Follow along for pet care tips, new arrivals and everyday favorites.', 'puppy-market'),
+            'type'     => 'textarea',
+            'sanitize' => 'sanitize_textarea_field',
+        ),
+        'puppy_market_footer_facebook_url' => array(
+            'label'    => __('Facebook URL', 'puppy-market'),
+            'default'  => '',
+            'type'     => 'url',
+            'sanitize' => 'esc_url_raw',
+        ),
+        'puppy_market_footer_youtube_url' => array(
+            'label'    => __('YouTube URL', 'puppy-market'),
+            'default'  => '',
+            'type'     => 'url',
+            'sanitize' => 'esc_url_raw',
+        ),
+        'puppy_market_footer_instagram_url' => array(
+            'label'    => __('Instagram URL', 'puppy-market'),
+            'default'  => '',
+            'type'     => 'url',
+            'sanitize' => 'esc_url_raw',
+        ),
+        'puppy_market_footer_tiktok_url' => array(
+            'label'    => __('TikTok URL', 'puppy-market'),
+            'default'  => '',
+            'type'     => 'url',
+            'sanitize' => 'esc_url_raw',
+        ),
+    );
+
+    foreach ($footer_social_fields as $setting_id => $field) {
+        $wp_customize->add_setting($setting_id, array(
+            'default'           => $field['default'],
+            'sanitize_callback' => $field['sanitize'],
+            'transport'         => 'refresh',
+        ));
+        $wp_customize->add_control($setting_id, array(
+            'label'       => $field['label'],
+            'description' => $field['type'] === 'url' ? __('Leave blank to disable this icon link.', 'puppy-market') : '',
+            'section'     => 'puppy_market_footer_social',
+            'type'        => $field['type'],
+        ));
+    }
+
+    $wp_customize->add_section('puppy_market_footer_bottom', array(
+        'title'       => __('Footer bottom text', 'puppy-market'),
+        'description' => __('Customize the two small text items at the very bottom. Use {year} for the current year and {site_name} for the site title. Leave a field blank to hide it.', 'puppy-market'),
+        'priority'    => 41,
+    ));
+
+    $footer_bottom_fields = array(
+        'puppy_market_footer_copyright_text' => array(
+            'label'       => __('Copyright text', 'puppy-market'),
+            'description' => __('Available placeholders: {year} and {site_name}.', 'puppy-market'),
+            'default'     => __('© {year} {site_name}. All rights reserved.', 'puppy-market'),
+        ),
+        'puppy_market_footer_credit_text' => array(
+            'label'       => __('Right-side text', 'puppy-market'),
+            'description' => __('Leave blank to remove the right-side text.', 'puppy-market'),
+            'default'     => __('Powered by WordPress and WooCommerce', 'puppy-market'),
+        ),
+    );
+
+    foreach ($footer_bottom_fields as $setting_id => $field) {
+        $wp_customize->add_setting($setting_id, array(
+            'default'           => $field['default'],
+            'sanitize_callback' => 'sanitize_text_field',
+            'transport'         => 'refresh',
+        ));
+        $wp_customize->add_control($setting_id, array(
+            'label'       => $field['label'],
+            'description' => $field['description'],
+            'section'     => 'puppy_market_footer_bottom',
+            'type'        => 'text',
+        ));
+    }
+
     $wp_customize->add_section('puppy_market_contact_page', array(
         'title'       => __('Contact page', 'puppy-market'),
         'description' => __('Contact details used by the Contact Us page and its form.', 'puppy-market'),
-        'priority'    => 38,
+        'priority'    => 39,
     ));
 
     $contact_fields = array(
@@ -327,7 +510,7 @@ function puppy_market_ensure_contact_page() {
 }
 add_action('init', 'puppy_market_ensure_contact_page', 20);
 
-/** Theme-owned informational pages linked from the header service controls. */
+/** Theme-owned informational pages used by storefront service and footer links. */
 function puppy_market_service_page_definitions() {
     return array(
         'shipping' => array(
@@ -340,16 +523,35 @@ function puppy_market_service_page_definitions() {
             'template' => 'page-returns.php',
             'option'   => 'puppy_market_returns_page_id',
         ),
+        'about' => array(
+            'title'    => 'About Us',
+            'template' => 'page-about.php',
+            'option'   => 'puppy_market_about_page_id',
+        ),
+        'privacy-policy' => array(
+            'title'    => 'Privacy Policy',
+            'template' => 'page-privacy-policy.php',
+            'option'   => 'puppy_market_privacy_page_id',
+        ),
     );
 }
 
-/** Find a header service page by stored ID, slug, or assigned template. */
+/** Find a storefront information page by stored ID, slug, or assigned template. */
 function puppy_market_service_page($slug) {
     $slug = sanitize_title($slug);
     $definitions = puppy_market_service_page_definitions();
     if (!isset($definitions[$slug])) return null;
 
     $definition = $definitions[$slug];
+
+    if ($slug === 'privacy-policy') {
+        $wordpress_privacy_page_id = absint(get_option('wp_page_for_privacy_policy', 0));
+        $wordpress_privacy_page = $wordpress_privacy_page_id ? get_post($wordpress_privacy_page_id) : null;
+        if ($wordpress_privacy_page instanceof WP_Post && $wordpress_privacy_page->post_type === 'page' && $wordpress_privacy_page->post_status !== 'trash') {
+            return $wordpress_privacy_page;
+        }
+    }
+
     $stored_page_id = absint(get_option($definition['option'], 0));
     if ($stored_page_id) {
         $stored_page = get_post($stored_page_id);
@@ -375,7 +577,7 @@ function puppy_market_service_page($slug) {
         : null;
 }
 
-/** Create and publish Shipping and Returns pages when they do not exist. */
+/** Create and publish theme-owned information pages when they do not exist. */
 function puppy_market_ensure_service_pages() {
     if (wp_installing()) return;
 
@@ -407,6 +609,14 @@ function puppy_market_ensure_service_pages() {
         if (!$page_id) continue;
         update_post_meta($page_id, '_wp_page_template', $definition['template']);
         update_option($definition['option'], $page_id, false);
+
+        if ($slug === 'privacy-policy') {
+            $wordpress_privacy_page_id = absint(get_option('wp_page_for_privacy_policy', 0));
+            $wordpress_privacy_page = $wordpress_privacy_page_id ? get_post($wordpress_privacy_page_id) : null;
+            if (!$wordpress_privacy_page instanceof WP_Post || $wordpress_privacy_page->post_status === 'trash') {
+                update_option('wp_page_for_privacy_policy', $page_id, false);
+            }
+        }
     }
 }
 add_action('init', 'puppy_market_ensure_service_pages', 21);
@@ -497,6 +707,26 @@ function puppy_market_popular_categories($limit = 6) {
         'exclude'    => array(absint(get_option('default_product_cat'))),
     ));
     return is_wp_error($terms) ? array() : $terms;
+}
+
+/** Read a numbered group of Customizer IDs while preserving slot order. */
+function puppy_market_ordered_theme_mod_ids($setting_prefix, $limit) {
+    $ids = array();
+    for ($position = 1; $position <= absint($limit); $position++) {
+        $item_id = absint(get_theme_mod($setting_prefix . $position, 0));
+        if ($item_id && !in_array($item_id, $ids, true)) $ids[] = $item_id;
+    }
+    return $ids;
+}
+
+/** Resolve selected category IDs without allowing deleted terms into the page. */
+function puppy_market_ordered_product_categories($setting_prefix, $limit) {
+    $categories = array();
+    foreach (puppy_market_ordered_theme_mod_ids($setting_prefix, $limit) as $category_id) {
+        $category = get_term($category_id, 'product_cat');
+        if ($category && !is_wp_error($category)) $categories[] = $category;
+    }
+    return $categories;
 }
 /** Return a backend-managed URL, or the supplied page URL when the field is blank. */
 function puppy_market_setting_url($setting_id, $fallback = '') {

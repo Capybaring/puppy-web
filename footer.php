@@ -11,6 +11,45 @@ $footer_privacy_url = get_privacy_policy_url();
 if (!$footer_privacy_url) $footer_privacy_url = puppy_market_page_url('privacy-policy');
 $footer_cart_url = function_exists('wc_get_cart_url') ? wc_get_cart_url() : puppy_market_page_url('cart');
 $footer_checkout_url = function_exists('wc_get_checkout_url') ? wc_get_checkout_url() : puppy_market_page_url('checkout');
+$footer_social_title = get_theme_mod('puppy_market_footer_social_title', 'Stay connected');
+$footer_social_description = get_theme_mod(
+    'puppy_market_footer_social_description',
+    'Follow along for pet care tips, new arrivals and everyday favorites.'
+);
+$footer_social_items = array(
+    'facebook' => array(
+        'label' => 'Facebook',
+        'url'   => puppy_market_setting_url('puppy_market_footer_facebook_url', ''),
+        'icon'  => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4.2c-.5-.1-1.8-.2-3.4-.2C10.4 4 8 6 8 9.7V13H4v4h4v7h5v-7h3.7l.6-4H13V10c0-1.2.3-2 1-2Z"></path></svg>',
+    ),
+    'youtube' => array(
+        'label' => 'YouTube',
+        'url'   => puppy_market_setting_url('puppy_market_footer_youtube_url', ''),
+        'icon'  => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12c0-3-.4-5-1-6-.8-1-2-1.2-9-1.2S3.8 5 3 6c-.6 1-1 3-1 6s.4 5 1 6c.8 1 2 1.2 9 1.2s8.2-.2 9-1.2c.6-1 1-3 1-6Z"></path><path class="footer-social-cutout" d="m10 9 5 3-5 3V9Z"></path></svg>',
+    ),
+    'instagram' => array(
+        'label' => 'Instagram',
+        'url'   => puppy_market_setting_url('puppy_market_footer_instagram_url', ''),
+        'icon'  => '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"></rect><circle class="footer-social-cutout" cx="12" cy="12" r="3.5"></circle><circle class="footer-social-cutout" cx="17.5" cy="6.8" r="1"></circle></svg>',
+    ),
+    'tiktok' => array(
+        'label' => 'TikTok',
+        'url'   => puppy_market_setting_url('puppy_market_footer_tiktok_url', ''),
+        'icon'  => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h3c.3 2 1.5 3.4 4 4v3c-1.6 0-3-.5-4-1.2V16a6 6 0 1 1-6-6h1v3h-1a3 3 0 1 0 3 3V3Z"></path></svg>',
+    ),
+);
+$footer_copyright_template = get_theme_mod(
+    'puppy_market_footer_copyright_text',
+    '© {year} {site_name}. All rights reserved.'
+);
+$footer_copyright_text = strtr((string) $footer_copyright_template, array(
+    '{year}'      => date_i18n('Y'),
+    '{site_name}' => get_bloginfo('name'),
+));
+$footer_credit_text = (string) get_theme_mod(
+    'puppy_market_footer_credit_text',
+    'Powered by WordPress and WooCommerce'
+);
 ?>
 <footer class="site-footer">
   <section class="footer-support" aria-label="Customer support">
@@ -55,12 +94,15 @@ $footer_checkout_url = function_exists('wc_get_checkout_url') ? wc_get_checkout_
           <ul class="footer-menu"><li><a href="<?php echo esc_url($footer_about_url); ?>">About us</a></li><li><a href="<?php echo esc_url($footer_privacy_url); ?>">Privacy</a></li><li><a href="<?php echo esc_url($footer_contact_url); ?>">Customer care</a></li></ul>
         <?php endif; ?>
       </div>
-      <div class="footer-connect"><h3>Stay connected</h3><p>Follow along for pet care tips, new arrivals and everyday favorites.</p>
+      <div class="footer-connect"><h3><?php echo esc_html($footer_social_title); ?></h3><p><?php echo esc_html($footer_social_description); ?></p>
         <div class="footer-socials" aria-label="Social media">
-          <a class="footer-social footer-social-facebook" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4.2c-.5-.1-1.8-.2-3.4-.2C10.4 4 8 6 8 9.7V13H4v4h4v7h5v-7h3.7l.6-4H13V10c0-1.2.3-2 1-2Z"></path></svg></a>
-          <a class="footer-social footer-social-youtube" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12c0-3-.4-5-1-6-.8-1-2-1.2-9-1.2S3.8 5 3 6c-.6 1-1 3-1 6s.4 5 1 6c.8 1 2 1.2 9 1.2s8.2-.2 9-1.2c.6-1 1-3 1-6Z"></path><path class="footer-social-cutout" d="m10 9 5 3-5 3V9Z"></path></svg></a>
-          <a class="footer-social footer-social-instagram" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"></rect><circle class="footer-social-cutout" cx="12" cy="12" r="3.5"></circle><circle class="footer-social-cutout" cx="17.5" cy="6.8" r="1"></circle></svg></a>
-          <a class="footer-social footer-social-tiktok" href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h3c.3 2 1.5 3.4 4 4v3c-1.6 0-3-.5-4-1.2V16a6 6 0 1 1-6-6h1v3h-1a3 3 0 1 0 3 3V3Z"></path></svg></a>
+          <?php foreach ($footer_social_items as $footer_social_network => $footer_social_item) : ?>
+            <?php if ($footer_social_item['url'] !== '') : ?>
+              <a class="footer-social footer-social-<?php echo esc_attr($footer_social_network); ?>" href="<?php echo esc_url($footer_social_item['url']); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr($footer_social_item['label']); ?>"><?php echo $footer_social_item['icon']; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted fixed theme SVG. */ ?></a>
+            <?php else : ?>
+              <span class="footer-social footer-social-<?php echo esc_attr($footer_social_network); ?> is-disabled" role="img" aria-label="<?php echo esc_attr($footer_social_item['label'] . ' link not configured'); ?>"><?php echo $footer_social_item['icon']; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted fixed theme SVG. */ ?></span>
+            <?php endif; ?>
+          <?php endforeach; ?>
         </div>
       </div>
     </div>
@@ -76,7 +118,12 @@ $footer_checkout_url = function_exists('wc_get_checkout_url') ? wc_get_checkout_
       <div class="footer-payments"><strong>Ways to pay</strong><span>VISA</span><span>Mastercard</span><span>AMEX</span><span>PayPal</span></div>
     </div>
 
-    <div class="footer-bottom"><span>© <?php echo esc_html(date_i18n('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?>. All rights reserved.</span><span>Powered by WordPress and WooCommerce</span></div>
+    <?php if ($footer_copyright_text !== '' || $footer_credit_text !== '') : ?>
+      <div class="footer-bottom">
+        <?php if ($footer_copyright_text !== '') : ?><span><?php echo esc_html($footer_copyright_text); ?></span><?php endif; ?>
+        <?php if ($footer_credit_text !== '') : ?><span><?php echo esc_html($footer_credit_text); ?></span><?php endif; ?>
+      </div>
+    <?php endif; ?>
   </div></div>
 </footer>
 <?php if (class_exists('WooCommerce')) : ?>
