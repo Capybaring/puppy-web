@@ -14,7 +14,11 @@ $assurance_text = get_theme_mod(
     'Clear support, protected checkout and straightforward help before and after every order.'
 );
 $assurance_button_text = get_theme_mod('puppy_market_assurance_button_text', 'Contact us');
-$assurance_button_url = puppy_market_setting_url('puppy_market_assurance_button_url', $contact_url);
+$assurance_custom_url = puppy_market_setting_url('puppy_market_assurance_button_url', '');
+$assurance_button_url = $assurance_custom_url !== ''
+    && untrailingslashit($assurance_custom_url) !== untrailingslashit(home_url('/'))
+        ? $assurance_custom_url
+        : $contact_url;
 
 $assurance_service_defaults = array(
     1 => array(
@@ -133,20 +137,20 @@ $care_image_id = puppy_market_media_id('puppy_market_home_care_image');
 
     <section class="section value-strip" aria-label="Shopping protection and support services">
         <div class="container"><div class="value-strip-inner">
-            <div class="value-strip-membership value-strip-assurance">
-                <span class="assurance-shield" aria-hidden="true"><?php echo wp_kses_post(puppy_market_service_icon('shield')); ?></span>
+            <a class="value-strip-membership value-strip-assurance" href="<?php echo esc_url($assurance_button_url); ?>">
+                <span class="assurance-shield" aria-hidden="true"><?php echo puppy_market_service_icon('shield'); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted, fixed theme SVG. */ ?></span>
                 <div class="assurance-copy">
                     <p class="eyebrow">Service assurance</p>
                     <strong><?php echo esc_html($assurance_title); ?></strong>
                     <p><?php echo esc_html($assurance_text); ?></p>
                 </div>
-                <a class="button button-light" href="<?php echo esc_url($assurance_button_url); ?>"><?php echo esc_html($assurance_button_text); ?></a>
-            </div>
+                <span class="button button-light"><?php echo esc_html($assurance_button_text); ?></span>
+            </a>
 
             <div class="value-strip-services">
                 <?php foreach ($assurance_services as $assurance_service) : ?>
                     <a href="<?php echo esc_url($assurance_service['url']); ?>">
-                        <span class="service-icon" aria-hidden="true"><?php echo wp_kses_post(puppy_market_service_icon($assurance_service['icon'])); ?></span>
+                        <span class="service-icon" aria-hidden="true"><?php echo puppy_market_service_icon($assurance_service['icon']); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted, fixed theme SVG. */ ?></span>
                         <span class="service-copy">
                             <strong><?php echo esc_html($assurance_service['title']); ?></strong>
                             <small><?php echo esc_html($assurance_service['description']); ?></small>
@@ -366,4 +370,3 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 <?php get_footer(); ?>
-

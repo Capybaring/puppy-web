@@ -258,10 +258,90 @@ function puppy_market_brand_markup() {
     return '<span class="brand-text">' . esc_html(get_bloginfo('name')) . '</span>';
 }
 
-/** Resolve a real WordPress page by slug; never synthesize a page in theme code. */
+/** Find the Contact Us page by stored ID, common slug, or assigned template. */
+function puppy_market_contact_page() {
+    $stored_page_id = absint(get_option('puppy_market_contact_page_id', 0));
+    if ($stored_page_id) {
+        $stored_page = get_post($stored_page_id);
+        if ($stored_page instanceof WP_Post && $stored_page->post_type === 'page' && $stored_page->post_status !== 'trash') {
+            return $stored_page;
+        }
+    }
+
+    foreach (array('contact-us', 'contact') as $candidate_slug) {
+        $page = get_page_by_path($candidate_slug, OBJECT, 'page');
+        if ($page instanceof WP_Post && $page->post_status !== 'trash') {
+            return $page;
+        }
+    }
+
+    $template_pages = get_posts(array(
+        'post_type'      => 'page',
+        'post_status'    => array('publish', 'draft', 'pending', 'private', 'future'),
+        'posts_per_page' => 1,
+        'meta_key'       => '_wp_page_template',
+        'meta_value'     => 'page-contact.php',
+        'no_found_rows'  => true,
+    ));
+
+    return !empty($template_pages) && $template_pages[0] instanceof WP_Post
+        ? $template_pages[0]
+        : null;
+}
+
+/** Create and publish the theme's Contact Us page once when it does not exist. */
+function puppy_market_ensure_contact_page() {
+    if (wp_installing()) return;
+
+    $page = puppy_market_contact_page();
+    if ($page instanceof WP_Post) {
+        $page_id = $page->ID;
+
+        if ($page->post_status !== 'publish') {
+            $updated_page_id = wp_update_post(array(
+                'ID'          => $page_id,
+                'post_status' => 'publish',
+            ), true);
+
+            if (!is_wp_error($updated_page_id)) {
+                $page_id = absint($updated_page_id);
+            }
+        }
+    } else {
+        $page_id = wp_insert_post(array(
+            'post_type'    => 'page',
+            'post_status'  => 'publish',
+            'post_title'   => 'Contact Us',
+            'post_name'    => 'contact-us',
+            'post_content' => '',
+        ), true);
+
+        if (is_wp_error($page_id)) return;
+        $page_id = absint($page_id);
+    }
+
+    if (!$page_id) return;
+
+    update_post_meta($page_id, '_wp_page_template', 'page-contact.php');
+    update_option('puppy_market_contact_page_id', $page_id, false);
+}
+add_action('init', 'puppy_market_ensure_contact_page', 20);
+
+/** Resolve a WordPress page URL, with a stable Contact Us destination. */
 function puppy_market_page_url($slug) {
-    $page = get_page_by_path(sanitize_title($slug), OBJECT, 'page');
-    return $page instanceof WP_Post ? get_permalink($page) : home_url('/');
+    $slug = sanitize_title($slug);
+
+    if ($slug === 'contact' || $slug === 'contact-us') {
+        $contact_page = puppy_market_contact_page();
+        return $contact_page instanceof WP_Post
+            ? get_permalink($contact_page)
+            : home_url('/contact-us/');
+    }
+
+    $page = get_page_by_path($slug, OBJECT, 'page');
+    return $page instanceof WP_Post && $page->post_status === 'publish'
+        ? get_permalink($page)
+        : home_url('/');
 }
 
 /** Resolve a WooCommerce category managed in Products → Categories. */
@@ -347,4 +427,3 @@ function puppy_market_service_icon($name) {
     $paths = isset($icons[$name]) ? $icons[$name] : $icons['shield'];
     return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' . $paths . '</svg>';
 }
-

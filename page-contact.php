@@ -39,7 +39,7 @@ $orders_url = function_exists('wc_get_account_endpoint_url')
       </div>
 
       <aside class="ipet-contact-promise" aria-label="Service assurance">
-        <span class="ipet-contact-promise-icon" aria-hidden="true"><?php echo wp_kses_post(puppy_market_service_icon('shield')); ?></span>
+        <span class="ipet-contact-promise-icon" aria-hidden="true"><?php echo puppy_market_service_icon('shield'); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted, fixed theme SVG. */ ?></span>
         <p class="eyebrow">Service assurance</p>
         <h2>Support before and after your order.</h2>
         <p><?php echo esc_html($response_text); ?></p>
@@ -60,28 +60,28 @@ $orders_url = function_exists('wc_get_account_endpoint_url')
       </div>
       <div class="ipet-contact-method-grid">
         <a href="#contact-form">
-          <span aria-hidden="true"><?php echo wp_kses_post(puppy_market_service_icon('support')); ?></span>
+          <span aria-hidden="true"><?php echo puppy_market_service_icon('support'); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted, fixed theme SVG. */ ?></span>
           <div><strong>Customer support</strong><p>Orders, shipping, returns and product questions.</p></div>
           <b aria-hidden="true">→</b>
         </a>
 
         <?php if ($contact_email) : ?>
           <a href="mailto:<?php echo esc_attr(antispambot($contact_email)); ?>">
-            <span aria-hidden="true"><?php echo wp_kses_post(puppy_market_service_icon('mail')); ?></span>
+            <span aria-hidden="true"><?php echo puppy_market_service_icon('mail'); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted, fixed theme SVG. */ ?></span>
             <div><strong>Email us</strong><p><?php echo wp_kses_post(antispambot($contact_email)); ?></p></div>
             <b aria-hidden="true">→</b>
           </a>
         <?php endif; ?>
 
         <a id="business-support" href="#contact-form">
-          <span aria-hidden="true"><?php echo wp_kses_post(puppy_market_service_icon('business')); ?></span>
+          <span aria-hidden="true"><?php echo puppy_market_service_icon('business'); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted, fixed theme SVG. */ ?></span>
           <div><strong>Business & wholesale</strong><p>For stores, clinics and professional purchasing.</p></div>
           <b aria-hidden="true">→</b>
         </a>
 
         <?php if ($contact_phone !== '') : ?>
           <a href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', $contact_phone)); ?>">
-            <span aria-hidden="true"><?php echo wp_kses_post(puppy_market_service_icon('phone')); ?></span>
+            <span aria-hidden="true"><?php echo puppy_market_service_icon('phone'); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted, fixed theme SVG. */ ?></span>
             <div><strong>Call support</strong><p><?php echo esc_html($contact_phone); ?></p></div>
             <b aria-hidden="true">→</b>
           </a>
