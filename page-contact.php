@@ -18,6 +18,11 @@ $response_text = get_theme_mod(
 $contact_status = isset($_GET['contact_status'])
     ? sanitize_key(wp_unslash($_GET['contact_status']))
     : '';
+$contact_topic = isset($_GET['contact_topic'])
+    ? sanitize_key(wp_unslash($_GET['contact_topic']))
+    : 'order';
+$contact_topics = array('order', 'shipping', 'returns', 'product', 'business', 'other');
+if (!in_array($contact_topic, $contact_topics, true)) $contact_topic = 'order';
 
 $shipping_url = puppy_market_page_url('shipping');
 $returns_url = puppy_market_page_url('returns');
@@ -133,12 +138,12 @@ $orders_url = function_exists('wc_get_account_endpoint_url')
           <div class="ipet-contact-field">
             <label for="contact-topic">Topic <span>*</span></label>
             <select id="contact-topic" name="contact_topic" required>
-              <option value="order">Order help</option>
-              <option value="shipping">Shipping</option>
-              <option value="returns">Returns</option>
-              <option value="product">Product question</option>
-              <option value="business">Business & wholesale</option>
-              <option value="other">Other</option>
+              <option value="order" <?php selected($contact_topic, 'order'); ?>>Order help</option>
+              <option value="shipping" <?php selected($contact_topic, 'shipping'); ?>>Shipping</option>
+              <option value="returns" <?php selected($contact_topic, 'returns'); ?>>Returns</option>
+              <option value="product" <?php selected($contact_topic, 'product'); ?>>Product question</option>
+              <option value="business" <?php selected($contact_topic, 'business'); ?>>Business & wholesale</option>
+              <option value="other" <?php selected($contact_topic, 'other'); ?>>Other</option>
             </select>
           </div>
 

@@ -327,7 +327,91 @@ function puppy_market_ensure_contact_page() {
 }
 add_action('init', 'puppy_market_ensure_contact_page', 20);
 
-/** Resolve a WordPress page URL, with a stable Contact Us destination. */
+/** Theme-owned informational pages linked from the header service controls. */
+function puppy_market_service_page_definitions() {
+    return array(
+        'shipping' => array(
+            'title'    => 'Shipping',
+            'template' => 'page-shipping.php',
+            'option'   => 'puppy_market_shipping_page_id',
+        ),
+        'returns' => array(
+            'title'    => 'Returns',
+            'template' => 'page-returns.php',
+            'option'   => 'puppy_market_returns_page_id',
+        ),
+    );
+}
+
+/** Find a header service page by stored ID, slug, or assigned template. */
+function puppy_market_service_page($slug) {
+    $slug = sanitize_title($slug);
+    $definitions = puppy_market_service_page_definitions();
+    if (!isset($definitions[$slug])) return null;
+
+    $definition = $definitions[$slug];
+    $stored_page_id = absint(get_option($definition['option'], 0));
+    if ($stored_page_id) {
+        $stored_page = get_post($stored_page_id);
+        if ($stored_page instanceof WP_Post && $stored_page->post_type === 'page' && $stored_page->post_status !== 'trash') {
+            return $stored_page;
+        }
+    }
+
+    $page = get_page_by_path($slug, OBJECT, 'page');
+    if ($page instanceof WP_Post && $page->post_status !== 'trash') return $page;
+
+    $template_pages = get_posts(array(
+        'post_type'      => 'page',
+        'post_status'    => array('publish', 'draft', 'pending', 'private', 'future'),
+        'posts_per_page' => 1,
+        'meta_key'       => '_wp_page_template',
+        'meta_value'     => $definition['template'],
+        'no_found_rows'  => true,
+    ));
+
+    return !empty($template_pages) && $template_pages[0] instanceof WP_Post
+        ? $template_pages[0]
+        : null;
+}
+
+/** Create and publish Shipping and Returns pages when they do not exist. */
+function puppy_market_ensure_service_pages() {
+    if (wp_installing()) return;
+
+    foreach (puppy_market_service_page_definitions() as $slug => $definition) {
+        $page = puppy_market_service_page($slug);
+
+        if ($page instanceof WP_Post) {
+            $page_id = $page->ID;
+            if ($page->post_status !== 'publish') {
+                $updated_page_id = wp_update_post(array(
+                    'ID'          => $page_id,
+                    'post_status' => 'publish',
+                ), true);
+                if (!is_wp_error($updated_page_id)) $page_id = absint($updated_page_id);
+            }
+        } else {
+            $page_id = wp_insert_post(array(
+                'post_type'    => 'page',
+                'post_status'  => 'publish',
+                'post_title'   => $definition['title'],
+                'post_name'    => $slug,
+                'post_content' => '',
+            ), true);
+
+            if (is_wp_error($page_id)) continue;
+            $page_id = absint($page_id);
+        }
+
+        if (!$page_id) continue;
+        update_post_meta($page_id, '_wp_page_template', $definition['template']);
+        update_option($definition['option'], $page_id, false);
+    }
+}
+add_action('init', 'puppy_market_ensure_service_pages', 21);
+
+/** Resolve a WordPress page URL, with stable theme-owned service destinations. */
 function puppy_market_page_url($slug) {
     $slug = sanitize_title($slug);
 
@@ -336,6 +420,14 @@ function puppy_market_page_url($slug) {
         return $contact_page instanceof WP_Post
             ? get_permalink($contact_page)
             : home_url('/contact-us/');
+    }
+
+    $service_page_definitions = puppy_market_service_page_definitions();
+    if (isset($service_page_definitions[$slug])) {
+        $service_page = puppy_market_service_page($slug);
+        return $service_page instanceof WP_Post
+            ? get_permalink($service_page)
+            : home_url('/' . $slug . '/');
     }
 
     $page = get_page_by_path($slug, OBJECT, 'page');

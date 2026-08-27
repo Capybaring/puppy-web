@@ -1416,7 +1416,7 @@ body.single-product .ipet-pdp-payments { justify-content: center; padding-top: 1
 @media (min-width: 901px) {
   .site-header .nav {
     position: relative;
-    z-index: 30;
+    z-index: 10;
     min-height: 50px;
     padding-top: 0;
     padding-bottom: 0;
@@ -1596,6 +1596,46 @@ body.single-product .ipet-pdp-payments { justify-content: center; padding-top: 1
     color: var(--primary) !important;
     text-decoration: underline;
     text-underline-offset: 3px;
+  }
+
+  /* A branch with no level-3 children is a compact anchored dropdown, not a mega menu. */
+  .site-header .nav-menu > li.puppy-menu-two-level-only {
+    position: relative;
+  }
+
+  .site-header .nav-menu > li.puppy-menu-two-level-only > .sub-menu {
+    left: 0;
+    width: 300px;
+    max-width: min(360px, calc(100vw - 32px));
+    max-height: min(60vh, 520px);
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 2px;
+    padding: 10px;
+  }
+
+  .site-header .nav-menu > li.puppy-menu-two-level-only > .sub-menu > li {
+    width: 100%;
+    max-width: none;
+    flex: 0 0 auto;
+  }
+
+  .site-header .nav-menu > li.puppy-menu-two-level-only > .sub-menu > li > a {
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 0;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 550;
+    line-height: 1.35;
+  }
+
+  .site-header .nav-menu > li.puppy-menu-two-level-only > .sub-menu > li > a:hover,
+  .site-header .nav-menu > li.puppy-menu-two-level-only > .sub-menu > li > a:focus-visible {
+    color: var(--primary) !important;
+    background: #f2f4f8;
+    text-decoration: none;
   }
 
   .site-header .nav-menu a:focus-visible {
@@ -2648,5 +2688,697 @@ body.home .value-strip-services > a:hover > .service-icon {
   .ipet-contact-form-card,
   .ipet-contact-help-card {
     padding: 22px 18px;
+  }
+}
+
+/* Search controls V5.5: compact typography, calm blue palette, and a stable
+   submit-button colour. Scoped to the two product-search forms only. */
+.site-header .header-main .search {
+  position: relative;
+  z-index: 20;
+  min-height: 50px;
+  overflow: visible;
+  border: 1px solid #cbd8ee;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: none;
+}
+
+.site-header .header-main .search:focus-within {
+  border-color: #a9bfe9;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .2);
+}
+
+.site-header .header-main .search input[type="search"] {
+  padding: 0 17px;
+  appearance: none;
+  color: #17233c;
+  background: #fff;
+  font-family: "Avenir Next", "Segoe UI", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+
+.site-header .header-main .search input[type="search"]::placeholder {
+  color: #747e8f;
+  opacity: 1;
+}
+
+.site-header .header-main .search button {
+  width: 58px;
+  min-width: 58px;
+  border-left: 1px solid #d7e2f5;
+  color: #234fbf;
+  border-radius: 0 9px 9px 0;
+  background: #fff;
+  transition: none;
+}
+
+.site-header .header-main .search button:hover,
+.site-header .header-main .search button:focus-visible,
+.site-header .header-main .search button:active {
+  color: #234fbf;
+  background: #fff;
+  box-shadow: none;
+  transform: none;
+}
+
+.site-header .header-main .search button svg {
+  width: 25px;
+  height: 25px;
+}
+
+.puppy-search-suggest-panel[hidden] {
+  display: none !important;
+}
+
+.puppy-search-suggest-panel {
+  position: absolute;
+  z-index: 100;
+  top: calc(100% + 7px);
+  right: -1px;
+  left: -1px;
+  max-height: min(560px, calc(100vh - 150px));
+  padding: 18px 22px 22px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid #cfd3da;
+  border-radius: 0;
+  color: #171717;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(17, 28, 51, .18);
+}
+
+.puppy-search-suggest-list,
+.puppy-search-suggest-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.puppy-search-suggest-group {
+  gap: 4px;
+}
+
+.puppy-search-suggest-group + .puppy-search-suggest-group {
+  margin-top: 20px;
+}
+
+.puppy-search-suggest-item {
+  display: grid;
+  min-height: 48px;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 0;
+  color: #171717 !important;
+  background: #fff;
+  font-family: "Avenir Next", "Segoe UI", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.puppy-search-suggest-item:hover,
+.puppy-search-suggest-item:focus-visible,
+.puppy-search-suggest-item.is-active {
+  color: #171717 !important;
+  background: #f2f2f2;
+  outline: 0;
+}
+
+.puppy-search-suggest-icon {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  color: #111;
+}
+
+.puppy-search-suggest-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.puppy-search-suggest-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.puppy-search-suggest-label strong {
+  font-weight: 750;
+}
+
+.puppy-search-refine {
+  min-height: 48px;
+  border-color: #cbd5e6;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: none;
+}
+
+.puppy-search-refine:focus-within {
+  border-color: #8fa9dd;
+  box-shadow: 0 0 0 3px rgba(35, 79, 191, .1);
+}
+
+.puppy-search-refine input[type="search"] {
+  padding: 0 16px;
+  appearance: none;
+  color: #17233c;
+  font-family: "Avenir Next", "Segoe UI", Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.puppy-search-refine input[type="search"]::placeholder {
+  color: #747e8f;
+  opacity: 1;
+}
+
+.puppy-search-refine button {
+  min-width: 104px;
+  padding: 0 20px;
+  color: #fff;
+  background: #234fbf;
+  font-family: "Avenir Next", "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: .01em;
+  transition: none;
+}
+
+.puppy-search-refine button:hover,
+.puppy-search-refine button:focus-visible,
+.puppy-search-refine button:active {
+  color: #fff;
+  background: #234fbf;
+  box-shadow: none;
+  transform: none;
+}
+
+@media (max-width: 760px) {
+  .site-header .header-main .search {
+    min-height: 48px;
+  }
+
+  .site-header .header-main .search input[type="search"] {
+    padding: 0 14px;
+    font-size: 15px;
+  }
+
+  .site-header .header-main .search button {
+    width: 54px;
+    min-width: 54px;
+  }
+
+  .site-header .header-main .search button svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .puppy-search-suggest-panel {
+    top: calc(100% + 6px);
+    max-height: min(480px, calc(100vh - 132px));
+    padding: 12px;
+  }
+
+  .puppy-search-suggest-item {
+    min-height: 44px;
+    grid-template-columns: 23px minmax(0, 1fr);
+    gap: 8px;
+    padding: 7px 8px;
+    font-size: 15px;
+  }
+
+  .puppy-search-suggest-icon,
+  .puppy-search-suggest-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .puppy-search-refine button {
+    min-width: 92px;
+    padding: 0 14px;
+  }
+}
+
+/* Shipping and Returns information pages. */
+.ipet-policy-page {
+  color: var(--ink);
+  background: #f5f7fb;
+}
+
+.ipet-policy-page .container {
+  width: min(1260px, calc(100% - 40px));
+}
+
+.ipet-policy-hero {
+  padding: 52px 0;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary-deep) 0%, #2454c8 100%);
+}
+
+.ipet-policy-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(330px, .8fr);
+  gap: 46px;
+  align-items: center;
+}
+
+.ipet-policy-page .eyebrow {
+  margin: 0 0 8px;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.ipet-policy-hero .eyebrow,
+.ipet-policy-highlight .eyebrow,
+.ipet-policy-cta .eyebrow {
+  color: #b9ff63;
+}
+
+.ipet-policy-hero-copy h1 {
+  max-width: 760px;
+  margin: 0 0 18px;
+  color: #fff;
+  font-size: clamp(42px, 5.6vw, 70px);
+  font-weight: 740;
+  line-height: 1.02;
+  letter-spacing: -.05em;
+}
+
+.ipet-policy-hero-copy > p:not(.eyebrow) {
+  max-width: 680px;
+  margin: 0;
+  color: rgba(255, 255, 255, .82);
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.ipet-policy-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.ipet-policy-actions .button,
+.ipet-policy-cta .button {
+  display: inline-flex;
+  min-height: 50px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 8px;
+  color: var(--primary-deep) !important;
+  background: #b9ff63;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.ipet-policy-actions .button:hover,
+.ipet-policy-cta .button:hover {
+  color: var(--primary-deep) !important;
+  background: #a7ef4c;
+}
+
+.ipet-policy-text-link {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.ipet-policy-text-link:hover {
+  color: #b9ff63;
+}
+
+.ipet-policy-highlight {
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, .24);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .09);
+}
+
+.ipet-policy-highlight > span {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 22px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--primary-deep);
+  background: #b9ff63;
+}
+
+.ipet-policy-highlight svg {
+  width: 31px;
+  height: 31px;
+}
+
+.ipet-policy-highlight > strong {
+  display: block;
+  color: #fff;
+  font-size: 25px;
+  font-weight: 720;
+  line-height: 1.25;
+}
+
+.ipet-policy-highlight > p:last-child {
+  margin: 12px 0 0;
+  color: rgba(255, 255, 255, .78);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.ipet-policy-summary,
+.ipet-policy-process,
+.ipet-policy-details,
+.ipet-policy-faq {
+  padding: 58px 0;
+}
+
+.ipet-policy-process,
+.ipet-policy-faq {
+  background: #fff;
+}
+
+.ipet-policy-heading {
+  margin-bottom: 24px;
+}
+
+.ipet-policy-heading h2,
+.ipet-policy-details h2,
+.ipet-policy-cta h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(29px, 4vw, 40px);
+  font-weight: 720;
+  line-height: 1.15;
+  letter-spacing: -.035em;
+}
+
+.ipet-policy-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ipet-policy-card-grid article {
+  min-height: 190px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.ipet-policy-card-grid article > span {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 22px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--primary);
+  background: var(--primary-soft);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.ipet-policy-card-grid h3,
+.ipet-policy-steps h3 {
+  margin: 0 0 8px;
+  color: var(--ink);
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.ipet-policy-card-grid p,
+.ipet-policy-steps p,
+.ipet-policy-details li,
+.ipet-policy-faq-list p,
+.ipet-policy-cta p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.ipet-policy-card-grid p,
+.ipet-policy-steps p,
+.ipet-policy-cta p {
+  margin: 0;
+}
+
+.ipet-policy-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ipet-policy-steps li {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 14px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.ipet-policy-steps li + li {
+  border-left: 0;
+}
+
+.ipet-policy-steps li:first-child {
+  border-radius: 12px 0 0 12px;
+}
+
+.ipet-policy-steps li:last-child {
+  border-radius: 0 12px 12px 0;
+}
+
+.ipet-policy-steps li > span {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--primary);
+  font-weight: 800;
+}
+
+.ipet-policy-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.ipet-policy-details article {
+  padding: 30px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.ipet-policy-details h2 {
+  font-size: 30px;
+}
+
+.ipet-policy-details ul {
+  display: grid;
+  gap: 12px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ipet-policy-details li {
+  position: relative;
+  padding-left: 24px;
+}
+
+.ipet-policy-details li::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--primary);
+  content: "✓";
+  font-weight: 800;
+}
+
+.ipet-policy-faq-list {
+  border-top: 1px solid var(--line);
+}
+
+.ipet-policy-faq-list details {
+  border-bottom: 1px solid var(--line);
+}
+
+.ipet-policy-faq-list summary {
+  position: relative;
+  padding: 20px 44px 20px 0;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 680;
+  cursor: pointer;
+  list-style: none;
+}
+
+.ipet-policy-faq-list summary::-webkit-details-marker {
+  display: none;
+}
+
+.ipet-policy-faq-list summary::after {
+  position: absolute;
+  top: 18px;
+  right: 4px;
+  color: var(--primary);
+  content: "+";
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.ipet-policy-faq-list details[open] summary::after {
+  content: "−";
+}
+
+.ipet-policy-faq-list p {
+  max-width: 900px;
+  margin: -4px 0 20px;
+}
+
+.ipet-policy-cta {
+  padding: 0 0 72px;
+}
+
+.ipet-policy-cta .container {
+  display: flex;
+  min-height: 190px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 34px 38px;
+  border-radius: 14px;
+  color: #fff;
+  background: var(--primary-deep);
+}
+
+.ipet-policy-cta h2 {
+  color: #fff;
+}
+
+.ipet-policy-cta p:last-child {
+  max-width: 720px;
+  margin-top: 9px;
+  color: rgba(255, 255, 255, .78);
+}
+
+.ipet-policy-cta .button {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 900px) {
+  .ipet-policy-hero-grid,
+  .ipet-policy-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ipet-policy-card-grid,
+  .ipet-policy-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .ipet-policy-steps li + li {
+    border-top: 0;
+    border-left: 1px solid var(--line);
+  }
+
+  .ipet-policy-steps li:first-child {
+    border-radius: 12px 12px 0 0;
+  }
+
+  .ipet-policy-steps li:last-child {
+    border-radius: 0 0 12px 12px;
+  }
+
+  .ipet-policy-cta .container {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 640px) {
+  .ipet-policy-page .container {
+    width: calc(100% - 20px);
+  }
+
+  .ipet-policy-hero {
+    padding: 38px 0;
+  }
+
+  .ipet-policy-hero-grid {
+    gap: 28px;
+  }
+
+  .ipet-policy-hero-copy h1 {
+    font-size: 43px;
+  }
+
+  .ipet-policy-hero-copy > p:not(.eyebrow) {
+    font-size: 16px;
+  }
+
+  .ipet-policy-highlight,
+  .ipet-policy-card-grid article,
+  .ipet-policy-details article {
+    padding: 22px 18px;
+  }
+
+  .ipet-policy-summary,
+  .ipet-policy-process,
+  .ipet-policy-details,
+  .ipet-policy-faq {
+    padding: 42px 0;
+  }
+
+  .ipet-policy-steps li {
+    grid-template-columns: 40px minmax(0, 1fr);
+    padding: 20px 18px;
+  }
+
+  .ipet-policy-steps li > span {
+    width: 40px;
+    height: 40px;
+  }
+
+  .ipet-policy-cta {
+    padding-bottom: 50px;
+  }
+
+  .ipet-policy-cta .container {
+    padding: 28px 20px;
+  }
+
+  .ipet-policy-cta .button {
+    width: 100%;
   }
 }

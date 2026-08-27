@@ -23,6 +23,47 @@ function puppy_market_setup() {
 }
 add_action('after_setup_theme', 'puppy_market_setup');
 
+/** Mark primary-menu branches so two-level dropdowns do not inherit mega-menu styling. */
+function puppy_market_primary_menu_depth_classes($items, $args) {
+    if (empty($args->theme_location) || $args->theme_location !== 'primary') return $items;
+
+    $children_by_parent = array();
+    $items_by_id = array();
+
+    foreach ($items as $item) {
+        $item_id = absint($item->ID);
+        $parent_id = absint($item->menu_item_parent);
+        $items_by_id[$item_id] = $item;
+        if ($parent_id) $children_by_parent[$parent_id][] = $item_id;
+    }
+
+    foreach ($items as $item) {
+        if (absint($item->menu_item_parent) !== 0) continue;
+
+        $item_id = absint($item->ID);
+        $second_level_ids = isset($children_by_parent[$item_id])
+            ? $children_by_parent[$item_id]
+            : array();
+        if (empty($second_level_ids)) continue;
+
+        $has_third_level = false;
+        foreach ($second_level_ids as $second_level_id) {
+            if (!empty($children_by_parent[$second_level_id])) {
+                $has_third_level = true;
+                break;
+            }
+        }
+
+        $depth_class = $has_third_level
+            ? 'puppy-menu-has-third-level'
+            : 'puppy-menu-two-level-only';
+        $items_by_id[$item_id]->classes[] = $depth_class;
+    }
+
+    return $items;
+}
+add_filter('wp_nav_menu_objects', 'puppy_market_primary_menu_depth_classes', 10, 2);
+
 function puppy_market_image_sizes() {
     add_image_size('puppy-cart-400', 400, 400, true);
 }
@@ -52,16 +93,19 @@ function puppy_market_assets() {
         );
     }
 
-    if (is_search()) {
-        $search_script_path = get_template_directory() . '/assets/search.js';
-        wp_enqueue_script(
-            'puppy-market-product-search',
-            get_template_directory_uri() . '/assets/search.js',
-            class_exists('WooCommerce') ? array('jquery', 'wc-cart-fragments') : array('jquery'),
-            file_exists($search_script_path) ? filemtime($search_script_path) : $style_version,
-            true
-        );
-    }
+    $search_script_path = get_template_directory() . '/assets/search.js';
+    wp_enqueue_script(
+        'puppy-market-product-search',
+        get_template_directory_uri() . '/assets/search.js',
+        array(),
+        file_exists($search_script_path) ? filemtime($search_script_path) : $style_version,
+        true
+    );
+    wp_localize_script('puppy-market-product-search', 'puppySearchData', array(
+        'ajaxUrl'  => admin_url('admin-ajax.php'),
+        'action'   => 'puppy_market_search_suggestions',
+        'minChars' => 2,
+    ));
 
     // Catalog-only interactions. Do not load this script on the homepage,
     // product detail, account, cart, checkout, header or footer-only pages.
@@ -635,6 +679,88 @@ function puppy_market_product_search_ids($search_term) {
     $prepared_sql = $wpdb->prepare($sql, $parameters);
     return array_values(array_filter(array_map('absint', (array) $wpdb->get_col($prepared_sql))));
 }
+
+/** Return compact product/category and article suggestions for the header search. */
+function puppy_market_search_suggestions() {
+    $search_term = isset($_GET['term'])
+        ? trim(sanitize_text_field(wp_unslash($_GET['term'])))
+        : '';
+    $search_length = function_exists('mb_strlen')
+        ? mb_strlen($search_term)
+        : strlen($search_term);
+
+    if ($search_length < 2) {
+        wp_send_json_success(array('suggestions' => array(), 'articles' => array()));
+    }
+
+    $search_term = function_exists('mb_substr')
+        ? mb_substr($search_term, 0, 80)
+        : substr($search_term, 0, 80);
+    $suggestions = array();
+    $seen_labels = array();
+
+    foreach (array_slice(puppy_market_product_search_ids($search_term), 0, 5) as $product_id) {
+        $label = trim(wp_strip_all_tags(get_the_title($product_id)));
+        $url = get_permalink($product_id);
+        if ($label === '' || !$url) continue;
+
+        $label_key = strtolower($label);
+        if (isset($seen_labels[$label_key])) continue;
+
+        $suggestions[] = array('label' => $label, 'url' => esc_url_raw($url));
+        $seen_labels[$label_key] = true;
+    }
+
+    if (count($suggestions) < 5 && taxonomy_exists('product_cat')) {
+        $category_terms = get_terms(array(
+            'taxonomy'   => 'product_cat',
+            'hide_empty' => true,
+            'search'     => $search_term,
+            'number'     => 5 - count($suggestions),
+            'orderby'    => 'count',
+            'order'      => 'DESC',
+        ));
+
+        if (!is_wp_error($category_terms)) {
+            foreach ($category_terms as $category_term) {
+                $label = trim(wp_strip_all_tags($category_term->name));
+                $url = get_term_link($category_term);
+                $label_key = strtolower($label);
+                if ($label === '' || is_wp_error($url) || isset($seen_labels[$label_key])) continue;
+
+                $suggestions[] = array('label' => $label, 'url' => esc_url_raw($url));
+                $seen_labels[$label_key] = true;
+                if (count($suggestions) >= 5) break;
+            }
+        }
+    }
+
+    $articles = array();
+    $article_query = new WP_Query(array(
+        'post_type'           => 'post',
+        'post_status'         => 'publish',
+        's'                   => $search_term,
+        'posts_per_page'      => 3,
+        'ignore_sticky_posts' => true,
+        'no_found_rows'       => true,
+    ));
+
+    foreach ($article_query->posts as $article) {
+        $label = trim(wp_strip_all_tags(get_the_title($article)));
+        $url = get_permalink($article);
+        if ($label === '' || !$url) continue;
+        $articles[] = array('label' => $label, 'url' => esc_url_raw($url));
+    }
+
+    wp_reset_postdata();
+    nocache_headers();
+    wp_send_json_success(array(
+        'suggestions' => $suggestions,
+        'articles'    => $articles,
+    ));
+}
+add_action('wp_ajax_nopriv_puppy_market_search_suggestions', 'puppy_market_search_suggestions');
+add_action('wp_ajax_puppy_market_search_suggestions', 'puppy_market_search_suggestions');
 
 /** Restrict the public storefront search to published WooCommerce products. */
 function puppy_market_search_products($query) {
