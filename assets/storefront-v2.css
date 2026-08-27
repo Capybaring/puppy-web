@@ -1248,12 +1248,12 @@ body.single-product .ipet-pdp-account-benefit p { margin: 3px 0 7px; color: var(
 body.single-product .ipet-pdp-account-benefit a { color: var(--primary); font-size: 12px; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
 body.single-product .ipet-pdp-payments { justify-content: center; padding-top: 18px; border-top: 1px solid var(--line); }
 
-/* Keep availability, delivery and WooCommerce's real quantity input on one row. */
+/* Quantity sits on the left; stock status sits above delivery on the right. */
 body.single-product .ipet-pdp-buy-grid {
   display: grid;
-  grid-template-columns: minmax(0, .8fr) minmax(0, 1.35fr) 92px;
+  grid-template-columns: 110px minmax(0, 1fr);
   align-items: end;
-  column-gap: 12px;
+  column-gap: 18px;
   row-gap: 20px;
   padding-top: 20px;
   border-bottom: 1px solid var(--line);
@@ -1265,14 +1265,28 @@ body.single-product .ipet-pdp-cart-form .single_variation_wrap,
 body.single-product .ipet-pdp-cart-form .woocommerce-variation-add-to-cart {
   display: contents !important;
 }
-body.single-product .ipet-pdp-stock-row > div { min-width: 0; align-self: end; }
-body.single-product .ipet-pdp-stock-row > div:first-child { grid-column: 1; grid-row: 1; }
-body.single-product .ipet-pdp-stock-row > div:nth-child(2) { grid-column: 2; grid-row: 1; }
-body.single-product .ipet-pdp-stock-row strong { overflow-wrap: anywhere; }
+body.single-product .ipet-pdp-delivery-summary {
+  min-width: 0;
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+}
+body.single-product .ipet-pdp-delivery-summary small {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 700;
+}
+body.single-product .ipet-pdp-delivery-summary strong {
+  display: block;
+  color: var(--ink);
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
 body.single-product .ipet-pdp-quantity-unavailable,
 body.single-product .ipet-pdp-cart-form form.cart .quantity {
-  width: 92px;
-  grid-column: 3;
+  width: 110px;
+  grid-column: 1;
   grid-row: 1;
   align-self: end;
   float: none !important;
@@ -1287,9 +1301,15 @@ body.single-product .ipet-pdp-cart-form form.cart .quantity::before {
   font-size: 13px;
   font-weight: 400;
 }
-body.single-product .ipet-pdp-quantity-unavailable strong { display: block; min-height: 44px; padding-top: 11px; color: var(--ink); font-size: 15px; }
+body.single-product .ipet-pdp-quantity-unavailable strong {
+  display: block;
+  min-height: 44px;
+  padding-top: 11px;
+  color: var(--ink);
+  font-size: 15px;
+}
 body.single-product .ipet-pdp-cart-form form.cart .quantity .qty {
-  width: 92px !important;
+  width: 110px !important;
   min-height: 44px;
   padding: 0 8px;
   border: 1px solid #9da1a5;
@@ -1315,16 +1335,16 @@ body.single-product .ipet-pdp-cart-form .stock { display: none !important; }
 
 @media (max-width: 520px) {
   body.single-product .ipet-pdp-buy-grid {
-    grid-template-columns: minmax(0, .85fr) minmax(0, 1.35fr) 78px;
-    gap: 8px;
+    grid-template-columns: 92px minmax(0, 1fr);
+    column-gap: 12px;
   }
-  body.single-product .ipet-pdp-stock-row small,
+  body.single-product .ipet-pdp-delivery-summary small,
   body.single-product .ipet-pdp-cart-form form.cart .quantity::before,
   body.single-product .ipet-pdp-quantity-unavailable small { font-size: 11px; }
-  body.single-product .ipet-pdp-stock-row strong { font-size: 12px; }
+  body.single-product .ipet-pdp-delivery-summary strong { font-size: 12px; }
   body.single-product .ipet-pdp-quantity-unavailable,
   body.single-product .ipet-pdp-cart-form form.cart .quantity,
-  body.single-product .ipet-pdp-cart-form form.cart .quantity .qty { width: 78px !important; }
+  body.single-product .ipet-pdp-cart-form form.cart .quantity .qty { width: 92px !important; }
 }
 
 @media (max-width: 1050px) {

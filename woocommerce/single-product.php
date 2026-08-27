@@ -160,8 +160,10 @@ $puppy_promotion_text = get_theme_mod('puppy_market_pdp_promotion_text', 'Free s
 
                                 <div class="ipet-pdp-buy-grid">
                                     <div class="ipet-pdp-stock-row">
-                                        <div><small>Availability</small><strong class="<?php echo $product->is_in_stock() ? 'is-in-stock' : 'is-out-of-stock'; ?>" data-pdp-stock><?php echo esc_html($puppy_stock_text); ?></strong></div>
-                                        <div><small>Delivery</small><strong><?php echo $product->is_in_stock() ? 'Get it by ' . esc_html($puppy_eta) : 'Currently unavailable'; ?></strong></div>
+                                        <div class="ipet-pdp-delivery-summary">
+                                            <small class="<?php echo $product->is_in_stock() ? 'is-in-stock' : 'is-out-of-stock'; ?>" data-pdp-stock><?php echo esc_html($puppy_stock_text); ?></small>
+                                            <strong><?php echo $product->is_in_stock() ? 'Get it by ' . esc_html($puppy_eta) : 'Currently unavailable'; ?></strong>
+                                        </div>
                                     </div>
 
                                     <?php if (!$puppy_has_quantity) : ?>
