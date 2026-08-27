@@ -51,6 +51,10 @@ $puppy_promotion_text = get_theme_mod('puppy_market_pdp_promotion_text', 'Free s
                     return $attribute->get_visible() || $attribute->get_variation();
                 });
                 $puppy_stock_text = $product->is_in_stock() ? ($product->is_on_backorder(1) ? 'Available on backorder' : 'In stock') : 'Out of stock';
+                $puppy_has_quantity = $product->is_type(array('simple', 'variable'))
+                    && $product->is_purchasable()
+                    && $product->is_in_stock()
+                    && !$product->is_sold_individually();
                 $puppy_eta_timestamp = strtotime('+3 weekdays', current_time('timestamp'));
                 $puppy_eta = $puppy_eta_timestamp ? date_i18n('D, M j', $puppy_eta_timestamp) : '';
                 $puppy_rating = (float) $product->get_average_rating();
@@ -154,13 +158,19 @@ $puppy_promotion_text = get_theme_mod('puppy_market_pdp_promotion_text', 'Free s
                                     <div class="ipet-pdp-offer"><span aria-hidden="true">⌁</span><p><strong>Free shipping over $49</strong><br>Qualifying orders ship free.</p></div>
                                 </div>
 
-                                <div class="ipet-pdp-stock-row">
-                                    <div><small>Availability</small><strong class="<?php echo $product->is_in_stock() ? 'is-in-stock' : 'is-out-of-stock'; ?>" data-pdp-stock><?php echo esc_html($puppy_stock_text); ?></strong></div>
-                                    <div><small>Delivery</small><strong><?php echo $product->is_in_stock() ? 'Get it by ' . esc_html($puppy_eta) : 'Currently unavailable'; ?></strong></div>
-                                </div>
+                                <div class="ipet-pdp-buy-grid">
+                                    <div class="ipet-pdp-stock-row">
+                                        <div><small>Availability</small><strong class="<?php echo $product->is_in_stock() ? 'is-in-stock' : 'is-out-of-stock'; ?>" data-pdp-stock><?php echo esc_html($puppy_stock_text); ?></strong></div>
+                                        <div><small>Delivery</small><strong><?php echo $product->is_in_stock() ? 'Get it by ' . esc_html($puppy_eta) : 'Currently unavailable'; ?></strong></div>
+                                    </div>
 
-                                <div class="ipet-pdp-cart-form">
-                                    <?php woocommerce_template_single_add_to_cart(); ?>
+                                    <?php if (!$puppy_has_quantity) : ?>
+                                        <div class="ipet-pdp-quantity-unavailable"><small>Quantity</small><strong>—</strong></div>
+                                    <?php endif; ?>
+
+                                    <div class="ipet-pdp-cart-form">
+                                        <?php woocommerce_template_single_add_to_cart(); ?>
+                                    </div>
                                 </div>
 
                                 <div class="ipet-pdp-reassurance">

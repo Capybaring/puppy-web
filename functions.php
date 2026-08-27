@@ -469,45 +469,145 @@ function puppy_market_product_delivery_estimate() {
 }
 add_action('woocommerce_single_product_summary', 'puppy_market_product_delivery_estimate', 22);
 
-/** Data-driven PDP details. Reviews stay disabled for this storefront. */
+/** Define the four editorial sections managed on each product. */
+function puppy_market_product_detail_fields() {
+    return array(
+        'detail' => array(
+            'label'       => 'Detail',
+            'description' => 'Main product information. Leave blank to use the WooCommerce product description.',
+            'meta_key'    => '_puppy_pdp_detail',
+        ),
+        'instruction' => array(
+            'label'       => 'Instruction',
+            'description' => 'Usage, feeding, care or assembly instructions.',
+            'meta_key'    => '_puppy_pdp_instruction',
+        ),
+        'size' => array(
+            'label'       => 'Size',
+            'description' => 'Sizing, dimensions, weight, fit or capacity information.',
+            'meta_key'    => '_puppy_pdp_size',
+        ),
+        'faq' => array(
+            'label'       => 'FAQ',
+            'description' => 'Common product questions and answers.',
+            'meta_key'    => '_puppy_pdp_faq',
+        ),
+    );
+}
+
+/** Add rich-text editors to the WooCommerce product editing screen. */
+function puppy_market_add_product_detail_meta_box() {
+    add_meta_box(
+        'puppy-market-product-detail-sections',
+        __('Product detail sections', 'puppy-market'),
+        'puppy_market_render_product_detail_meta_box',
+        'product',
+        'normal',
+        'default'
+    );
+}
+add_action('add_meta_boxes_product', 'puppy_market_add_product_detail_meta_box');
+
+/** Render the four product-specific detail editors. */
+function puppy_market_render_product_detail_meta_box($post) {
+    wp_nonce_field('puppy_market_save_product_detail_sections', 'puppy_market_product_detail_sections_nonce');
+
+    foreach (puppy_market_product_detail_fields() as $field_id => $field) {
+        $value = (string) get_post_meta($post->ID, $field['meta_key'], true);
+        echo '<div class="puppy-product-detail-editor" style="margin:0 0 24px">';
+        echo '<p style="margin:0 0 8px"><strong>' . esc_html($field['label']) . '</strong><br><span class="description">' . esc_html($field['description']) . '</span></p>';
+
+        wp_editor($value, 'puppypdp' . sanitize_key($field_id), array(
+            'textarea_name' => 'puppy_pdp_' . sanitize_key($field_id),
+            'textarea_rows' => 7,
+            'media_buttons'  => false,
+            'teeny'          => true,
+            'quicktags'      => true,
+        ));
+
+        echo '</div>';
+    }
+}
+
+/** Save product detail editors without affecting quick edits or autosaves. */
+function puppy_market_save_product_detail_sections($post_id) {
+    if (!isset($_POST['puppy_market_product_detail_sections_nonce'])) return;
+    if (!wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['puppy_market_product_detail_sections_nonce'])), 'puppy_market_save_product_detail_sections')) return;
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    if (!current_user_can('edit_post', $post_id)) return;
+
+    foreach (puppy_market_product_detail_fields() as $field_id => $field) {
+        $input_name = 'puppy_pdp_' . sanitize_key($field_id);
+        if (!isset($_POST[$input_name])) continue;
+        update_post_meta($post_id, $field['meta_key'], wp_kses_post(wp_unslash($_POST[$input_name])));
+    }
+}
+add_action('save_post_product', 'puppy_market_save_product_detail_sections');
+
+/** Render Detail, Instruction, Size and FAQ below the product hero. */
 function puppy_market_product_about_item() {
     global $product;
     if (!$product) return;
 
-    $description = $product->get_description() ?: $product->get_short_description();
-    $ingredients = $product->get_meta('_ingredients', true) ?: $product->get_meta('ingredients', true);
-    $instructions = $product->get_meta('_feeding_instructions', true) ?: $product->get_meta('feeding_instructions', true);
-    $specifications = array();
+    $detail = (string) $product->get_meta('_puppy_pdp_detail', true);
+    if ($detail === '') $detail = $product->get_description() ?: $product->get_short_description();
 
-    foreach ($product->get_attributes() as $attribute) {
-        if (!$attribute->get_visible()) continue;
-        $values = $attribute->is_taxonomy()
-            ? wc_get_product_terms($product->get_id(), $attribute->get_name(), array('fields' => 'names'))
-            : $attribute->get_options();
-        if (!empty($values)) {
-            $attribute_label = wc_attribute_label($attribute->get_name());
-            $attribute_value = implode(', ', $values);
-            $specifications[$attribute_label] = $attribute_value;
-            if (!$ingredients && stripos($attribute_label, 'ingredient') !== false) $ingredients = $attribute_value;
-            if (!$instructions && (stripos($attribute_label, 'feeding') !== false || stripos($attribute_label, 'instruction') !== false)) $instructions = $attribute_value;
+    $instruction = (string) $product->get_meta('_puppy_pdp_instruction', true);
+    if ($instruction === '') {
+        $instruction = (string) ($product->get_meta('_feeding_instructions', true) ?: $product->get_meta('feeding_instructions', true));
+    }
+
+    $size = (string) $product->get_meta('_puppy_pdp_size', true);
+    $size_rows = array();
+
+    if ($size === '') {
+        foreach ($product->get_attributes() as $attribute) {
+            if (!$attribute->get_visible()) continue;
+            $label = wc_attribute_label($attribute->get_name());
+            if (!preg_match('/size|dimension|weight|width|height|length|capacity|volume/i', $label)) continue;
+
+            $values = $attribute->is_taxonomy()
+                ? wc_get_product_terms($product->get_id(), $attribute->get_name(), array('fields' => 'names'))
+                : $attribute->get_options();
+            if (!empty($values)) $size_rows[$label] = implode(', ', $values);
         }
-    }
-    if ($product->get_sku()) $specifications['SKU'] = $product->get_sku();
-    if ($product->has_weight()) $specifications['Weight'] = wc_format_weight($product->get_weight());
-    if ($product->has_dimensions()) $specifications['Dimensions'] = wc_format_dimensions($product->get_dimensions(false));
 
-    $sections = array();
-    if ($description) $sections[] = array('title' => 'Details', 'content' => wp_kses_post(wpautop($description)), 'open' => true);
-    if ($ingredients) $sections[] = array('title' => 'Ingredient Information', 'content' => wp_kses_post(wpautop($ingredients)), 'open' => false);
-    if ($instructions) $sections[] = array('title' => 'Feeding Instructions', 'content' => wp_kses_post(wpautop($instructions)), 'open' => false);
-    if (!empty($specifications)) {
-        $spec_html = '<dl class="ipet-spec-list">';
-        foreach ($specifications as $label => $value) $spec_html .= '<div><dt>' . esc_html($label) . '</dt><dd>' . esc_html($value) . '</dd></div>';
-        $spec_html .= '</dl>';
-        $sections[] = array('title' => 'Specifications', 'content' => $spec_html, 'open' => false);
+        if ($product->has_weight()) $size_rows['Weight'] = wc_format_weight($product->get_weight());
+        if ($product->has_dimensions()) $size_rows['Dimensions'] = wc_format_dimensions($product->get_dimensions(false));
     }
-    $sections[] = array('title' => 'Shipping & Returns', 'content' => '<p>Free shipping is available on qualifying orders. Eligible unused items can be returned within 30 days of delivery.</p>', 'open' => false);
-    if (!empty($sections) && !array_filter($sections, function ($section) { return $section['open']; })) $sections[0]['open'] = true;
+
+    $faq = (string) $product->get_meta('_puppy_pdp_faq', true);
+
+    $detail_content = $detail !== ''
+        ? wp_kses_post(wpautop($detail))
+        : '<p>Product details will be added soon.</p>';
+
+    $instruction_content = $instruction !== ''
+        ? wp_kses_post(wpautop($instruction))
+        : '<p>Please follow the directions supplied with the product. Contact customer care if you need product-specific guidance.</p>';
+
+    if ($size !== '') {
+        $size_content = wp_kses_post(wpautop($size));
+    } elseif (!empty($size_rows)) {
+        $size_content = '<dl class="ipet-spec-list">';
+        foreach ($size_rows as $label => $value) {
+            $size_content .= '<div><dt>' . esc_html($label) . '</dt><dd>' . esc_html($value) . '</dd></div>';
+        }
+        $size_content .= '</dl>';
+    } else {
+        $size_content = '<p>Size information will be added soon.</p>';
+    }
+
+    $faq_content = $faq !== ''
+        ? wp_kses_post(wpautop($faq))
+        : '<p>Have a question about this item? <a href="' . esc_url(puppy_market_page_url('contact')) . '">Contact customer care</a> before ordering.</p>';
+
+    $sections = array(
+        array('title' => 'Detail', 'content' => $detail_content, 'open' => true),
+        array('title' => 'Instruction', 'content' => $instruction_content, 'open' => false),
+        array('title' => 'Size', 'content' => $size_content, 'open' => false),
+        array('title' => 'FAQ', 'content' => $faq_content, 'open' => false),
+    );
 
     echo '<section class="ipet-about-item" aria-labelledby="ipet-about-title"><h2 id="ipet-about-title">About This Item</h2>';
     foreach ($sections as $index => $section) {
