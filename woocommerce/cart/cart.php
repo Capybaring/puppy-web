@@ -293,7 +293,6 @@ $puppy_cart_item_count = WC()->cart->get_cart_contents_count();
 					'product'         => $puppy_rec_product,
 					'card_class'      => 'puppy-cart-recommendation',
 					'show_sale_label' => false,
-					'show_reviews'    => false,
 				) );
 			endforeach;
 			?>
