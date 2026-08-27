@@ -168,11 +168,12 @@ $puppy_promotion_text = get_theme_mod('puppy_market_pdp_promotion_text', 'Free s
                                     <p><span aria-hidden="true">✓</span><strong>Secure checkout</strong><small>Protected payment processing</small></p>
                                 </div>
 
-                                <div class="ipet-pdp-account-benefit">
-                                    <span aria-hidden="true">iP</span><div><strong>Make checkout easier</strong><p>Sign in to keep your order history and manage purchases in one place.</p><a href="<?php echo esc_url(puppy_market_account_url()); ?>">Sign in or create an account</a></div>
-                                </div>
-
-                                <div class="ipet-pdp-payments" aria-label="Accepted payment methods"><span>Visa</span><span>Mastercard</span><span>PayPal</span><span>Apple Pay</span></div>
+                                <?php $puppy_payment_methods = puppy_market_payment_methods(); ?>
+                                <?php if (!empty($puppy_payment_methods)) : ?>
+                                    <div class="ipet-pdp-payments" aria-label="Accepted payment methods">
+                                        <?php foreach ($puppy_payment_methods as $puppy_payment_method) : ?><span><?php echo esc_html($puppy_payment_method); ?></span><?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
 
                             <?php

@@ -115,7 +115,10 @@ $footer_credit_text = (string) get_theme_mod(
       <div><span aria-hidden="true">✓</span><strong>Secure checkout</strong><small>Protected payments</small></div>
       <div><span aria-hidden="true">↗</span><strong>Fast shipping</strong><small>Free over $75</small></div>
       <div><span aria-hidden="true">↩</span><strong>Easy returns</strong><small>Simple and convenient</small></div>
-      <div class="footer-payments"><strong>Ways to pay</strong><span>VISA</span><span>Mastercard</span><span>AMEX</span><span>PayPal</span></div>
+      <?php $footer_payment_methods = puppy_market_payment_methods(); ?>
+      <?php if (!empty($footer_payment_methods)) : ?>
+        <div class="footer-payments"><strong>Ways to pay</strong><?php foreach ($footer_payment_methods as $footer_payment_method) : ?><span><?php echo esc_html($footer_payment_method); ?></span><?php endforeach; ?></div>
+      <?php endif; ?>
     </div>
 
     <?php if ($footer_copyright_text !== '' || $footer_credit_text !== '') : ?>

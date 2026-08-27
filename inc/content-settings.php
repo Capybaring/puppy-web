@@ -9,6 +9,33 @@
 
 defined('ABSPATH') || exit;
 
+/** Default payment badges used until the store owner saves a custom list. */
+function puppy_market_default_payment_methods() {
+    return array('Visa', 'Mastercard', 'PayPal', 'Apple Pay');
+}
+
+/** Sanitize a comma- or line-separated list of payment method labels. */
+function puppy_market_sanitize_payment_methods($value) {
+    $methods = preg_split('/[\r\n,]+/', (string) $value);
+    $sanitized = array();
+
+    foreach ((array) $methods as $method) {
+        $method = sanitize_text_field(trim($method));
+        if ($method === '' || in_array($method, $sanitized, true)) continue;
+        $sanitized[] = $method;
+        if (count($sanitized) >= 12) break;
+    }
+
+    return implode("\n", $sanitized);
+}
+
+/** Return the payment badges configured in the WordPress Customizer. */
+function puppy_market_payment_methods() {
+    $default = implode("\n", puppy_market_default_payment_methods());
+    $stored = puppy_market_sanitize_payment_methods(get_theme_mod('puppy_market_payment_methods', $default));
+    return $stored === '' ? array() : explode("\n", $stored);
+}
+
 /** Register the native Customizer controls used by the storefront. */
 function puppy_market_customize_register($wp_customize) {
     $wp_customize->add_section('puppy_market_home_media', array(
@@ -67,6 +94,25 @@ function puppy_market_customize_register($wp_customize) {
         'label'       => __('Footer description', 'puppy-market'),
         'description' => __('Leave blank to use the site tagline from Settings → General.', 'puppy-market'),
         'section'     => 'puppy_market_store_text',
+        'type'        => 'textarea',
+    ));
+
+    $wp_customize->add_section('puppy_market_payment_methods', array(
+        'title'       => __('Payment methods', 'puppy-market'),
+        'description' => __('Manage the payment badges shown on product pages, the cart and the footer.', 'puppy-market'),
+        'priority'    => 37,
+    ));
+
+    $wp_customize->add_setting('puppy_market_payment_methods', array(
+        'default'           => implode("\n", puppy_market_default_payment_methods()),
+        'sanitize_callback' => 'puppy_market_sanitize_payment_methods',
+        'transport'         => 'refresh',
+    ));
+
+    $wp_customize->add_control('puppy_market_payment_methods', array(
+        'label'       => __('Accepted payment methods', 'puppy-market'),
+        'description' => __('Enter one name per line, or separate names with commas. Leave blank to hide the payment badges.', 'puppy-market'),
+        'section'     => 'puppy_market_payment_methods',
         'type'        => 'textarea',
     ));
 

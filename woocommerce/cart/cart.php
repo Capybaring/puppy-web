@@ -260,10 +260,13 @@ $puppy_cart_item_count = WC()->cart->get_cart_contents_count();
 					<div class="puppy-cart-trust-row"><span aria-hidden="true">✓</span><div><strong>Secure checkout</strong><p>Your payment information is protected</p></div></div>
 				</div>
 
-				<div class="puppy-cart-pay-card">
-					<span class="puppy-cart-pay-label">Secure payment</span>
-					<div class="puppy-cart-pay-badges"><span>PayPal</span><span>Visa</span><span>Mastercard</span><span>Apple Pay</span><span>G Pay</span></div>
-				</div>
+				<?php $puppy_cart_payment_methods = puppy_market_payment_methods(); ?>
+				<?php if ( ! empty( $puppy_cart_payment_methods ) ) : ?>
+					<div class="puppy-cart-pay-card">
+						<span class="puppy-cart-pay-label">Secure payment</span>
+						<div class="puppy-cart-pay-badges"><?php foreach ( $puppy_cart_payment_methods as $puppy_cart_payment_method ) : ?><span><?php echo esc_html( $puppy_cart_payment_method ); ?></span><?php endforeach; ?></div>
+					</div>
+				<?php endif; ?>
 			</aside>
 		<?php endif; ?>
 
