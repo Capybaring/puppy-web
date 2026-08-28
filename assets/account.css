@@ -1842,7 +1842,7 @@ body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-d
 }
 
 body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .order-again {
-    margin: 0 0 22px !important;
+    margin: 22px 0 !important;
 }
 
 body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .order-again .button {
