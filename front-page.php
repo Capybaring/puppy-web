@@ -114,16 +114,6 @@ if (!empty($manual_best_seller_ids) && function_exists('wc_get_product')) {
     ));
 }
 
-$brand_taxonomy = puppy_market_brand_taxonomy();
-$brand_terms = get_terms(array(
-    'taxonomy'   => $brand_taxonomy,
-    'hide_empty' => true,
-    'number'     => 6,
-    'orderby'    => 'count',
-    'order'      => 'DESC',
-));
-if (is_wp_error($brand_terms)) $brand_terms = array();
-
 $video_url = puppy_market_media_url('puppy_market_home_video');
 $video_type = puppy_market_media_mime_type('puppy_market_home_video');
 $video_poster_id = puppy_market_media_id('puppy_market_home_video_poster');
@@ -205,16 +195,6 @@ $care_image_id = puppy_market_media_id('puppy_market_home_care_image');
                     <?php endforeach; ?>
                 </div>
             </div>
-        </section>
-    <?php endif; ?>
-
-    <?php if (!empty($brand_terms)) : ?>
-        <section class="section brand-wall" aria-label="Shop by brand">
-            <div class="container"><div class="section-heading"><h2>Shop by brand</h2></div><div class="brand-wall-row">
-                <?php foreach ($brand_terms as $brand_term) : ?>
-                    <a href="<?php echo esc_url(add_query_arg('puppy_brand%5B%5D', $brand_term->slug, $shop_url)); ?>"><?php echo esc_html($brand_term->name); ?></a>
-                <?php endforeach; ?>
-            </div></div>
         </section>
     <?php endif; ?>
 
