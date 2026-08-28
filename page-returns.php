@@ -44,16 +44,29 @@ $chat_url = esc_url_raw(get_theme_mod('puppy_market_contact_chat_url', ''));
       <aside class="ipet-care-sidebar">
         <p class="eyebrow">Help</p>
         <h2>Browse by topic</h2>
-        <nav aria-label="Customer care topics">
-          <a class="is-active" href="#common-questions">Common questions</a>
-          <a href="#orders-help">Orders &amp; payments</a>
-          <a href="#shipping-help">Shipping &amp; delivery</a>
-          <a href="#returns-help">Returns &amp; refunds</a>
-          <a href="#products-help">Product questions</a>
-        </nav>
+        <div class="ipet-care-topic-selector" role="radiogroup" aria-label="Customer care topics">
+          <input class="ipet-care-topic-control ipet-care-topic-default" type="radio" name="care-help-topic" id="care-topic-common" checked tabindex="-1" autocomplete="off" aria-label="Common questions">
+          <label class="ipet-care-topic-option">
+            <input class="ipet-care-topic-control" type="radio" name="care-help-topic" id="care-topic-orders" autocomplete="off" aria-controls="orders-help">
+            <span>Orders &amp; payments</span>
+          </label>
+          <label class="ipet-care-topic-option">
+            <input class="ipet-care-topic-control" type="radio" name="care-help-topic" id="care-topic-shipping" autocomplete="off" aria-controls="shipping-help">
+            <span>Shipping &amp; delivery</span>
+          </label>
+          <label class="ipet-care-topic-option">
+            <input class="ipet-care-topic-control" type="radio" name="care-help-topic" id="care-topic-returns" autocomplete="off" aria-controls="returns-help">
+            <span>Returns &amp; refunds</span>
+          </label>
+          <label class="ipet-care-topic-option">
+            <input class="ipet-care-topic-control" type="radio" name="care-help-topic" id="care-topic-products" autocomplete="off" aria-controls="products-help">
+            <span>Product questions</span>
+          </label>
+        </div>
       </aside>
 
       <div class="ipet-care-help-main">
+        <label class="ipet-care-common-return" for="care-topic-common">← Back to common questions</label>
         <?php echo apply_filters('the_content', $care_content); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WordPress page content. */ ?>
       </div>
     </div>

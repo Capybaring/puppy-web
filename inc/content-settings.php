@@ -1133,7 +1133,7 @@ function puppy_market_page_url($slug) {
     }
 
     if ($slug === 'shipping') {
-        return $returns_url . '#shipping-help';
+        return $returns_url;
     }
 
     if (isset($service_page_definitions[$slug])) {

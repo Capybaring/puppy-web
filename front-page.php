@@ -7,7 +7,7 @@ $shop_url = puppy_market_catalog_url();
 $returns_url = puppy_market_page_url('returns');
 $contact_url = $returns_url;
 $business_support_url = $returns_url . '#contact-options';
-$shipping_support_url = $returns_url . '#shipping-help';
+$shipping_support_url = $returns_url;
 $pet_care_url = puppy_market_category_link('pet-care');
 
 $assurance_title = get_theme_mod('puppy_market_assurance_title', 'Shop with confidence');

@@ -5116,7 +5116,7 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
 }
 
 
-/* Customer Care V2 — topic sidebar with grouped questions. */
+/* Customer Care V3 — nested topic panels with a default question view. */
 .ipet-care-page {
   color: var(--ink);
   background: #fff;
@@ -5188,8 +5188,6 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   align-items: start;
 }
 .ipet-care-sidebar {
-  position: sticky;
-  top: 110px;
   padding: 24px;
   border: 1px solid var(--line);
   border-radius: 14px;
@@ -5204,11 +5202,28 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   line-height: 1.2;
   letter-spacing: -.025em;
 }
-.ipet-care-sidebar nav {
+.ipet-care-topic-selector {
   display: grid;
   gap: 4px;
 }
-.ipet-care-sidebar nav a {
+.ipet-care-topic-control {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  opacity: 0;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.ipet-care-topic-option {
+  display: block;
+  margin: 0;
+  cursor: pointer;
+}
+.ipet-care-topic-option span {
   display: flex;
   min-height: 44px;
   align-items: center;
@@ -5220,45 +5235,56 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   line-height: 1.35;
   transition: color .16s ease, background-color .16s ease;
 }
-.ipet-care-sidebar nav a:hover,
-.ipet-care-sidebar nav a.is-active {
+.ipet-care-topic-option:hover span,
+.ipet-care-topic-option:has(.ipet-care-topic-control:checked) span {
   color: var(--primary);
   background: var(--primary-soft);
 }
-.ipet-care-help-layout:has(.ipet-care-question-group:target) .ipet-care-sidebar nav a.is-active {
-  color: #43536a;
-  background: transparent;
-}
-.ipet-care-help-layout:has(#common-questions:target) .ipet-care-sidebar nav a[href="#common-questions"],
-.ipet-care-help-layout:has(#orders-help:target) .ipet-care-sidebar nav a[href="#orders-help"],
-.ipet-care-help-layout:has(#shipping-help:target) .ipet-care-sidebar nav a[href="#shipping-help"],
-.ipet-care-help-layout:has(#returns-help:target) .ipet-care-sidebar nav a[href="#returns-help"],
-.ipet-care-help-layout:has(#products-help:target) .ipet-care-sidebar nav a[href="#products-help"] {
-  color: var(--primary);
-  background: var(--primary-soft);
+.ipet-care-topic-option:has(.ipet-care-topic-control:focus-visible) span {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 .ipet-care-help-main {
   min-width: 0;
 }
+.ipet-care-common-return {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  margin: 0 0 22px;
+  padding: 7px 12px;
+  border-radius: 7px;
+  color: var(--primary);
+  background: var(--primary-soft);
+  font-size: 14px;
+  font-weight: 680;
+  cursor: pointer;
+}
+.ipet-care-common-return:hover {
+  background: #dfeaff;
+}
 .ipet-care-question-groups {
-  display: grid;
+  min-height: 410px;
 }
 .ipet-care-question-group {
-  padding: 52px 0;
-  border-bottom: 1px solid var(--line);
-  scroll-margin-top: 108px;
+  display: none;
 }
-.ipet-care-question-group:first-child {
-  padding-top: 0;
+.ipet-care-help-layout:has(#care-topic-common:checked) #common-questions,
+.ipet-care-help-layout:has(#care-topic-orders:checked) #orders-help,
+.ipet-care-help-layout:has(#care-topic-shipping:checked) #shipping-help,
+.ipet-care-help-layout:has(#care-topic-returns:checked) #returns-help,
+.ipet-care-help-layout:has(#care-topic-products:checked) #products-help {
+  display: block;
 }
-.ipet-care-question-group:last-child {
-  padding-bottom: 0;
-  border-bottom: 0;
+.ipet-care-help-layout:has(#care-topic-common:checked) .ipet-care-common-return {
+  display: none;
 }
-.ipet-care-question-group:target {
-  border-radius: 14px;
-  outline: 8px solid #f6f9ff;
-  background: #f6f9ff;
+.ipet-care-help-layout:not(:has(.ipet-care-question-group)) {
+  grid-template-columns: minmax(0, 1fr);
+}
+.ipet-care-help-layout:not(:has(.ipet-care-question-group)) .ipet-care-sidebar,
+.ipet-care-help-layout:not(:has(.ipet-care-question-group)) .ipet-care-common-return {
+  display: none;
 }
 .ipet-care-question-heading {
   max-width: 720px;
@@ -5418,22 +5444,22 @@ a.ipet-care-channel:hover {
     gap: 34px;
   }
   .ipet-care-sidebar {
-    position: static;
     padding: 20px;
   }
-  .ipet-care-sidebar nav {
-    display: flex;
-    margin-right: -20px;
-    margin-left: -20px;
-    padding: 0 20px 2px;
+  .ipet-care-topic-selector {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    overflow-x: auto;
-    scrollbar-width: thin;
   }
-  .ipet-care-sidebar nav a {
-    min-height: 40px;
-    flex: 0 0 auto;
-    white-space: nowrap;
+  .ipet-care-topic-option {
+    min-width: 0;
+  }
+  .ipet-care-topic-option span {
+    min-height: 44px;
+    justify-content: center;
+    text-align: center;
+  }
+  .ipet-care-question-groups {
+    min-height: 0;
   }
   .ipet-care-channel-grid {
     grid-template-columns: 1fr;
@@ -5460,18 +5486,6 @@ a.ipet-care-channel:hover {
   }
   .ipet-care-sidebar {
     padding: 18px;
-  }
-  .ipet-care-sidebar nav {
-    margin-right: -18px;
-    margin-left: -18px;
-    padding-right: 18px;
-    padding-left: 18px;
-  }
-  .ipet-care-question-group {
-    padding: 42px 0;
-  }
-  .ipet-care-question-group:target {
-    outline-width: 5px;
   }
   .ipet-care-faq-list summary {
     padding: 18px 48px 18px 18px;
