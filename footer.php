@@ -83,14 +83,14 @@ $footer_credit_text = (string) get_theme_mod(
         <?php if (has_nav_menu('footer_help')) : ?>
           <?php wp_nav_menu(array('theme_location' => 'footer_help', 'container' => false, 'menu_class' => 'footer-menu', 'fallback_cb' => false)); ?>
         <?php else : ?>
-          <ul class="footer-menu"><li><a href="<?php echo esc_url($footer_returns_url); ?>">Returns &amp; support</a></li><li><a href="<?php echo esc_url($footer_account_url); ?>">My account</a></li></ul>
+          <ul class="footer-menu"><li><a href="<?php echo esc_url($footer_returns_url); ?>">Customer care</a></li><li><a href="<?php echo esc_url($footer_account_url); ?>">My account</a></li></ul>
         <?php endif; ?>
       </div>
       <div><h3>About</h3>
         <?php if (has_nav_menu('footer_about')) : ?>
           <?php wp_nav_menu(array('theme_location' => 'footer_about', 'container' => false, 'menu_class' => 'footer-menu', 'fallback_cb' => false)); ?>
         <?php else : ?>
-          <ul class="footer-menu"><li><a href="<?php echo esc_url($footer_about_url); ?>">About us</a></li><li><a href="<?php echo esc_url($footer_privacy_url); ?>">Privacy</a></li><li><a href="<?php echo esc_url($footer_contact_url); ?>">Customer care</a></li></ul>
+          <ul class="footer-menu"><li><a href="<?php echo esc_url($footer_about_url); ?>">About us</a></li><li><a href="<?php echo esc_url($footer_privacy_url); ?>">Privacy</a></li></ul>
         <?php endif; ?>
       </div>
       <div class="footer-connect"><h3><?php echo esc_html($footer_social_title); ?></h3><p><?php echo esc_html($footer_social_description); ?></p>
@@ -107,7 +107,7 @@ $footer_credit_text = (string) get_theme_mod(
     </div>
 
     <nav class="footer-quick-links" aria-label="Footer links">
-      <span aria-label="Country">🌐 United States</span><a href="<?php echo esc_url($footer_about_url); ?>">About</a><a href="<?php echo esc_url($footer_returns_url); ?>">Returns &amp; support</a><a href="<?php echo esc_url($footer_privacy_url); ?>">Privacy</a><a href="<?php echo esc_url($footer_shop_url); ?>">Shop all</a>
+      <span aria-label="Country">🌐 United States</span><a href="<?php echo esc_url($footer_about_url); ?>">About</a><a href="<?php echo esc_url($footer_returns_url); ?>">Customer care</a><a href="<?php echo esc_url($footer_privacy_url); ?>">Privacy</a><a href="<?php echo esc_url($footer_shop_url); ?>">Shop all</a>
     </nav>
 
     <div class="footer-reassurance" aria-label="Shopping reassurance">

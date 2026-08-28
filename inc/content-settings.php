@@ -518,8 +518,8 @@ function puppy_market_customize_register($wp_customize) {
     }
 
     $wp_customize->add_section('puppy_market_contact_page', array(
-        'title'       => __('Returns & support page', 'puppy-market'),
-        'description' => __('Manage the merged Returns and Contact page. Edit the policy body under Pages → Returns & Support.', 'puppy-market'),
+        'title'       => __('Customer care page', 'puppy-market'),
+        'description' => __('Manage customer care channels and page text. Edit the common questions under Pages → Returns & Support.', 'puppy-market'),
         'priority'    => 39,
     ));
 
@@ -532,63 +532,52 @@ function puppy_market_customize_register($wp_customize) {
         ),
         'puppy_market_business_email' => array(
             'label'       => __('Business and wholesale email', 'puppy-market'),
-            'description' => __('Leave blank to use the customer support email.', 'puppy-market'),
+            'description' => __('Leave blank to use the customer support email for business form submissions.', 'puppy-market'),
             'default'     => '',
             'type'        => 'email',
             'sanitize'    => 'sanitize_email',
         ),
         'puppy_market_contact_phone' => array(
             'label'       => __('Support phone', 'puppy-market'),
-            'description' => __('Optional. Leave blank to hide the phone contact method.', 'puppy-market'),
+            'description' => __('Leave blank to show the Phone channel as unavailable.', 'puppy-market'),
             'default'     => '',
             'type'        => 'text',
             'sanitize'    => 'sanitize_text_field',
         ),
+        'puppy_market_contact_chat_url' => array(
+            'label'       => __('Live chat URL', 'puppy-market'),
+            'description' => __('Add the URL supplied by your live-chat provider. Leave blank to show Chat as unavailable.', 'puppy-market'),
+            'default'     => '',
+            'type'        => 'url',
+            'sanitize'    => 'esc_url_raw',
+        ),
         'puppy_market_contact_response_text' => array(
-            'label'    => __('Response promise', 'puppy-market'),
-            'default'  => __('We will review your request and follow up as soon as possible.', 'puppy-market'),
+            'label'    => __('Availability or response text', 'puppy-market'),
+            'default'  => __('Our customer care team will follow up as soon as possible.', 'puppy-market'),
             'type'     => 'textarea',
             'sanitize' => 'sanitize_textarea_field',
         ),
         'puppy_market_returns_hero_title' => array(
-            'label'    => __('Hero title', 'puppy-market'),
-            'default'  => __('A straightforward path when an item is not right.', 'puppy-market'),
+            'label'    => __('Customer care title', 'puppy-market'),
+            'default'  => __('How can we help?', 'puppy-market'),
             'type'     => 'text',
             'sanitize' => 'sanitize_text_field',
         ),
         'puppy_market_returns_hero_text' => array(
-            'label'    => __('Hero description', 'puppy-market'),
-            'default'  => __('Review the return guidance or send the support team your order details from one place.', 'puppy-market'),
-            'type'     => 'textarea',
-            'sanitize' => 'sanitize_textarea_field',
-        ),
-        'puppy_market_returns_highlight_label' => array(
-            'label'    => __('Policy highlight label', 'puppy-market'),
-            'default'  => __('Return window', 'puppy-market'),
-            'type'     => 'text',
-            'sanitize' => 'sanitize_text_field',
-        ),
-        'puppy_market_returns_highlight_title' => array(
-            'label'    => __('Policy highlight title', 'puppy-market'),
-            'default'  => __('Eligible unused items can be requested for return within 30 days of delivery.', 'puppy-market'),
-            'type'     => 'textarea',
-            'sanitize' => 'sanitize_textarea_field',
-        ),
-        'puppy_market_returns_highlight_text' => array(
-            'label'    => __('Policy highlight description', 'puppy-market'),
-            'default'  => __('Support confirms eligibility and provides the correct instructions for the product and order.', 'puppy-market'),
+            'label'    => __('Customer care description', 'puppy-market'),
+            'default'  => __('Find a quick answer, manage your order or reach the customer care team in the way that works best for you.', 'puppy-market'),
             'type'     => 'textarea',
             'sanitize' => 'sanitize_textarea_field',
         ),
         'puppy_market_returns_form_title' => array(
-            'label'    => __('Support form title', 'puppy-market'),
-            'default'  => __('Tell us what you need', 'puppy-market'),
+            'label'    => __('Email form title', 'puppy-market'),
+            'default'  => __('Send us a message', 'puppy-market'),
             'type'     => 'text',
             'sanitize' => 'sanitize_text_field',
         ),
         'puppy_market_returns_form_text' => array(
-            'label'    => __('Support form description', 'puppy-market'),
-            'default'  => __('Use this form for returns, delivery questions, order help, products or business enquiries.', 'puppy-market'),
+            'label'    => __('Email form description', 'puppy-market'),
+            'default'  => __('Share the details below and choose the topic that best matches your question.', 'puppy-market'),
             'type'     => 'textarea',
             'sanitize' => 'sanitize_textarea_field',
         ),
@@ -721,12 +710,58 @@ function puppy_market_service_page($slug) {
 }
 
 /**
- * Compact policy body used when the Returns & Support page is first created.
+ * Default common questions used by the Customer Care page.
  *
  * The content is stored in the WordPress page editor so store managers can
- * change it without editing this theme.
+ * add, remove or rewrite questions without editing this theme.
  */
 function puppy_market_default_returns_page_content() {
+    return <<<'HTML'
+<section class="ipet-care-faq" id="common-questions">
+  <div class="container">
+    <div class="ipet-care-section-heading">
+      <p class="eyebrow">Common questions</p>
+      <h2>Find an answer before contacting us</h2>
+      <p>Open a question below for the most useful next step.</p>
+    </div>
+    <div class="ipet-care-faq-list">
+      <details id="orders-question">
+        <summary>Where can I check my order status?</summary>
+        <p>Open My Account and choose Orders to review the latest information available for your purchase. Tracking appears there when it has been provided.</p>
+      </details>
+      <details>
+        <summary>Can I change or cancel an order?</summary>
+        <p>Contact customer care as soon as possible. Address changes and cancellations cannot be guaranteed after an order begins processing.</p>
+      </details>
+      <details id="shipping-question">
+        <summary>How do shipping and delivery estimates work?</summary>
+        <p>The available delivery methods, cost and current estimate are shown during checkout. After dispatch, use the tracking information attached to your order.</p>
+      </details>
+      <details id="returns-question">
+        <summary>How do I start a return?</summary>
+        <p>Eligible unused items can be requested for return within 30 days of delivery. Contact customer care before sending anything back so eligibility and the correct instructions can be confirmed.</p>
+      </details>
+      <details>
+        <summary>When will my refund be completed?</summary>
+        <p>Refund timing depends on the return route and review. Customer care will confirm the outcome after the returned item or required evidence has been checked.</p>
+      </details>
+      <details>
+        <summary>Which payment methods can I use?</summary>
+        <p>The payment options currently enabled by the store are displayed at checkout. Availability can vary by payment provider and order.</p>
+      </details>
+    </div>
+  </div>
+</section>
+HTML;
+}
+
+/**
+ * Previous full-width returns layout, retained for safe migration.
+ *
+ * This exact copy prevents the migration from overwriting content edited in
+ * the WordPress page editor.
+ */
+function puppy_market_legacy_returns_page_content_v3() {
     return <<<'HTML'
 <section class="ipet-policy-compact">
   <div class="container">
@@ -926,7 +961,7 @@ function puppy_market_ensure_service_pages() {
             update_post_meta($page_id, '_puppy_market_returns_content_initialized', 1);
         }
 
-        if ($slug === 'returns' && absint(get_post_meta($page_id, '_puppy_market_returns_content_version', true)) < 3) {
+        if ($slug === 'returns' && absint(get_post_meta($page_id, '_puppy_market_returns_content_version', true)) < 4) {
             $returns_page = get_post($page_id);
             $current_content = $returns_page instanceof WP_Post
                 ? trim((string) $returns_page->post_content)
@@ -934,6 +969,7 @@ function puppy_market_ensure_service_pages() {
             $generated_content_versions = array(
                 trim(puppy_market_legacy_returns_page_content_v1()),
                 trim(puppy_market_legacy_returns_page_content_v2()),
+                trim(puppy_market_legacy_returns_page_content_v3()),
             );
 
             if ($current_content === '' || in_array($current_content, $generated_content_versions, true)) {
@@ -943,7 +979,7 @@ function puppy_market_ensure_service_pages() {
                 )));
             }
 
-            update_post_meta($page_id, '_puppy_market_returns_content_version', 3);
+            update_post_meta($page_id, '_puppy_market_returns_content_version', 4);
         }
 
         update_post_meta($page_id, '_wp_page_template', $definition['template']);
@@ -1037,7 +1073,7 @@ function puppy_market_page_url($slug) {
         : home_url('/returns/');
 
     if ($slug === 'contact' || $slug === 'contact-us') {
-        return add_query_arg('contact_topic', 'order', $returns_url) . '#contact-form';
+        return $returns_url;
     }
 
     if ($slug === 'shipping') {
