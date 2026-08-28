@@ -13,19 +13,37 @@
   $puppy_current_user = is_user_logged_in() ? wp_get_current_user() : null;
   $puppy_account_greeting = $puppy_current_user ? ($puppy_current_user->first_name ?: $puppy_current_user->display_name) : '';
   $puppy_orders_url = function_exists('wc_get_account_endpoint_url') ? wc_get_account_endpoint_url('orders') : $puppy_account_url;
-  $puppy_account_menu_links = array(
-      'Account'            => $puppy_account_url,
-      'Orders'             => $puppy_orders_url,
-      'Manage Autoship'    => $puppy_account_url,
-      'Favorites'          => $puppy_account_url,
-      'Buy Again'          => $puppy_shop_url,
-      'iPet+'              => $puppy_account_url,
-      'Prescriptions'      => $puppy_shop_url,
-      'My Vet Clinics'     => $puppy_account_url,
-      'Pet Portal'         => $puppy_account_url,
-      'Connect with a Vet' => $puppy_contact_url,
-      'iPet Pet Insurance' => $puppy_contact_url,
-  );
+  $puppy_account_menu_links = array();
+
+  if (is_user_logged_in() && function_exists('wc_get_account_menu_items') && function_exists('wc_get_account_endpoint_url')) {
+      $puppy_account_menu_endpoints = array(
+          'dashboard',
+          'orders',
+          'downloads',
+          'edit-address',
+          'payment-methods',
+          'edit-account',
+          'customer-logout',
+      );
+
+      foreach (wc_get_account_menu_items() as $puppy_account_endpoint => $puppy_account_menu_label) {
+          if (!in_array($puppy_account_endpoint, $puppy_account_menu_endpoints, true)) {
+              continue;
+          }
+
+          $puppy_account_menu_links[$puppy_account_menu_label] = 'dashboard' === $puppy_account_endpoint
+              ? $puppy_account_url
+              : wc_get_account_endpoint_url($puppy_account_endpoint);
+      }
+  }
+
+  if (is_user_logged_in() && empty($puppy_account_menu_links)) {
+      $puppy_account_menu_links = array(
+          'Account overview' => $puppy_account_url,
+          'Orders'           => $puppy_orders_url,
+          'Sign out'         => wp_logout_url(home_url('/')),
+      );
+  }
   // Mini-cart preview data for the hover dropdown below — Chewy always lets you
   // peek at what's in the cart without leaving the page, we previously just had
   // a plain link straight to /cart/.

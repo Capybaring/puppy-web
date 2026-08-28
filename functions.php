@@ -501,6 +501,43 @@ function puppy_market_account_dequeue_block_styles() {
 }
 add_action('wp_enqueue_scripts', 'puppy_market_account_dequeue_block_styles', 100);
 
+/**
+ * Keep the account menu limited to real WooCommerce features.
+ *
+ * Downloads are only useful after a customer has purchased a downloadable
+ * product, so the empty endpoint is hidden until then.
+ */
+function puppy_market_account_menu_items($items) {
+    $labels = array(
+        'dashboard'       => __('Account overview', 'puppy-market'),
+        'orders'          => __('Orders', 'puppy-market'),
+        'downloads'       => __('Downloads', 'puppy-market'),
+        'edit-address'    => __('Addresses', 'puppy-market'),
+        'payment-methods' => __('Payment methods', 'puppy-market'),
+        'edit-account'    => __('Account details', 'puppy-market'),
+        'customer-logout' => __('Sign out', 'puppy-market'),
+    );
+
+    foreach ($labels as $endpoint => $label) {
+        if (isset($items[$endpoint])) {
+            $items[$endpoint] = $label;
+        }
+    }
+
+    if (isset($items['downloads'])) {
+        $downloads = is_user_logged_in() && function_exists('wc_get_customer_available_downloads')
+            ? wc_get_customer_available_downloads(get_current_user_id())
+            : array();
+
+        if (empty($downloads)) {
+            unset($items['downloads']);
+        }
+    }
+
+    return $items;
+}
+add_filter('woocommerce_account_menu_items', 'puppy_market_account_menu_items', 20);
+
 /** A small, consistent SVG icon set for the WooCommerce account center. */
 function puppy_market_account_icon($name) {
     $icons = array(
