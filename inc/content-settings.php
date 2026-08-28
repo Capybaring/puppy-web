@@ -565,27 +565,9 @@ function puppy_market_customize_register($wp_customize) {
         ),
         'puppy_market_returns_hero_text' => array(
             'label'    => __('Customer care description', 'puppy-market'),
-            'default'  => __('Find a quick answer, manage your order or reach the customer care team in the way that works best for you.', 'puppy-market'),
+            'default'  => __('Choose a help topic to find the most useful answer, or contact the customer care team in the way that works best for you.', 'puppy-market'),
             'type'     => 'textarea',
             'sanitize' => 'sanitize_textarea_field',
-        ),
-        'puppy_market_returns_form_title' => array(
-            'label'    => __('Email form title', 'puppy-market'),
-            'default'  => __('Send us a message', 'puppy-market'),
-            'type'     => 'text',
-            'sanitize' => 'sanitize_text_field',
-        ),
-        'puppy_market_returns_form_text' => array(
-            'label'    => __('Email form description', 'puppy-market'),
-            'default'  => __('Share the details below and choose the topic that best matches your question.', 'puppy-market'),
-            'type'     => 'textarea',
-            'sanitize' => 'sanitize_textarea_field',
-        ),
-        'puppy_market_returns_success_text' => array(
-            'label'    => __('Successful submission message', 'puppy-market'),
-            'default'  => __('Thanks — your message has been sent.', 'puppy-market'),
-            'type'     => 'text',
-            'sanitize' => 'sanitize_text_field',
         ),
     );
 
@@ -710,12 +692,85 @@ function puppy_market_service_page($slug) {
 }
 
 /**
- * Default common questions used by the Customer Care page.
+ * Default sidebar-linked questions used by the Customer Care page.
  *
  * The content is stored in the WordPress page editor so store managers can
  * add, remove or rewrite questions without editing this theme.
  */
 function puppy_market_default_returns_page_content() {
+    return <<<'HTML'
+<div class="ipet-care-question-groups">
+  <section class="ipet-care-question-group" id="common-questions">
+    <div class="ipet-care-question-heading">
+      <p class="eyebrow">Help</p>
+      <h2>Common questions</h2>
+      <p>Start with the information that helps customer care understand your request.</p>
+    </div>
+    <div class="ipet-care-faq-list">
+      <details><summary>Which help topic should I choose?</summary><p>Choose the topic that most closely matches your question. If none is exact, use the contact options below and briefly explain what you need.</p></details>
+      <details><summary>What information should I have ready?</summary><p>Keep your account email and order number available. For damaged or incorrect items, photos can help customer care review the issue.</p></details>
+      <details><summary>How will customer care respond?</summary><p>Use Chat, Phone or Email below. The currently available channels and response guidance are shown on this page.</p></details>
+    </div>
+  </section>
+
+  <section class="ipet-care-question-group" id="orders-help">
+    <div class="ipet-care-question-heading">
+      <p class="eyebrow">Help topic</p>
+      <h2>Orders &amp; payments</h2>
+    </div>
+    <div class="ipet-care-faq-list">
+      <details><summary>Can I change or cancel an order?</summary><p>Contact customer care as soon as possible. Address changes and cancellations cannot be guaranteed after an order begins processing.</p></details>
+      <details><summary>Why did my payment fail?</summary><p>Check that the billing details match your payment method and that the method is still valid. Your payment provider may need to approve or explain a declined transaction.</p></details>
+      <details><summary>Why was a promotion not applied?</summary><p>Review the promotion requirements, eligible products and dates. Some offers cannot be combined with other discounts.</p></details>
+    </div>
+  </section>
+
+  <section class="ipet-care-question-group" id="shipping-help">
+    <div class="ipet-care-question-heading">
+      <p class="eyebrow">Help topic</p>
+      <h2>Shipping &amp; delivery</h2>
+    </div>
+    <div class="ipet-care-faq-list">
+      <details><summary>How are delivery estimates calculated?</summary><p>The available methods, cost and current delivery estimate are shown during checkout based on the items and destination.</p></details>
+      <details><summary>What if tracking has not updated?</summary><p>Carrier updates can take time to appear. If the status remains unchanged or the estimated date has passed, contact customer care with the order number.</p></details>
+      <details><summary>What if the delivery address is wrong?</summary><p>Contact customer care immediately. An address cannot always be changed after an order begins processing or has been dispatched.</p></details>
+    </div>
+  </section>
+
+  <section class="ipet-care-question-group" id="returns-help">
+    <div class="ipet-care-question-heading">
+      <p class="eyebrow">Help topic</p>
+      <h2>Returns &amp; refunds</h2>
+    </div>
+    <div class="ipet-care-faq-list">
+      <details><summary>How do I start a return?</summary><p>Eligible unused items can be requested for return within 30 days of delivery. Contact customer care before sending anything back so the correct instructions can be confirmed.</p></details>
+      <details><summary>When will my refund be completed?</summary><p>Refund timing depends on the return route and review. Customer care confirms the outcome after the item or required evidence has been checked.</p></details>
+      <details><summary>What if an item arrived damaged or incorrect?</summary><p>Keep the packaging and take clear photos of the item and parcel. Contact customer care with the order number so the appropriate resolution can be reviewed.</p></details>
+    </div>
+  </section>
+
+  <section class="ipet-care-question-group" id="products-help">
+    <div class="ipet-care-question-heading">
+      <p class="eyebrow">Help topic</p>
+      <h2>Product questions</h2>
+    </div>
+    <div class="ipet-care-faq-list">
+      <details><summary>Where can I find size and usage information?</summary><p>Open the product page and review its Detail, Instruction, Size and FAQ tabs. Available information can vary by product.</p></details>
+      <details><summary>What does out of stock mean?</summary><p>The item is not currently available to purchase. Availability can change, so check the product page again later.</p></details>
+      <details><summary>Can customer care give medical advice?</summary><p>Customer care can help with store and product information, but health, nutrition and behavior concerns should be discussed with a qualified veterinarian.</p></details>
+    </div>
+  </section>
+</div>
+HTML;
+}
+
+/**
+ * Previous flat Customer Care questions, retained for safe migration.
+ *
+ * This exact copy prevents the migration from overwriting content edited in
+ * the WordPress page editor.
+ */
+function puppy_market_legacy_returns_page_content_v4() {
     return <<<'HTML'
 <section class="ipet-care-faq" id="common-questions">
   <div class="container">
@@ -961,7 +1016,7 @@ function puppy_market_ensure_service_pages() {
             update_post_meta($page_id, '_puppy_market_returns_content_initialized', 1);
         }
 
-        if ($slug === 'returns' && absint(get_post_meta($page_id, '_puppy_market_returns_content_version', true)) < 4) {
+        if ($slug === 'returns' && absint(get_post_meta($page_id, '_puppy_market_returns_content_version', true)) < 5) {
             $returns_page = get_post($page_id);
             $current_content = $returns_page instanceof WP_Post
                 ? trim((string) $returns_page->post_content)
@@ -970,6 +1025,7 @@ function puppy_market_ensure_service_pages() {
                 trim(puppy_market_legacy_returns_page_content_v1()),
                 trim(puppy_market_legacy_returns_page_content_v2()),
                 trim(puppy_market_legacy_returns_page_content_v3()),
+                trim(puppy_market_legacy_returns_page_content_v4()),
             );
 
             if ($current_content === '' || in_array($current_content, $generated_content_versions, true)) {
@@ -979,7 +1035,7 @@ function puppy_market_ensure_service_pages() {
                 )));
             }
 
-            update_post_meta($page_id, '_puppy_market_returns_content_version', 4);
+            update_post_meta($page_id, '_puppy_market_returns_content_version', 5);
         }
 
         update_post_meta($page_id, '_wp_page_template', $definition['template']);
@@ -1077,7 +1133,7 @@ function puppy_market_page_url($slug) {
     }
 
     if ($slug === 'shipping') {
-        return add_query_arg('contact_topic', 'shipping', $returns_url) . '#contact-form';
+        return $returns_url . '#shipping-help';
     }
 
     if (isset($service_page_definitions[$slug])) {

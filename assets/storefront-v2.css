@@ -5116,7 +5116,7 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
 }
 
 
-/* Customer Care V1 — common questions first, contact channels second. */
+/* Customer Care V2 — topic sidebar with grouped questions. */
 .ipet-care-page {
   color: var(--ink);
   background: #fff;
@@ -5130,40 +5130,39 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   text-transform: uppercase;
 }
 .ipet-care-hero {
-  padding: 58px 0 62px;
+  padding: 50px 0 54px;
   text-align: center;
   background: #eef5ff;
 }
 .ipet-care-hero-inner {
-  max-width: 920px;
+  max-width: 880px;
 }
 .ipet-care-hero h1 {
   margin: 0;
   color: var(--primary-deep);
-  font-size: clamp(48px, 6vw, 72px);
+  font-size: clamp(44px, 5.5vw, 66px);
   font-weight: 740;
   line-height: 1;
   letter-spacing: -.05em;
 }
 .ipet-care-hero-inner > p:not(.eyebrow) {
-  max-width: 760px;
-  margin: 18px auto 0;
+  max-width: 720px;
+  margin: 16px auto 0;
   color: #435b77;
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1.58;
 }
 .ipet-care-hero-actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
+  gap: 16px;
   align-items: center;
-  margin-top: 26px;
+  margin-top: 24px;
 }
-.ipet-care-hero-actions .button,
-.ipet-care-form-card .ipet-contact-submit button {
+.ipet-care-hero-actions .button {
   display: inline-flex;
-  min-height: 48px;
+  min-height: 46px;
   align-items: center;
   justify-content: center;
   padding: 0 24px;
@@ -5174,105 +5173,126 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   font-size: 15px;
   font-weight: 700;
 }
-.ipet-care-hero-actions > a:not(.button) {
+.ipet-care-hero-actions .button:hover {
+  background: var(--primary-dark);
+}
+.ipet-care-help {
+  padding: 62px 0 72px;
+  background: #fff;
+  scroll-margin-top: 100px;
+}
+.ipet-care-help-layout {
+  display: grid;
+  grid-template-columns: 270px minmax(0, 1fr);
+  gap: clamp(40px, 6vw, 78px);
+  align-items: start;
+}
+.ipet-care-sidebar {
+  position: sticky;
+  top: 110px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(24, 61, 166, .06);
+}
+.ipet-care-sidebar h2 {
+  margin: 0 0 18px;
+  color: var(--primary-deep);
+  font-size: 23px;
+  font-weight: 710;
+  line-height: 1.2;
+  letter-spacing: -.025em;
+}
+.ipet-care-sidebar nav {
+  display: grid;
+  gap: 4px;
+}
+.ipet-care-sidebar nav a {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #43536a;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.35;
+  transition: color .16s ease, background-color .16s ease;
+}
+.ipet-care-sidebar nav a:hover,
+.ipet-care-sidebar nav a.is-active {
   color: var(--primary);
-  font-weight: 680;
+  background: var(--primary-soft);
 }
-.ipet-care-topics {
-  padding: 58px 0 64px;
+.ipet-care-help-layout:has(.ipet-care-question-group:target) .ipet-care-sidebar nav a.is-active {
+  color: #43536a;
+  background: transparent;
 }
-.ipet-care-section-heading {
-  max-width: 780px;
-  margin-bottom: 28px;
+.ipet-care-help-layout:has(#common-questions:target) .ipet-care-sidebar nav a[href="#common-questions"],
+.ipet-care-help-layout:has(#orders-help:target) .ipet-care-sidebar nav a[href="#orders-help"],
+.ipet-care-help-layout:has(#shipping-help:target) .ipet-care-sidebar nav a[href="#shipping-help"],
+.ipet-care-help-layout:has(#returns-help:target) .ipet-care-sidebar nav a[href="#returns-help"],
+.ipet-care-help-layout:has(#products-help:target) .ipet-care-sidebar nav a[href="#products-help"] {
+  color: var(--primary);
+  background: var(--primary-soft);
 }
-.ipet-care-section-heading h2,
-.ipet-care-form-card .ipet-contact-section-heading h2 {
+.ipet-care-help-main {
+  min-width: 0;
+}
+.ipet-care-question-groups {
+  display: grid;
+}
+.ipet-care-question-group {
+  padding: 52px 0;
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: 108px;
+}
+.ipet-care-question-group:first-child {
+  padding-top: 0;
+}
+.ipet-care-question-group:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.ipet-care-question-group:target {
+  border-radius: 14px;
+  outline: 8px solid #f6f9ff;
+  background: #f6f9ff;
+}
+.ipet-care-question-heading {
+  max-width: 720px;
+  margin-bottom: 24px;
+}
+.ipet-care-question-heading h2 {
   margin: 0;
   color: var(--primary-deep);
-  font-size: clamp(34px, 4.5vw, 50px);
+  font-size: clamp(30px, 3.6vw, 40px);
   font-weight: 720;
   line-height: 1.08;
   letter-spacing: -.04em;
 }
-.ipet-care-section-heading > p:not(.eyebrow) {
-  margin: 12px 0 0;
+.ipet-care-question-heading > p:not(.eyebrow) {
+  margin: 10px 0 0;
   color: var(--muted);
   line-height: 1.55;
 }
-.ipet-care-topic-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-}
-.ipet-care-topic-grid > a {
-  display: grid;
-  min-height: 154px;
-  grid-template-columns: 48px minmax(0, 1fr) auto;
-  gap: 14px;
-  align-items: start;
-  padding: 24px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  color: var(--ink);
-  background: #fff;
-  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
-}
-.ipet-care-topic-grid > a:hover {
-  border-color: #a7bde9;
-  box-shadow: 0 10px 25px rgba(24, 61, 166, .08);
-  transform: translateY(-2px);
-}
-.ipet-care-topic-grid > a > span {
-  display: grid;
-  width: 48px;
-  height: 48px;
-  place-items: center;
-  border-radius: 50%;
-  color: var(--primary);
-  background: var(--primary-soft);
-}
-.ipet-care-topic-grid svg {
-  width: 25px;
-  height: 25px;
-}
-.ipet-care-topic-grid strong {
-  color: var(--ink);
-  font-size: 17px;
-  font-weight: 680;
-}
-.ipet-care-topic-grid p {
-  margin: 7px 0 0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.45;
-}
-.ipet-care-topic-grid b {
-  color: var(--primary);
-  font-size: 20px;
-  font-weight: 500;
-}
-.ipet-care-managed-content {
-  background: #f7f9fc;
-}
-.ipet-care-faq {
-  padding: 64px 0 70px;
-  scroll-margin-top: 120px;
-}
 .ipet-care-faq-list {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 10px;
 }
 .ipet-care-faq-list details {
-  align-self: start;
   border: 1px solid var(--line);
   border-radius: 10px;
   background: #fff;
-  scroll-margin-top: 120px;
+}
+.ipet-care-faq-list details[open] {
+  border-color: #b8c9eb;
+  box-shadow: 0 6px 18px rgba(24, 61, 166, .06);
 }
 .ipet-care-faq-list summary {
   position: relative;
-  padding: 20px 48px 20px 20px;
+  padding: 19px 52px 19px 20px;
   color: var(--ink);
   font-size: 16px;
   font-weight: 680;
@@ -5285,7 +5305,7 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
 }
 .ipet-care-faq-list summary::after {
   position: absolute;
-  top: 15px;
+  top: 14px;
   right: 18px;
   color: var(--primary);
   content: "+";
@@ -5300,10 +5320,29 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   padding: 0 20px 20px;
   color: var(--muted);
   font-size: 14px;
-  line-height: 1.58;
+  line-height: 1.62;
+}
+.ipet-care-section-heading {
+  max-width: 760px;
+  margin-bottom: 28px;
+}
+.ipet-care-section-heading h2 {
+  margin: 0;
+  color: var(--primary-deep);
+  font-size: clamp(32px, 4vw, 46px);
+  font-weight: 720;
+  line-height: 1.08;
+  letter-spacing: -.04em;
+}
+.ipet-care-section-heading > p:not(.eyebrow) {
+  margin: 12px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
 }
 .ipet-care-channels {
-  padding: 66px 0 72px;
+  padding: 64px 0 72px;
+  background: #f7f9fc;
+  scroll-margin-top: 100px;
 }
 .ipet-care-channel-grid {
   display: grid;
@@ -5312,7 +5351,7 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
 }
 .ipet-care-channel {
   display: flex;
-  min-height: 230px;
+  min-height: 220px;
   flex-direction: column;
   align-items: flex-start;
   padding: 28px;
@@ -5320,15 +5359,17 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   border-radius: 14px;
   color: var(--ink);
   background: #fff;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
 a.ipet-care-channel:hover {
   border-color: #9db7ec;
   color: var(--primary);
-  background: #f7faff;
+  box-shadow: 0 10px 25px rgba(24, 61, 166, .08);
+  transform: translateY(-2px);
 }
 .ipet-care-channel.is-disabled {
   color: var(--muted);
-  background: #f6f7f8;
+  background: #f1f3f6;
 }
 .ipet-care-channel-icon {
   display: grid;
@@ -5342,7 +5383,7 @@ a.ipet-care-channel:hover {
 }
 .ipet-care-channel.is-disabled .ipet-care-channel-icon {
   color: #8893a3;
-  background: #e7eaee;
+  background: #e2e6eb;
 }
 .ipet-care-channel svg {
   width: 27px;
@@ -5370,51 +5411,35 @@ a.ipet-care-channel:hover {
   font-size: 13px;
   font-weight: 680;
 }
-.ipet-care-form-section {
-  padding: 64px 0 76px;
-  background: #f7f9fc;
-  scroll-margin-top: 100px;
-}
-.ipet-care-form-card {
-  max-width: 920px;
-  margin: 0 auto;
-  padding: 34px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: #fff;
-}
-.ipet-care-form-card .ipet-contact-section-heading {
-  margin-bottom: 24px;
-}
-.ipet-care-form-card .ipet-contact-section-heading .eyebrow {
-  color: var(--primary);
-}
-.ipet-care-form-card .ipet-contact-section-heading h2 {
-  font-size: 38px;
-}
-.ipet-care-form-card .ipet-contact-form {
-  gap: 16px;
-}
-.ipet-care-form-card .ipet-contact-form textarea {
-  min-height: 130px;
-}
-.ipet-care-form-card .ipet-contact-submit button:hover {
-  background: var(--primary-dark);
-}
 
 @media (max-width: 900px) {
-  .ipet-care-topic-grid,
+  .ipet-care-help-layout {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+  .ipet-care-sidebar {
+    position: static;
+    padding: 20px;
+  }
+  .ipet-care-sidebar nav {
+    display: flex;
+    margin-right: -20px;
+    margin-left: -20px;
+    padding: 0 20px 2px;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+  .ipet-care-sidebar nav a {
+    min-height: 40px;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
   .ipet-care-channel-grid {
     grid-template-columns: 1fr;
   }
-  .ipet-care-topic-grid > a {
-    min-height: 0;
-  }
-  .ipet-care-faq-list {
-    grid-template-columns: 1fr;
-  }
   .ipet-care-channel {
-    min-height: 190px;
+    min-height: 185px;
   }
 }
 
@@ -5423,25 +5448,35 @@ a.ipet-care-channel:hover {
     width: calc(100% - 20px);
   }
   .ipet-care-hero {
-    padding: 42px 0 46px;
+    padding: 40px 0 44px;
   }
   .ipet-care-hero h1 {
-    font-size: 46px;
+    font-size: 44px;
   }
-  .ipet-care-topics,
-  .ipet-care-faq,
-  .ipet-care-channels,
-  .ipet-care-form-section {
-    padding-top: 48px;
+  .ipet-care-help,
+  .ipet-care-channels {
+    padding-top: 46px;
     padding-bottom: 52px;
   }
-  .ipet-care-topic-grid > a {
-    padding: 20px;
+  .ipet-care-sidebar {
+    padding: 18px;
   }
-  .ipet-care-form-card {
-    padding: 24px 18px;
+  .ipet-care-sidebar nav {
+    margin-right: -18px;
+    margin-left: -18px;
+    padding-right: 18px;
+    padding-left: 18px;
   }
-  .ipet-care-form-card .ipet-contact-section-heading h2 {
-    font-size: 32px;
+  .ipet-care-question-group {
+    padding: 42px 0;
+  }
+  .ipet-care-question-group:target {
+    outline-width: 5px;
+  }
+  .ipet-care-faq-list summary {
+    padding: 18px 48px 18px 18px;
+  }
+  .ipet-care-faq-list details > p {
+    padding: 0 18px 18px;
   }
 }

@@ -17,46 +17,15 @@ if ($care_content === '' && function_exists('puppy_market_default_returns_page_c
 $hero_title = get_theme_mod('puppy_market_returns_hero_title', 'How can we help?');
 $hero_text = get_theme_mod(
     'puppy_market_returns_hero_text',
-    'Find a quick answer, manage your order or reach the customer care team in the way that works best for you.'
-);
-$form_title = get_theme_mod('puppy_market_returns_form_title', 'Send us a message');
-$form_text = get_theme_mod(
-    'puppy_market_returns_form_text',
-    'Share the details below and choose the topic that best matches your question.'
-);
-$success_text = get_theme_mod(
-    'puppy_market_returns_success_text',
-    'Thanks — your message has been sent.'
+    'Choose a help topic to find the most useful answer, or contact the customer care team in the way that works best for you.'
 );
 $response_text = get_theme_mod(
     'puppy_market_contact_response_text',
     'Our customer care team will follow up as soon as possible.'
 );
+$contact_email = sanitize_email(get_theme_mod('puppy_market_contact_email', get_option('admin_email')));
 $contact_phone = trim((string) get_theme_mod('puppy_market_contact_phone', ''));
 $chat_url = esc_url_raw(get_theme_mod('puppy_market_contact_chat_url', ''));
-
-$contact_status = isset($_GET['contact_status'])
-    ? sanitize_key(wp_unslash($_GET['contact_status']))
-    : '';
-$contact_topic = isset($_GET['contact_topic'])
-    ? sanitize_key(wp_unslash($_GET['contact_topic']))
-    : 'order';
-$contact_topics = array(
-    'order'    => 'Order help',
-    'shipping' => 'Shipping or delivery',
-    'returns'  => 'Returns',
-    'product'  => 'Product question',
-    'business' => 'Business & wholesale',
-    'other'    => 'Other',
-);
-if (!isset($contact_topics[$contact_topic])) $contact_topic = 'order';
-
-$orders_url = function_exists('wc_get_account_endpoint_url')
-    ? wc_get_account_endpoint_url('orders')
-    : puppy_market_account_url();
-$account_url = puppy_market_account_url();
-$product_support_url = add_query_arg('contact_topic', 'product', puppy_market_page_url('returns')) . '#contact-form';
-$business_support_url = add_query_arg('contact_topic', 'business', puppy_market_page_url('returns')) . '#contact-form';
 ?>
 <main id="main-content" class="ipet-care-page">
   <section class="ipet-care-hero">
@@ -65,52 +34,32 @@ $business_support_url = add_query_arg('contact_topic', 'business', puppy_market_
       <h1><?php echo esc_html($hero_title); ?></h1>
       <p><?php echo esc_html($hero_text); ?></p>
       <div class="ipet-care-hero-actions">
-        <a class="button" href="<?php echo esc_url($orders_url); ?>">View your orders</a>
-        <a href="#common-questions">Browse common questions →</a>
+        <a class="button" href="#help-center">Browse help topics</a>
       </div>
     </div>
   </section>
 
-  <section class="ipet-care-topics" aria-labelledby="care-topics-title">
-    <div class="container">
-      <div class="ipet-care-section-heading">
-        <p class="eyebrow">Start here</p>
-        <h2 id="care-topics-title">What do you need help with?</h2>
-      </div>
-      <div class="ipet-care-topic-grid">
-        <a href="<?php echo esc_url($orders_url); ?>">
-          <span aria-hidden="true"><?php echo puppy_market_service_icon('shield'); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted theme SVG. */ ?></span>
-          <div><strong>Orders & payments</strong><p>Review purchases, payment details and order status.</p></div><b aria-hidden="true">→</b>
-        </a>
-        <a href="#shipping-question">
-          <span aria-hidden="true"><?php echo puppy_market_service_icon('shipping'); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted theme SVG. */ ?></span>
-          <div><strong>Shipping & delivery</strong><p>Find delivery estimates, tracking and address guidance.</p></div><b aria-hidden="true">→</b>
-        </a>
-        <a href="#returns-question">
-          <span aria-hidden="true"><?php echo puppy_market_service_icon('returns'); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted theme SVG. */ ?></span>
-          <div><strong>Returns & refunds</strong><p>Check return requirements and the next steps.</p></div><b aria-hidden="true">→</b>
-        </a>
-        <a href="<?php echo esc_url($product_support_url); ?>">
-          <span aria-hidden="true"><?php echo puppy_market_service_icon('support'); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted theme SVG. */ ?></span>
-          <div><strong>Product questions</strong><p>Ask about an item before or after purchasing.</p></div><b aria-hidden="true">→</b>
-        </a>
-        <a href="<?php echo esc_url($account_url); ?>">
-          <span aria-hidden="true"><?php echo puppy_market_service_icon('shield'); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted theme SVG. */ ?></span>
-          <div><strong>Account help</strong><p>Manage your details and access your order history.</p></div><b aria-hidden="true">→</b>
-        </a>
-        <a href="<?php echo esc_url($business_support_url); ?>">
-          <span aria-hidden="true"><?php echo puppy_market_service_icon('business'); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted theme SVG. */ ?></span>
-          <div><strong>Business & wholesale</strong><p>Contact the team about professional purchasing.</p></div><b aria-hidden="true">→</b>
-        </a>
+  <section class="ipet-care-help" id="help-center" aria-label="Help center">
+    <div class="container ipet-care-help-layout">
+      <aside class="ipet-care-sidebar">
+        <p class="eyebrow">Help</p>
+        <h2>Browse by topic</h2>
+        <nav aria-label="Customer care topics">
+          <a class="is-active" href="#common-questions">Common questions</a>
+          <a href="#orders-help">Orders &amp; payments</a>
+          <a href="#shipping-help">Shipping &amp; delivery</a>
+          <a href="#returns-help">Returns &amp; refunds</a>
+          <a href="#products-help">Product questions</a>
+        </nav>
+      </aside>
+
+      <div class="ipet-care-help-main">
+        <?php echo apply_filters('the_content', $care_content); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WordPress page content. */ ?>
       </div>
     </div>
   </section>
 
-  <div class="ipet-care-managed-content">
-    <?php echo apply_filters('the_content', $care_content); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WordPress page content. */ ?>
-  </div>
-
-  <section class="ipet-care-channels" aria-labelledby="care-channels-title">
+  <section class="ipet-care-channels" id="contact-options" aria-labelledby="care-channels-title">
     <div class="container">
       <div class="ipet-care-section-heading">
         <p class="eyebrow">Still need help?</p>
@@ -150,69 +99,21 @@ $business_support_url = add_query_arg('contact_topic', 'business', puppy_market_
           </div>
         <?php endif; ?>
 
-        <a class="ipet-care-channel" href="#contact-form">
-          <span class="ipet-care-channel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2"></rect><path d="m5 7 7 6 7-6"></path></svg></span>
-          <strong>Email</strong>
-          <p>Send your question through the secure form.</p>
-          <small>Write a message →</small>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section class="ipet-care-form-section" id="contact-form">
-    <div class="container">
-      <div class="ipet-care-form-card">
-        <div class="ipet-contact-section-heading">
-          <p class="eyebrow">Email customer care</p>
-          <h2><?php echo esc_html($form_title); ?></h2>
-          <p><?php echo esc_html($form_text); ?></p>
-        </div>
-
-        <?php if ($contact_status === 'success') : ?>
-          <div class="ipet-contact-notice is-success" role="status"><?php echo esc_html($success_text); ?></div>
-        <?php elseif ($contact_status === 'invalid') : ?>
-          <div class="ipet-contact-notice is-error" role="alert">Please check the required fields and try again.</div>
-        <?php elseif ($contact_status === 'error') : ?>
-          <div class="ipet-contact-notice is-error" role="alert">Your message could not be sent. Please use another contact option.</div>
+        <?php if ($contact_email) : ?>
+          <a class="ipet-care-channel" href="mailto:<?php echo esc_attr(antispambot($contact_email)); ?>">
+            <span class="ipet-care-channel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2"></rect><path d="m5 7 7 6 7-6"></path></svg></span>
+            <strong>Email</strong>
+            <p>Open your email app and write to customer care.</p>
+            <small>Send email →</small>
+          </a>
+        <?php else : ?>
+          <div class="ipet-care-channel is-disabled" aria-disabled="true">
+            <span class="ipet-care-channel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2"></rect><path d="m5 7 7 6 7-6"></path></svg></span>
+            <strong>Email</strong>
+            <p>Email support is not configured yet.</p>
+            <small>Unavailable</small>
+          </div>
         <?php endif; ?>
-
-        <form class="ipet-contact-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
-          <input type="hidden" name="action" value="puppy_market_contact">
-          <?php wp_nonce_field('puppy_market_contact_form', 'puppy_contact_nonce'); ?>
-
-          <p class="ipet-contact-honeypot" aria-hidden="true">
-            <label>Website<input type="text" name="company_website" tabindex="-1" autocomplete="off"></label>
-          </p>
-
-          <div class="ipet-contact-field">
-            <label for="contact-name">Name <span>*</span></label>
-            <input id="contact-name" type="text" name="contact_name" autocomplete="name" required>
-          </div>
-          <div class="ipet-contact-field">
-            <label for="contact-email">Email <span>*</span></label>
-            <input id="contact-email" type="email" name="contact_email" autocomplete="email" required>
-          </div>
-          <div class="ipet-contact-field">
-            <label for="contact-order">Order number</label>
-            <input id="contact-order" type="text" name="order_number" autocomplete="off">
-          </div>
-          <div class="ipet-contact-field">
-            <label for="contact-topic">Topic <span>*</span></label>
-            <select id="contact-topic" name="contact_topic" required>
-              <?php foreach ($contact_topics as $topic_value => $topic_label) : ?>
-                <option value="<?php echo esc_attr($topic_value); ?>" <?php selected($contact_topic, $topic_value); ?>><?php echo esc_html($topic_label); ?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-          <div class="ipet-contact-field is-full">
-            <label for="contact-message">How can we help? <span>*</span></label>
-            <textarea id="contact-message" name="contact_message" rows="6" maxlength="5000" required></textarea>
-          </div>
-          <div class="ipet-contact-submit is-full">
-            <button type="submit">Send message</button>
-          </div>
-        </form>
       </div>
     </div>
   </section>
