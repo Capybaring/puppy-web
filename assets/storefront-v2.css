@@ -4573,7 +4573,7 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
 }
 
 
-/* Returns & Support V2: compact the merged page and remove repeated vertical sections. */
+/* Returns & Support V3: full-width return steps with a compact note below. */
 .ipet-returns-page .ipet-policy-hero {
   padding: 32px 0;
 }
@@ -4591,11 +4591,7 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   line-height: 1.5;
 }
 .ipet-returns-page .ipet-policy-actions {
-  gap: 16px;
-  margin-top: 18px;
-}
-.ipet-returns-page .ipet-policy-actions .button {
-  min-height: 46px;
+  margin-top: 16px;
 }
 .ipet-returns-page .ipet-policy-highlight {
   padding: 22px;
@@ -4613,14 +4609,8 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   font-size: 20px;
 }
 .ipet-policy-compact {
-  padding: 36px 0;
+  padding: 34px 0;
   background: #fff;
-}
-.ipet-policy-compact-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.8fr) minmax(300px, .7fr);
-  gap: 22px;
-  align-items: stretch;
 }
 .ipet-policy-compact .ipet-policy-heading {
   margin-bottom: 16px;
@@ -4635,13 +4625,13 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   letter-spacing: -.03em;
 }
 .ipet-policy-compact .ipet-policy-steps li {
-  grid-template-columns: 38px minmax(0, 1fr);
-  gap: 11px;
-  padding: 18px 16px;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 12px;
+  padding: 19px 18px;
 }
 .ipet-policy-compact .ipet-policy-steps li > span {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
 }
 .ipet-policy-compact .ipet-policy-steps h3 {
   font-size: 17px;
@@ -4650,23 +4640,35 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   line-height: 1.45;
 }
 .ipet-policy-compact-note {
-  padding: 22px;
+  display: grid;
+  grid-template-columns: minmax(230px, 280px) minmax(0, 1fr);
+  gap: 16px 28px;
+  align-items: center;
+  margin-top: 16px;
+  padding: 20px 22px;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: #f7f9fc;
 }
+.ipet-policy-compact-note-heading .eyebrow {
+  margin-bottom: 6px;
+}
+.ipet-policy-compact-note h2 {
+  font-size: 24px;
+}
 .ipet-policy-compact-note ul {
   display: grid;
-  gap: 9px;
-  margin: 18px 0 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 .ipet-policy-compact-note li {
   position: relative;
-  padding-left: 22px;
+  padding-left: 21px;
   color: var(--ink);
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.45;
 }
 .ipet-policy-compact-note li::before {
@@ -4678,10 +4680,13 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   font-weight: 800;
 }
 .ipet-policy-compact-note > p:last-child {
+  grid-column: 1 / -1;
   margin: 0;
+  padding-top: 13px;
+  border-top: 1px solid var(--line);
   color: var(--muted);
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.45;
 }
 .ipet-returns-page .ipet-contact-workspace {
   padding: 34px 0 46px;
@@ -4717,9 +4722,14 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
 
 @media (max-width: 900px) {
   .ipet-returns-page .ipet-policy-hero-grid,
-  .ipet-policy-compact-grid,
   .ipet-returns-page .ipet-contact-workspace-grid {
     grid-template-columns: 1fr;
+  }
+  .ipet-policy-compact-note {
+    grid-template-columns: 1fr;
+  }
+  .ipet-policy-compact-note > p:last-child {
+    grid-column: auto;
   }
 }
 
@@ -4735,6 +4745,13 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   }
   .ipet-policy-compact .ipet-policy-steps li {
     padding: 16px 14px;
+  }
+  .ipet-policy-compact-note {
+    padding: 18px;
+  }
+  .ipet-policy-compact-note ul {
+    grid-template-columns: 1fr;
+    gap: 9px;
   }
   .ipet-returns-page .ipet-contact-workspace {
     padding: 28px 0 36px;

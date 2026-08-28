@@ -76,7 +76,6 @@ $orders_url = function_exists('wc_get_account_endpoint_url')
         <h1><?php echo esc_html($hero_title); ?></h1>
         <p><?php echo esc_html($hero_text); ?></p>
         <div class="ipet-policy-actions">
-          <a class="button" href="#contact-form">Contact support</a>
           <a class="ipet-policy-text-link" href="<?php echo esc_url($orders_url); ?>">Find your order →</a>
         </div>
       </div>
