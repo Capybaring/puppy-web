@@ -5116,7 +5116,7 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
 }
 
 
-/* Customer Care V3 — nested topic panels with a default question view. */
+/* Customer Care V4 — compact nested panels inspired by Chewy's help density. */
 .ipet-care-page {
   color: var(--ink);
   background: #fff;
@@ -5130,7 +5130,7 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   text-transform: uppercase;
 }
 .ipet-care-hero {
-  padding: 50px 0 54px;
+  padding: 32px 0 36px;
   text-align: center;
   background: #eef5ff;
 }
@@ -5140,16 +5140,16 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
 .ipet-care-hero h1 {
   margin: 0;
   color: var(--primary-deep);
-  font-size: clamp(44px, 5.5vw, 66px);
+  font-size: clamp(38px, 4.6vw, 54px);
   font-weight: 740;
   line-height: 1;
   letter-spacing: -.05em;
 }
 .ipet-care-hero-inner > p:not(.eyebrow) {
   max-width: 720px;
-  margin: 16px auto 0;
+  margin: 12px auto 0;
   color: #435b77;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.58;
 }
 .ipet-care-hero-actions {
@@ -5158,11 +5158,11 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   justify-content: center;
   gap: 16px;
   align-items: center;
-  margin-top: 24px;
+  margin-top: 18px;
 }
 .ipet-care-hero-actions .button {
   display: inline-flex;
-  min-height: 46px;
+  min-height: 42px;
   align-items: center;
   justify-content: center;
   padding: 0 24px;
@@ -5177,34 +5177,33 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   background: var(--primary-dark);
 }
 .ipet-care-help {
-  padding: 62px 0 72px;
+  padding: 38px 0 46px;
   background: #fff;
   scroll-margin-top: 100px;
 }
 .ipet-care-help-layout {
   display: grid;
-  grid-template-columns: 270px minmax(0, 1fr);
-  gap: clamp(40px, 6vw, 78px);
+  grid-template-columns: 244px minmax(0, 1fr);
+  gap: clamp(24px, 3vw, 36px);
   align-items: start;
 }
 .ipet-care-sidebar {
-  padding: 24px;
+  padding: 18px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 12px;
   background: #fff;
-  box-shadow: 0 8px 24px rgba(24, 61, 166, .06);
 }
 .ipet-care-sidebar h2 {
-  margin: 0 0 18px;
+  margin: 0 0 12px;
   color: var(--primary-deep);
-  font-size: 23px;
+  font-size: 20px;
   font-weight: 710;
   line-height: 1.2;
   letter-spacing: -.025em;
 }
 .ipet-care-topic-selector {
   display: grid;
-  gap: 4px;
+  gap: 2px;
 }
 .ipet-care-topic-control {
   position: absolute;
@@ -5225,9 +5224,9 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
 }
 .ipet-care-topic-option span {
   display: flex;
-  min-height: 44px;
+  min-height: 40px;
   align-items: center;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border-radius: 8px;
   color: #43536a;
   font-size: 14px;
@@ -5249,10 +5248,10 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
 }
 .ipet-care-common-return {
   display: inline-flex;
-  min-height: 38px;
+  min-height: 34px;
   align-items: center;
-  margin: 0 0 22px;
-  padding: 7px 12px;
+  margin: 0 0 18px;
+  padding: 6px 10px;
   border-radius: 7px;
   color: var(--primary);
   background: var(--primary-soft);
@@ -5264,7 +5263,7 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
   background: #dfeaff;
 }
 .ipet-care-question-groups {
-  min-height: 410px;
+  min-height: 0;
 }
 .ipet-care-question-group {
   display: none;
@@ -5288,24 +5287,24 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
 }
 .ipet-care-question-heading {
   max-width: 720px;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 }
 .ipet-care-question-heading h2 {
   margin: 0;
   color: var(--primary-deep);
-  font-size: clamp(30px, 3.6vw, 40px);
+  font-size: clamp(28px, 3vw, 34px);
   font-weight: 720;
   line-height: 1.08;
   letter-spacing: -.04em;
 }
 .ipet-care-question-heading > p:not(.eyebrow) {
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   color: var(--muted);
   line-height: 1.55;
 }
 .ipet-care-faq-list {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 .ipet-care-faq-list details {
   border: 1px solid var(--line);
@@ -5318,9 +5317,9 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
 }
 .ipet-care-faq-list summary {
   position: relative;
-  padding: 19px 52px 19px 20px;
+  padding: 15px 46px 15px 18px;
   color: var(--ink);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 680;
   line-height: 1.4;
   cursor: pointer;
@@ -5331,11 +5330,11 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
 }
 .ipet-care-faq-list summary::after {
   position: absolute;
-  top: 14px;
-  right: 18px;
+  top: 10px;
+  right: 16px;
   color: var(--primary);
   content: "+";
-  font-size: 25px;
+  font-size: 22px;
   font-weight: 500;
 }
 .ipet-care-faq-list details[open] summary::after {
@@ -5343,46 +5342,48 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
 }
 .ipet-care-faq-list details > p {
   margin: 0;
-  padding: 0 20px 20px;
+  padding: 0 18px 16px;
   color: var(--muted);
   font-size: 14px;
-  line-height: 1.62;
+  line-height: 1.55;
 }
 .ipet-care-section-heading {
   max-width: 760px;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 .ipet-care-section-heading h2 {
   margin: 0;
   color: var(--primary-deep);
-  font-size: clamp(32px, 4vw, 46px);
+  font-size: clamp(28px, 3.4vw, 38px);
   font-weight: 720;
   line-height: 1.08;
   letter-spacing: -.04em;
 }
 .ipet-care-section-heading > p:not(.eyebrow) {
-  margin: 12px 0 0;
+  margin: 8px 0 0;
   color: var(--muted);
   line-height: 1.55;
 }
 .ipet-care-channels {
-  padding: 64px 0 72px;
+  padding: 40px 0 46px;
   background: #f7f9fc;
   scroll-margin-top: 100px;
 }
 .ipet-care-channel-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 12px;
 }
 .ipet-care-channel {
-  display: flex;
-  min-height: 220px;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 28px;
+  display: grid;
+  min-height: 128px;
+  grid-template-columns: 44px minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  column-gap: 14px;
+  align-items: start;
+  padding: 20px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 12px;
   color: var(--ink);
   background: #fff;
   transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
@@ -5399,9 +5400,10 @@ a.ipet-care-channel:hover {
 }
 .ipet-care-channel-icon {
   display: grid;
-  width: 54px;
-  height: 54px;
-  margin-bottom: 22px;
+  width: 44px;
+  height: 44px;
+  grid-row: 1 / span 3;
+  margin: 0;
   place-items: center;
   border-radius: 50%;
   color: var(--primary);
@@ -5412,8 +5414,8 @@ a.ipet-care-channel:hover {
   background: #e2e6eb;
 }
 .ipet-care-channel svg {
-  width: 27px;
-  height: 27px;
+  width: 22px;
+  height: 22px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -5421,18 +5423,21 @@ a.ipet-care-channel:hover {
   stroke-width: 1.8;
 }
 .ipet-care-channel strong {
+  grid-column: 2;
   color: inherit;
-  font-size: 22px;
+  font-size: 19px;
   font-weight: 690;
 }
 .ipet-care-channel p {
-  margin: 9px 0 18px;
+  grid-column: 2;
+  margin: 4px 0 7px;
   color: var(--muted);
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.45;
 }
 .ipet-care-channel small {
-  margin-top: auto;
+  grid-column: 2;
+  margin: 0;
   color: inherit;
   font-size: 13px;
   font-weight: 680;
@@ -5441,10 +5446,10 @@ a.ipet-care-channel:hover {
 @media (max-width: 900px) {
   .ipet-care-help-layout {
     grid-template-columns: 1fr;
-    gap: 34px;
+    gap: 24px;
   }
   .ipet-care-sidebar {
-    padding: 20px;
+    padding: 16px;
   }
   .ipet-care-topic-selector {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -5454,7 +5459,7 @@ a.ipet-care-channel:hover {
     min-width: 0;
   }
   .ipet-care-topic-option span {
-    min-height: 44px;
+    min-height: 40px;
     justify-content: center;
     text-align: center;
   }
@@ -5465,7 +5470,7 @@ a.ipet-care-channel:hover {
     grid-template-columns: 1fr;
   }
   .ipet-care-channel {
-    min-height: 185px;
+    min-height: 112px;
   }
 }
 
@@ -5474,23 +5479,23 @@ a.ipet-care-channel:hover {
     width: calc(100% - 20px);
   }
   .ipet-care-hero {
-    padding: 40px 0 44px;
+    padding: 28px 0 32px;
   }
   .ipet-care-hero h1 {
-    font-size: 44px;
+    font-size: 38px;
   }
   .ipet-care-help,
   .ipet-care-channels {
-    padding-top: 46px;
-    padding-bottom: 52px;
+    padding-top: 32px;
+    padding-bottom: 38px;
   }
   .ipet-care-sidebar {
-    padding: 18px;
+    padding: 15px;
   }
   .ipet-care-faq-list summary {
-    padding: 18px 48px 18px 18px;
+    padding: 14px 44px 14px 16px;
   }
   .ipet-care-faq-list details > p {
-    padding: 0 18px 18px;
+    padding: 0 16px 15px;
   }
 }
