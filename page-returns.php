@@ -150,25 +150,18 @@ $orders_url = function_exists('wc_get_account_endpoint_url')
 
           <div class="ipet-contact-submit is-full">
             <button type="submit">Send message</button>
-            <small>Your message is sent securely to the configured store support address.</small>
           </div>
         </form>
       </div>
 
       <aside class="ipet-contact-help-card">
-        <p class="eyebrow">Support details</p>
-        <h2>Choose the right route</h2>
+        <p class="eyebrow">Direct contact</p>
+        <h2>Support details</h2>
         <p><?php echo esc_html($response_text); ?></p>
-
-        <a href="<?php echo esc_url($orders_url); ?>">
-          <span aria-hidden="true">01</span>
-          <div><strong>Orders</strong><p>Review purchases and order status.</p></div>
-          <b aria-hidden="true">→</b>
-        </a>
 
         <?php if ($contact_email) : ?>
           <a href="mailto:<?php echo esc_attr(antispambot($contact_email)); ?>">
-            <span aria-hidden="true">02</span>
+            <span aria-hidden="true">01</span>
             <div><strong>Email support</strong><p><?php echo wp_kses_post(antispambot($contact_email)); ?></p></div>
             <b aria-hidden="true">→</b>
           </a>
@@ -176,7 +169,7 @@ $orders_url = function_exists('wc_get_account_endpoint_url')
 
         <?php if ($contact_phone !== '') : ?>
           <a href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', $contact_phone)); ?>">
-            <span aria-hidden="true">03</span>
+            <span aria-hidden="true">02</span>
             <div><strong>Call support</strong><p><?php echo esc_html($contact_phone); ?></p></div>
             <b aria-hidden="true">→</b>
           </a>

@@ -598,12 +598,47 @@ function puppy_market_service_page($slug) {
 }
 
 /**
- * Default policy body used when the Returns & Support page is first created.
+ * Compact policy body used when the Returns & Support page is first created.
  *
  * The content is stored in the WordPress page editor so store managers can
- * change the policy without editing this theme.
+ * change it without editing this theme.
  */
 function puppy_market_default_returns_page_content() {
+    return <<<'HTML'
+<section class="ipet-policy-compact">
+  <div class="container ipet-policy-compact-grid">
+    <article class="ipet-policy-compact-steps">
+      <div class="ipet-policy-heading">
+        <p class="eyebrow">How returns work</p>
+        <h2>Three simple steps</h2>
+      </div>
+      <ol class="ipet-policy-steps">
+        <li><span>1</span><div><h3>Send a request</h3><p>Share your order number, item and reason for the return.</p></div></li>
+        <li><span>2</span><div><h3>Get instructions</h3><p>Support confirms eligibility and the correct return route.</p></div></li>
+        <li><span>3</span><div><h3>Complete the return</h3><p>Follow the supplied guidance for the refund or replacement review.</p></div></li>
+      </ol>
+    </article>
+
+    <aside class="ipet-policy-compact-note">
+      <p class="eyebrow">Before sending it back</p>
+      <h2>Keep these details ready</h2>
+      <ul>
+        <li>Request within 30 days of delivery.</li>
+        <li>Keep the item unused with its packaging and supplied parts.</li>
+        <li>Include photos if an item arrived damaged or incorrect.</li>
+      </ul>
+      <p>Contact support before arranging return shipping. Some products may have additional restrictions.</p>
+    </aside>
+  </div>
+</section>
+HTML;
+}
+
+/**
+ * Previous theme-owned policy body, retained only so an unchanged generated
+ * page can be safely migrated to the compact version without replacing edits.
+ */
+function puppy_market_legacy_returns_page_content_v1() {
     return <<<'HTML'
 <section class="ipet-policy-summary">
   <div class="container">
@@ -727,6 +762,23 @@ function puppy_market_ensure_service_pages() {
             }
 
             update_post_meta($page_id, '_puppy_market_returns_content_initialized', 1);
+        }
+
+        if ($slug === 'returns' && absint(get_post_meta($page_id, '_puppy_market_returns_content_version', true)) < 2) {
+            $returns_page = get_post($page_id);
+            $current_content = $returns_page instanceof WP_Post
+                ? trim((string) $returns_page->post_content)
+                : '';
+            $legacy_content = trim(puppy_market_legacy_returns_page_content_v1());
+
+            if ($current_content === '' || $current_content === $legacy_content) {
+                wp_update_post(wp_slash(array(
+                    'ID'           => $page_id,
+                    'post_content' => puppy_market_default_returns_page_content(),
+                )));
+            }
+
+            update_post_meta($page_id, '_puppy_market_returns_content_version', 2);
         }
 
         update_post_meta($page_id, '_wp_page_template', $definition['template']);
