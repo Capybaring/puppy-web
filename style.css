@@ -869,9 +869,10 @@ body.woocommerce-checkout .wc-block-components-text-input input,
 body.woocommerce-checkout .wc-block-components-textarea textarea,
 body.woocommerce-checkout .wc-block-components-select select,
 body.woocommerce-checkout .wc-block-components-combobox input { min-height: 44px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
-body.woocommerce-checkout .wc-block-components-radio-control__option { padding: 12px 14px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+body.woocommerce-checkout .wc-block-components-radio-control__option { box-sizing: border-box; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
 body.woocommerce-checkout .wc-block-components-radio-control__option + .wc-block-components-radio-control__option { margin-top: 8px; }
-body.woocommerce-checkout .wc-block-components-radio-control__option[aria-checked="true"] { border-color: #4b9fc4; }
+body.woocommerce-checkout .wc-block-components-radio-control__option[aria-checked="true"],
+body.woocommerce-checkout .wc-block-components-radio-control__option-checked { border-color: #4b9fc4; }
 body.woocommerce-checkout .wc-block-components-checkbox { color: #5c7180; font-size: 13px; }
 
 /* Order summary sidebar — identical block treatment to the cart sidebar. */
@@ -880,7 +881,6 @@ body.woocommerce-checkout .wc-block-checkout__sidebar > * { margin: 0 !important
 body.woocommerce-checkout .wp-block-woocommerce-checkout-order-summary-block { padding: 20px 20px 4px !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; box-shadow: none; }
 body.woocommerce-checkout .wc-block-components-totals-item { color: #5c7180; font-size: 14px; }
 body.woocommerce-checkout .wc-block-components-totals-footer-item { display: flex; justify-content: space-between; gap: 12px; padding-top: 12px; border-top: 1px solid var(--line); color: #17191b !important; font-size: 17px !important; font-weight: 700; }
-body.woocommerce-checkout .wc-block-checkout__payment-method,
 body.woocommerce-checkout .wc-block-checkout__actions { padding: 18px 20px !important; border: 0 !important; border-top: 1px solid var(--line) !important; border-radius: 0 !important; background: transparent !important; box-shadow: none; }
 body.woocommerce-checkout .wc-block-components-checkout-place-order-button { display: flex; width: 100%; min-height: 46px; align-items: center; justify-content: center; border: 0; border-radius: 6px; color: #fff; background: #4b9fc4; box-shadow: none; font-size: 15px; font-weight: 700; }
 body.woocommerce-checkout .wc-block-components-checkout-place-order-button:hover { background: #2f789e; }
