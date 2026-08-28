@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Returns
+ * Template Name: Returns & Support
  * Template Post Type: page
  */
 
@@ -8,7 +8,62 @@ defined('ABSPATH') || exit;
 
 get_header();
 
-$contact_url = add_query_arg('contact_topic', 'returns', puppy_market_page_url('contact')) . '#contact-form';
+$page_id = get_queried_object_id();
+$policy_content = trim((string) get_post_field('post_content', $page_id));
+if ($policy_content === '' && function_exists('puppy_market_default_returns_page_content')) {
+    $policy_content = puppy_market_default_returns_page_content();
+}
+
+$hero_title = get_theme_mod(
+    'puppy_market_returns_hero_title',
+    'A straightforward path when an item is not right.'
+);
+$hero_text = get_theme_mod(
+    'puppy_market_returns_hero_text',
+    'Review the return guidance or send the support team your order details from one place.'
+);
+$highlight_label = get_theme_mod('puppy_market_returns_highlight_label', 'Return window');
+$highlight_title = get_theme_mod(
+    'puppy_market_returns_highlight_title',
+    'Eligible unused items can be requested for return within 30 days of delivery.'
+);
+$highlight_text = get_theme_mod(
+    'puppy_market_returns_highlight_text',
+    'Support confirms eligibility and provides the correct instructions for the product and order.'
+);
+$form_title = get_theme_mod('puppy_market_returns_form_title', 'Tell us what you need');
+$form_text = get_theme_mod(
+    'puppy_market_returns_form_text',
+    'Use this form for returns, delivery questions, order help, products or business enquiries.'
+);
+$success_text = get_theme_mod(
+    'puppy_market_returns_success_text',
+    'Thanks — your message has been sent.'
+);
+$response_text = get_theme_mod(
+    'puppy_market_contact_response_text',
+    'We will review your request and follow up as soon as possible.'
+);
+$contact_email = sanitize_email(get_theme_mod('puppy_market_contact_email', get_option('admin_email')));
+$business_email = sanitize_email(get_theme_mod('puppy_market_business_email', ''));
+$contact_phone = trim((string) get_theme_mod('puppy_market_contact_phone', ''));
+
+$contact_status = isset($_GET['contact_status'])
+    ? sanitize_key(wp_unslash($_GET['contact_status']))
+    : '';
+$contact_topic = isset($_GET['contact_topic'])
+    ? sanitize_key(wp_unslash($_GET['contact_topic']))
+    : 'returns';
+$contact_topics = array(
+    'returns'  => 'Returns',
+    'order'    => 'Order help',
+    'shipping' => 'Shipping or delivery',
+    'product'  => 'Product question',
+    'business' => 'Business & wholesale',
+    'other'    => 'Other',
+);
+if (!isset($contact_topics[$contact_topic])) $contact_topic = 'returns';
+
 $orders_url = function_exists('wc_get_account_endpoint_url')
     ? wc_get_account_endpoint_url('orders')
     : puppy_market_account_url();
@@ -17,93 +72,123 @@ $orders_url = function_exists('wc_get_account_endpoint_url')
   <section class="ipet-policy-hero">
     <div class="container ipet-policy-hero-grid">
       <div class="ipet-policy-hero-copy">
-        <p class="eyebrow">Returns</p>
-        <h1>A straightforward path when an item is not right.</h1>
-        <p>Check the basic requirements, contact support before sending anything back and keep your order number ready.</p>
+        <p class="eyebrow"><?php echo esc_html(get_the_title($page_id)); ?></p>
+        <h1><?php echo esc_html($hero_title); ?></h1>
+        <p><?php echo esc_html($hero_text); ?></p>
         <div class="ipet-policy-actions">
-          <a class="button" href="<?php echo esc_url($contact_url); ?>">Start a return</a>
+          <a class="button" href="#contact-form">Contact support</a>
           <a class="ipet-policy-text-link" href="<?php echo esc_url($orders_url); ?>">Find your order →</a>
         </div>
       </div>
 
-      <aside class="ipet-policy-highlight" aria-label="Return policy summary">
+      <aside class="ipet-policy-highlight" aria-label="<?php echo esc_attr($highlight_label); ?>">
         <span aria-hidden="true"><?php echo puppy_market_service_icon('returns'); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted theme SVG. */ ?></span>
-        <p class="eyebrow">Return window</p>
-        <strong>Eligible unused items can be requested for return within 30 days of delivery.</strong>
-        <p>Support confirms eligibility and provides the correct instructions for the product and order.</p>
+        <p class="eyebrow"><?php echo esc_html($highlight_label); ?></p>
+        <strong><?php echo esc_html($highlight_title); ?></strong>
+        <p><?php echo esc_html($highlight_text); ?></p>
       </aside>
     </div>
   </section>
 
-  <section class="ipet-policy-summary">
-    <div class="container">
-      <div class="ipet-policy-heading">
-        <p class="eyebrow">At a glance</p>
-        <h2>Before you begin</h2>
-      </div>
-      <div class="ipet-policy-card-grid">
-        <article><span>01</span><h3>Request first</h3><p>Contact support before shipping an item back so the return can be reviewed and recorded.</p></article>
-        <article><span>02</span><h3>Keep the order number</h3><p>The order number helps support identify the item, purchase date and available next step.</p></article>
-        <article><span>03</span><h3>Wait for instructions</h3><p>Do not send an item to an unconfirmed address; follow the return instructions supplied by support.</p></article>
-      </div>
-    </div>
-  </section>
+  <div class="ipet-returns-managed-content">
+    <?php echo apply_filters('the_content', $policy_content); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WordPress page content. */ ?>
+  </div>
 
-  <section class="ipet-policy-process">
-    <div class="container">
-      <div class="ipet-policy-heading">
-        <p class="eyebrow">Return journey</p>
-        <h2>Three clear steps</h2>
-      </div>
-      <ol class="ipet-policy-steps">
-        <li><span>1</span><div><h3>Send the request</h3><p>Tell support the order number, item and reason for the return. Add photos when an item arrived damaged or incorrect.</p></div></li>
-        <li><span>2</span><div><h3>Receive confirmation</h3><p>Support reviews eligibility and sends the appropriate packaging, address and shipping guidance.</p></div></li>
-        <li><span>3</span><div><h3>Complete the return</h3><p>Once the return is received and reviewed, support confirms the available refund or replacement outcome.</p></div></li>
-      </ol>
-    </div>
-  </section>
+  <section class="ipet-contact-workspace" id="contact-form">
+    <div class="container ipet-contact-workspace-grid">
+      <div class="ipet-contact-form-card">
+        <div class="ipet-contact-section-heading">
+          <p class="eyebrow">Returns & support</p>
+          <h2><?php echo esc_html($form_title); ?></h2>
+          <p><?php echo esc_html($form_text); ?></p>
+        </div>
 
-  <section class="ipet-policy-details">
-    <div class="container ipet-policy-details-grid">
-      <article>
-        <p class="eyebrow">Generally required</p>
-        <h2>Keep the item return-ready</h2>
-        <ul>
-          <li>Request the return within 30 days of the recorded delivery date.</li>
-          <li>Keep the item unused and include its original packaging and supplied parts when possible.</li>
-          <li>Provide the order number and accurate information about the item's condition.</li>
-        </ul>
-      </article>
-      <article>
-        <p class="eyebrow">Contact us first</p>
-        <h2>Some products need review</h2>
-        <ul>
-          <li>Opened consumables, hygiene-sensitive goods and regulated products may have additional restrictions.</li>
-          <li>Damaged, defective or incorrect items may follow a different resolution process.</li>
-          <li>Support confirms eligibility before you pay for or arrange return shipping.</li>
-        </ul>
-      </article>
-    </div>
-  </section>
+        <?php if ($contact_status === 'success') : ?>
+          <div class="ipet-contact-notice is-success" role="status"><?php echo esc_html($success_text); ?></div>
+        <?php elseif ($contact_status === 'invalid') : ?>
+          <div class="ipet-contact-notice is-error" role="alert">Please check the required fields and try again.</div>
+        <?php elseif ($contact_status === 'error') : ?>
+          <div class="ipet-contact-notice is-error" role="alert">Your message could not be sent. Please use the email option instead.</div>
+        <?php endif; ?>
 
-  <section class="ipet-policy-faq">
-    <div class="container">
-      <div class="ipet-policy-heading">
-        <p class="eyebrow">Quick answers</p>
-        <h2>Return questions</h2>
-      </div>
-      <div class="ipet-policy-faq-list">
-        <details><summary>Can I send an item back without contacting support?</summary><p>Please contact support first. The team needs to confirm eligibility and provide the correct return destination and instructions.</p></details>
-        <details><summary>What if my item arrived damaged or incorrect?</summary><p>Start a return request and include the order number, a description and clear photos. Support will review the appropriate refund, replacement or return route.</p></details>
-        <details><summary>When will a refund be completed?</summary><p>Timing depends on the return method and inspection. Support will confirm the outcome after the returned item or required evidence has been reviewed.</p></details>
-      </div>
-    </div>
-  </section>
+        <form class="ipet-contact-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
+          <input type="hidden" name="action" value="puppy_market_contact">
+          <?php wp_nonce_field('puppy_market_contact_form', 'puppy_contact_nonce'); ?>
 
-  <section class="ipet-policy-cta">
-    <div class="container">
-      <div><p class="eyebrow">Ready to start?</p><h2>Send a return request.</h2><p>The contact form will open with Returns already selected. Add your order number and the details of the item.</p></div>
-      <a class="button" href="<?php echo esc_url($contact_url); ?>">Start a return</a>
+          <p class="ipet-contact-honeypot" aria-hidden="true">
+            <label>Website<input type="text" name="company_website" tabindex="-1" autocomplete="off"></label>
+          </p>
+
+          <div class="ipet-contact-field">
+            <label for="contact-name">Name <span>*</span></label>
+            <input id="contact-name" type="text" name="contact_name" autocomplete="name" required>
+          </div>
+
+          <div class="ipet-contact-field">
+            <label for="contact-email">Email <span>*</span></label>
+            <input id="contact-email" type="email" name="contact_email" autocomplete="email" required>
+          </div>
+
+          <div class="ipet-contact-field">
+            <label for="contact-order">Order number</label>
+            <input id="contact-order" type="text" name="order_number" autocomplete="off">
+          </div>
+
+          <div class="ipet-contact-field">
+            <label for="contact-topic">Topic <span>*</span></label>
+            <select id="contact-topic" name="contact_topic" required>
+              <?php foreach ($contact_topics as $topic_value => $topic_label) : ?>
+                <option value="<?php echo esc_attr($topic_value); ?>" <?php selected($contact_topic, $topic_value); ?>><?php echo esc_html($topic_label); ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+
+          <div class="ipet-contact-field is-full">
+            <label for="contact-message">How can we help? <span>*</span></label>
+            <textarea id="contact-message" name="contact_message" rows="7" maxlength="5000" required></textarea>
+          </div>
+
+          <div class="ipet-contact-submit is-full">
+            <button type="submit">Send message</button>
+            <small>Your message is sent securely to the configured store support address.</small>
+          </div>
+        </form>
+      </div>
+
+      <aside class="ipet-contact-help-card">
+        <p class="eyebrow">Support details</p>
+        <h2>Choose the right route</h2>
+        <p><?php echo esc_html($response_text); ?></p>
+
+        <a href="<?php echo esc_url($orders_url); ?>">
+          <span aria-hidden="true">01</span>
+          <div><strong>Orders</strong><p>Review purchases and order status.</p></div>
+          <b aria-hidden="true">→</b>
+        </a>
+
+        <?php if ($contact_email) : ?>
+          <a href="mailto:<?php echo esc_attr(antispambot($contact_email)); ?>">
+            <span aria-hidden="true">02</span>
+            <div><strong>Email support</strong><p><?php echo wp_kses_post(antispambot($contact_email)); ?></p></div>
+            <b aria-hidden="true">→</b>
+          </a>
+        <?php endif; ?>
+
+        <?php if ($contact_phone !== '') : ?>
+          <a href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', $contact_phone)); ?>">
+            <span aria-hidden="true">03</span>
+            <div><strong>Call support</strong><p><?php echo esc_html($contact_phone); ?></p></div>
+            <b aria-hidden="true">→</b>
+          </a>
+        <?php endif; ?>
+
+        <?php if ($business_email) : ?>
+          <div class="ipet-contact-business-email">
+            <strong>Business & wholesale</strong>
+            <a href="mailto:<?php echo esc_attr(antispambot($business_email)); ?>"><?php echo wp_kses_post(antispambot($business_email)); ?></a>
+          </div>
+        <?php endif; ?>
+      </aside>
     </div>
   </section>
 </main>

@@ -5,7 +5,6 @@ $footer_shop_url = puppy_market_catalog_url();
 $footer_account_url = puppy_market_account_url();
 $footer_contact_url = puppy_market_page_url('contact');
 $footer_about_url = puppy_market_page_url('about');
-$footer_shipping_url = puppy_market_page_url('shipping');
 $footer_returns_url = puppy_market_page_url('returns');
 $footer_privacy_url = get_privacy_policy_url();
 if (!$footer_privacy_url) $footer_privacy_url = puppy_market_page_url('privacy-policy');
@@ -84,7 +83,7 @@ $footer_credit_text = (string) get_theme_mod(
         <?php if (has_nav_menu('footer_help')) : ?>
           <?php wp_nav_menu(array('theme_location' => 'footer_help', 'container' => false, 'menu_class' => 'footer-menu', 'fallback_cb' => false)); ?>
         <?php else : ?>
-          <ul class="footer-menu"><li><a href="<?php echo esc_url($footer_contact_url); ?>">Contact us</a></li><li><a href="<?php echo esc_url($footer_shipping_url); ?>">Shipping</a></li><li><a href="<?php echo esc_url($footer_returns_url); ?>">Returns</a></li><li><a href="<?php echo esc_url($footer_account_url); ?>">My account</a></li></ul>
+          <ul class="footer-menu"><li><a href="<?php echo esc_url($footer_returns_url); ?>">Returns &amp; support</a></li><li><a href="<?php echo esc_url($footer_account_url); ?>">My account</a></li></ul>
         <?php endif; ?>
       </div>
       <div><h3>About</h3>
@@ -108,7 +107,7 @@ $footer_credit_text = (string) get_theme_mod(
     </div>
 
     <nav class="footer-quick-links" aria-label="Footer links">
-      <span aria-label="Country">🌐 United States</span><a href="<?php echo esc_url($footer_about_url); ?>">About</a><a href="<?php echo esc_url($footer_contact_url); ?>">Help</a><a href="<?php echo esc_url($footer_shipping_url); ?>">Shipping</a><a href="<?php echo esc_url($footer_returns_url); ?>">Returns</a><a href="<?php echo esc_url($footer_privacy_url); ?>">Privacy</a><a href="<?php echo esc_url($footer_shop_url); ?>">Shop all</a>
+      <span aria-label="Country">🌐 United States</span><a href="<?php echo esc_url($footer_about_url); ?>">About</a><a href="<?php echo esc_url($footer_returns_url); ?>">Returns &amp; support</a><a href="<?php echo esc_url($footer_privacy_url); ?>">Privacy</a><a href="<?php echo esc_url($footer_shop_url); ?>">Shop all</a>
     </nav>
 
     <div class="footer-reassurance" aria-label="Shopping reassurance">

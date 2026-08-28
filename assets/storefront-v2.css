@@ -740,8 +740,8 @@ body:not(.woocommerce-cart):not(.woocommerce-checkout):not(.single-product) .con
   font-weight: 650;
 }
 .site-header .header-main .search button:hover { color: #fff; background: #1569fa; }
-.header-utilities { display: flex; min-width: 0; flex: 0 0 auto; align-items: center; gap: 12px; margin-left: auto; }
-.site-header .header-main .header-promises { display: flex; align-items: center; gap: 12px; margin: 0; }
+.header-utilities { display: flex; min-width: 0; flex: 0 0 auto; align-items: center; gap: 24px; margin-left: auto; }
+.site-header .header-main .header-promises { display: flex; align-items: center; gap: 24px; margin: 0; }
 .site-header .header-main .header-promises > a,
 .site-header .header-main .header-actions > .header-menu > .header-menu-trigger {
   min-height: 42px;
@@ -763,7 +763,7 @@ body:not(.woocommerce-cart):not(.woocommerce-checkout):not(.single-product) .con
 }
 .site-header .header-main .header-promises .header-icon svg,
 .site-header .header-main .header-actions .header-icon svg { width: 24px; height: 24px; }
-.site-header .header-main .header-actions { gap: 12px; margin: 0; }
+.site-header .header-main .header-actions { gap: 24px; margin: 0; }
 .site-header .header-main .header-menu-trigger { min-height: 42px; padding: 0; }
 .site-header .header-main .header-dropdown a { color: var(--ink) !important; }
 .site-header .header-main .header-dropdown .dropdown-primary-button,
@@ -1112,9 +1112,9 @@ body.home .product > p { font-weight: 400; }
   .site-header .header-main { gap: 10px; }
   .site-header .header-main .brand-logo { width: 108px; }
   .site-header .header-main .search { max-width: 430px; min-width: 220px; }
-  .header-utilities { gap: 10px; }
-  .site-header .header-main .header-promises { display: flex !important; gap: 9px; }
-  .site-header .header-main .header-actions { gap: 9px; }
+  .header-utilities { gap: 16px; }
+  .site-header .header-main .header-promises { display: flex !important; gap: 16px; }
+  .site-header .header-main .header-actions { gap: 16px; }
   .site-header .header-main .header-promises a:nth-child(2),
   .site-header .header-main .header-promises a:nth-child(3) { display: flex !important; }
   .site-header .header-main .header-promises > a > strong,
@@ -4555,4 +4555,19 @@ body.woocommerce-checkout form.checkout #payment div.payment_box::before {
     padding-bottom: 14px !important;
     padding-left: 44px !important;
   }
+}
+
+
+/* Merged Returns & Support page: keep the policy design and give the form a clear handoff. */
+.ipet-returns-page .ipet-contact-workspace {
+  border-top: 1px solid var(--line);
+  background: #f7f9fc;
+}
+.ipet-returns-page .ipet-contact-section-heading .eyebrow,
+.ipet-returns-page .ipet-contact-help-card > .eyebrow {
+  color: var(--primary);
+}
+.ipet-returns-page .ipet-contact-help-card > p:not(.eyebrow) {
+  color: var(--muted);
+  line-height: 1.55;
 }

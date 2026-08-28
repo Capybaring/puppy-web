@@ -8,7 +8,6 @@
   $puppy_cart_url = function_exists('wc_get_cart_url') ? wc_get_cart_url() : '#';
   $puppy_checkout_url = function_exists('wc_get_checkout_url') ? wc_get_checkout_url() : $puppy_cart_url;
   $puppy_shop_url = puppy_market_catalog_url();
-  $puppy_shipping_url = puppy_market_page_url('shipping');
   $puppy_contact_url = puppy_market_page_url('contact');
   $puppy_returns_url = puppy_market_page_url('returns');
   $puppy_current_user = is_user_logged_in() ? wp_get_current_user() : null;
@@ -61,7 +60,10 @@
       </div>
     </form>
     <div class="header-utilities" aria-label="Store services and account">
-      <div class="header-promises"><a href="<?php echo esc_url($puppy_shipping_url); ?>"><span class="header-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 6.5h11v10H3z"></path><path d="M14 10h3.5l3.5 3.5v3H14z"></path><circle cx="7" cy="18" r="1.8"></circle><circle cx="18" cy="18" r="1.8"></circle></svg></span><strong>Free Shipping</strong></a><a href="<?php echo esc_url($puppy_contact_url); ?>"><span class="header-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.5 5.5h15v10h-9l-4.5 3v-3h-1.5z"></path><path d="M8 10h8M8 13h5"></path></svg></span><strong>24/7 Support</strong></a><a href="<?php echo esc_url($puppy_returns_url); ?>"><span class="header-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M8 7H4l3-3"></path><path d="M4 7a8 8 0 1 1-1 8"></path><path d="M12 9v4l2.5 1.5"></path></svg></span><strong>Easy Returns</strong></a></div>
+      <div class="header-promises">
+        <a href="<?php echo esc_url($puppy_contact_url); ?>"><span class="header-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.5 5.5h15v10h-9l-4.5 3v-3h-1.5z"></path><path d="M8 10h8M8 13h5"></path></svg></span><strong>24/7 Support</strong></a>
+        <a href="<?php echo esc_url($puppy_returns_url); ?>"><span class="header-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M8 7H4l3-3"></path><path d="M4 7a8 8 0 1 1-1 8"></path><path d="M12 9v4l2.5 1.5"></path></svg></span><strong>Easy Returns</strong></a>
+      </div>
       <div class="header-actions">
         <div class="header-menu">
           <a class="header-menu-trigger" href="<?php echo esc_url(is_user_logged_in() ? $puppy_account_url : $puppy_account_action_url); ?>"><span class="header-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8" r="3.2"></circle><path d="M5.5 19c.7-3.1 3.1-4.8 6.5-4.8s5.8 1.7 6.5 4.8"></path></svg></span><span class="header-account-copy"><?php if (is_user_logged_in()) : ?><small>Hi, <?php echo esc_html($puppy_account_greeting); ?>!</small><?php endif; ?><strong><?php echo is_user_logged_in() ? 'Account' : 'Sign In'; ?></strong></span><span class="header-dropdown-chevron" aria-hidden="true"></span></a>

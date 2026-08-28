@@ -395,8 +395,8 @@ function puppy_market_customize_register($wp_customize) {
     }
 
     $wp_customize->add_section('puppy_market_contact_page', array(
-        'title'       => __('Contact page', 'puppy-market'),
-        'description' => __('Contact details used by the Contact Us page and its form.', 'puppy-market'),
+        'title'       => __('Returns & support page', 'puppy-market'),
+        'description' => __('Manage the merged Returns and Contact page. Edit the policy body under Pages → Returns & Support.', 'puppy-market'),
         'priority'    => 39,
     ));
 
@@ -426,6 +426,54 @@ function puppy_market_customize_register($wp_customize) {
             'default'  => __('We will review your request and follow up as soon as possible.', 'puppy-market'),
             'type'     => 'textarea',
             'sanitize' => 'sanitize_textarea_field',
+        ),
+        'puppy_market_returns_hero_title' => array(
+            'label'    => __('Hero title', 'puppy-market'),
+            'default'  => __('A straightforward path when an item is not right.', 'puppy-market'),
+            'type'     => 'text',
+            'sanitize' => 'sanitize_text_field',
+        ),
+        'puppy_market_returns_hero_text' => array(
+            'label'    => __('Hero description', 'puppy-market'),
+            'default'  => __('Review the return guidance or send the support team your order details from one place.', 'puppy-market'),
+            'type'     => 'textarea',
+            'sanitize' => 'sanitize_textarea_field',
+        ),
+        'puppy_market_returns_highlight_label' => array(
+            'label'    => __('Policy highlight label', 'puppy-market'),
+            'default'  => __('Return window', 'puppy-market'),
+            'type'     => 'text',
+            'sanitize' => 'sanitize_text_field',
+        ),
+        'puppy_market_returns_highlight_title' => array(
+            'label'    => __('Policy highlight title', 'puppy-market'),
+            'default'  => __('Eligible unused items can be requested for return within 30 days of delivery.', 'puppy-market'),
+            'type'     => 'textarea',
+            'sanitize' => 'sanitize_textarea_field',
+        ),
+        'puppy_market_returns_highlight_text' => array(
+            'label'    => __('Policy highlight description', 'puppy-market'),
+            'default'  => __('Support confirms eligibility and provides the correct instructions for the product and order.', 'puppy-market'),
+            'type'     => 'textarea',
+            'sanitize' => 'sanitize_textarea_field',
+        ),
+        'puppy_market_returns_form_title' => array(
+            'label'    => __('Support form title', 'puppy-market'),
+            'default'  => __('Tell us what you need', 'puppy-market'),
+            'type'     => 'text',
+            'sanitize' => 'sanitize_text_field',
+        ),
+        'puppy_market_returns_form_text' => array(
+            'label'    => __('Support form description', 'puppy-market'),
+            'default'  => __('Use this form for returns, delivery questions, order help, products or business enquiries.', 'puppy-market'),
+            'type'     => 'textarea',
+            'sanitize' => 'sanitize_textarea_field',
+        ),
+        'puppy_market_returns_success_text' => array(
+            'label'    => __('Successful submission message', 'puppy-market'),
+            'default'  => __('Thanks — your message has been sent.', 'puppy-market'),
+            'type'     => 'text',
+            'sanitize' => 'sanitize_text_field',
         ),
     );
 
@@ -487,85 +535,11 @@ function puppy_market_brand_markup() {
     return '<span class="brand-text">' . esc_html(get_bloginfo('name')) . '</span>';
 }
 
-/** Find the Contact Us page by stored ID, common slug, or assigned template. */
-function puppy_market_contact_page() {
-    $stored_page_id = absint(get_option('puppy_market_contact_page_id', 0));
-    if ($stored_page_id) {
-        $stored_page = get_post($stored_page_id);
-        if ($stored_page instanceof WP_Post && $stored_page->post_type === 'page' && $stored_page->post_status !== 'trash') {
-            return $stored_page;
-        }
-    }
-
-    foreach (array('contact-us', 'contact') as $candidate_slug) {
-        $page = get_page_by_path($candidate_slug, OBJECT, 'page');
-        if ($page instanceof WP_Post && $page->post_status !== 'trash') {
-            return $page;
-        }
-    }
-
-    $template_pages = get_posts(array(
-        'post_type'      => 'page',
-        'post_status'    => array('publish', 'draft', 'pending', 'private', 'future'),
-        'posts_per_page' => 1,
-        'meta_key'       => '_wp_page_template',
-        'meta_value'     => 'page-contact.php',
-        'no_found_rows'  => true,
-    ));
-
-    return !empty($template_pages) && $template_pages[0] instanceof WP_Post
-        ? $template_pages[0]
-        : null;
-}
-
-/** Create and publish the theme's Contact Us page once when it does not exist. */
-function puppy_market_ensure_contact_page() {
-    if (wp_installing()) return;
-
-    $page = puppy_market_contact_page();
-    if ($page instanceof WP_Post) {
-        $page_id = $page->ID;
-
-        if ($page->post_status !== 'publish') {
-            $updated_page_id = wp_update_post(array(
-                'ID'          => $page_id,
-                'post_status' => 'publish',
-            ), true);
-
-            if (!is_wp_error($updated_page_id)) {
-                $page_id = absint($updated_page_id);
-            }
-        }
-    } else {
-        $page_id = wp_insert_post(array(
-            'post_type'    => 'page',
-            'post_status'  => 'publish',
-            'post_title'   => 'Contact Us',
-            'post_name'    => 'contact-us',
-            'post_content' => '',
-        ), true);
-
-        if (is_wp_error($page_id)) return;
-        $page_id = absint($page_id);
-    }
-
-    if (!$page_id) return;
-
-    update_post_meta($page_id, '_wp_page_template', 'page-contact.php');
-    update_option('puppy_market_contact_page_id', $page_id, false);
-}
-add_action('init', 'puppy_market_ensure_contact_page', 20);
-
 /** Theme-owned informational pages used by storefront service and footer links. */
 function puppy_market_service_page_definitions() {
     return array(
-        'shipping' => array(
-            'title'    => 'Shipping',
-            'template' => 'page-shipping.php',
-            'option'   => 'puppy_market_shipping_page_id',
-        ),
         'returns' => array(
-            'title'    => 'Returns',
+            'title'    => 'Returns & Support',
             'template' => 'page-returns.php',
             'option'   => 'puppy_market_returns_page_id',
         ),
@@ -623,6 +597,88 @@ function puppy_market_service_page($slug) {
         : null;
 }
 
+/**
+ * Default policy body used when the Returns & Support page is first created.
+ *
+ * The content is stored in the WordPress page editor so store managers can
+ * change the policy without editing this theme.
+ */
+function puppy_market_default_returns_page_content() {
+    return <<<'HTML'
+<section class="ipet-policy-summary">
+  <div class="container">
+    <div class="ipet-policy-heading">
+      <p class="eyebrow">At a glance</p>
+      <h2>Before you begin</h2>
+    </div>
+    <div class="ipet-policy-card-grid">
+      <article><span>01</span><h3>Request first</h3><p>Contact support before shipping an item back so the return can be reviewed and recorded.</p></article>
+      <article><span>02</span><h3>Keep the order number</h3><p>The order number helps support identify the item, purchase date and available next step.</p></article>
+      <article><span>03</span><h3>Wait for instructions</h3><p>Do not send an item to an unconfirmed address; follow the return instructions supplied by support.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="ipet-policy-process">
+  <div class="container">
+    <div class="ipet-policy-heading">
+      <p class="eyebrow">Return journey</p>
+      <h2>Three clear steps</h2>
+    </div>
+    <ol class="ipet-policy-steps">
+      <li><span>1</span><div><h3>Send the request</h3><p>Tell support the order number, item and reason for the return. Add photos when an item arrived damaged or incorrect.</p></div></li>
+      <li><span>2</span><div><h3>Receive confirmation</h3><p>Support reviews eligibility and sends the appropriate packaging, address and shipping guidance.</p></div></li>
+      <li><span>3</span><div><h3>Complete the return</h3><p>Once the return is received and reviewed, support confirms the available refund or replacement outcome.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="ipet-policy-details">
+  <div class="container ipet-policy-details-grid">
+    <article>
+      <p class="eyebrow">Generally required</p>
+      <h2>Keep the item return-ready</h2>
+      <ul>
+        <li>Request the return within 30 days of the recorded delivery date.</li>
+        <li>Keep the item unused and include its original packaging and supplied parts when possible.</li>
+        <li>Provide the order number and accurate information about the item's condition.</li>
+      </ul>
+    </article>
+    <article>
+      <p class="eyebrow">Contact us first</p>
+      <h2>Some products need review</h2>
+      <ul>
+        <li>Opened consumables, hygiene-sensitive goods and regulated products may have additional restrictions.</li>
+        <li>Damaged, defective or incorrect items may follow a different resolution process.</li>
+        <li>Support confirms eligibility before you pay for or arrange return shipping.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section class="ipet-policy-faq">
+  <div class="container">
+    <div class="ipet-policy-heading">
+      <p class="eyebrow">Quick answers</p>
+      <h2>Return questions</h2>
+    </div>
+    <div class="ipet-policy-faq-list">
+      <details><summary>Can I send an item back without contacting support?</summary><p>Please contact support first. The team needs to confirm eligibility and provide the correct return destination and instructions.</p></details>
+      <details><summary>What if my item arrived damaged or incorrect?</summary><p>Start a return request and include the order number, a description and clear photos. Support will review the appropriate refund, replacement or return route.</p></details>
+      <details><summary>When will a refund be completed?</summary><p>Timing depends on the return method and inspection. Support will confirm the outcome after the returned item or required evidence has been reviewed.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="ipet-policy-cta">
+  <div class="container">
+    <div><p class="eyebrow">Ready to start?</p><h2>Send a return request.</h2><p>Use the support form below and include your order number and item details.</p></div>
+    <a class="button" href="#contact-form">Contact support</a>
+  </div>
+</section>
+HTML;
+}
+
 /** Create and publish theme-owned information pages when they do not exist. */
 function puppy_market_ensure_service_pages() {
     if (wp_installing()) return;
@@ -653,6 +709,26 @@ function puppy_market_ensure_service_pages() {
         }
 
         if (!$page_id) continue;
+
+        if ($slug === 'returns' && !get_post_meta($page_id, '_puppy_market_returns_content_initialized', true)) {
+            $returns_page = get_post($page_id);
+            $returns_update = array('ID' => $page_id);
+
+            if ($returns_page instanceof WP_Post && $returns_page->post_title === 'Returns') {
+                $returns_update['post_title'] = 'Returns & Support';
+            }
+
+            if ($returns_page instanceof WP_Post && trim((string) $returns_page->post_content) === '') {
+                $returns_update['post_content'] = puppy_market_default_returns_page_content();
+            }
+
+            if (count($returns_update) > 1) {
+                wp_update_post(wp_slash($returns_update));
+            }
+
+            update_post_meta($page_id, '_puppy_market_returns_content_initialized', 1);
+        }
+
         update_post_meta($page_id, '_wp_page_template', $definition['template']);
         update_option($definition['option'], $page_id, false);
 
@@ -667,18 +743,90 @@ function puppy_market_ensure_service_pages() {
 }
 add_action('init', 'puppy_market_ensure_service_pages', 21);
 
+/**
+ * Retire legacy standalone service pages after Returns and Contact are merged.
+ *
+ * Only pages created by this theme are moved to Trash. If Trash is disabled,
+ * they are changed to Draft so no content is permanently deleted.
+ */
+function puppy_market_retire_legacy_service_pages() {
+    if (get_option('puppy_market_legacy_service_pages_retired_v1')) return;
+
+    $legacy_pages = array(
+        'contact' => array(
+            'option'   => 'puppy_market_contact_page_id',
+            'template' => 'page-contact.php',
+            'slugs'    => array('contact-us', 'contact'),
+        ),
+        'shipping' => array(
+            'option'   => 'puppy_market_shipping_page_id',
+            'template' => 'page-shipping.php',
+            'slugs'    => array('shipping'),
+        ),
+    );
+
+    foreach ($legacy_pages as $definition) {
+        $candidate_ids = array_filter(array(absint(get_option($definition['option'], 0))));
+
+        foreach ($definition['slugs'] as $candidate_slug) {
+            $candidate = get_page_by_path($candidate_slug, OBJECT, 'page');
+            if ($candidate instanceof WP_Post) $candidate_ids[] = $candidate->ID;
+        }
+
+        $template_pages = get_posts(array(
+            'post_type'      => 'page',
+            'post_status'    => array('publish', 'draft', 'pending', 'private', 'future'),
+            'posts_per_page' => -1,
+            'fields'         => 'ids',
+            'meta_key'       => '_wp_page_template',
+            'meta_value'     => $definition['template'],
+            'no_found_rows'  => true,
+        ));
+        $candidate_ids = array_unique(array_merge($candidate_ids, array_map('absint', $template_pages)));
+
+        foreach ($candidate_ids as $candidate_id) {
+            $candidate_page = get_post($candidate_id);
+            if (!$candidate_page instanceof WP_Post || $candidate_page->post_type !== 'page') continue;
+            if (get_post_meta($candidate_id, '_wp_page_template', true) !== $definition['template']) continue;
+
+            $retired = false;
+            if (!defined('EMPTY_TRASH_DAYS') || EMPTY_TRASH_DAYS) {
+                $retired = (bool) wp_trash_post($candidate_id);
+            }
+            if (!$retired) {
+                wp_update_post(array(
+                    'ID'          => $candidate_id,
+                    'post_status' => 'draft',
+                ));
+            }
+        }
+
+        delete_option($definition['option']);
+    }
+
+    update_option('puppy_market_legacy_service_pages_retired_v1', 1, false);
+}
+add_action('init', 'puppy_market_retire_legacy_service_pages', 30);
+
 /** Resolve a WordPress page URL, with stable theme-owned service destinations. */
 function puppy_market_page_url($slug) {
     $slug = sanitize_title($slug);
+    $service_page_definitions = puppy_market_service_page_definitions();
+    $returns_page = isset($service_page_definitions['returns'])
+        ? puppy_market_service_page('returns')
+        : null;
+    $returns_url = $returns_page instanceof WP_Post
+        ? get_permalink($returns_page)
+        : home_url('/returns/');
 
     if ($slug === 'contact' || $slug === 'contact-us') {
-        $contact_page = puppy_market_contact_page();
-        return $contact_page instanceof WP_Post
-            ? get_permalink($contact_page)
-            : home_url('/contact-us/');
+        return add_query_arg('contact_topic', 'order', $returns_url) . '#contact-form';
     }
 
-    $service_page_definitions = puppy_market_service_page_definitions();
+    if ($slug === 'shipping') {
+        return add_query_arg('contact_topic', 'shipping', $returns_url) . '#contact-form';
+    }
+
     if (isset($service_page_definitions[$slug])) {
         $service_page = puppy_market_service_page($slug);
         return $service_page instanceof WP_Post
@@ -691,6 +839,18 @@ function puppy_market_page_url($slug) {
         ? get_permalink($page)
         : home_url('/');
 }
+
+/** Redirect legacy standalone service routes to the merged Returns & Support page. */
+function puppy_market_redirect_legacy_service_routes() {
+    global $wp;
+    $request = isset($wp->request) ? trim((string) $wp->request, '/') : '';
+
+    if (!in_array($request, array('contact', 'contact-us', 'shipping'), true)) return;
+
+    wp_safe_redirect(puppy_market_page_url($request), 301);
+    exit;
+}
+add_action('template_redirect', 'puppy_market_redirect_legacy_service_routes', 1);
 
 /** Resolve a WooCommerce category managed in Products → Categories. */
 function puppy_market_product_category($slug) {
