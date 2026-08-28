@@ -220,10 +220,22 @@ function puppy_market_assets() {
                     var doc = new DOMParser().parseFromString(html, "text/html");
                     var main = doc.querySelector(".puppy-cart-main");
                     var side = doc.querySelector(".puppy-cart-sidebar");
+                    var empty = doc.querySelector(".puppy-cart-empty-page, .puppy-cart-empty, .cart-empty");
                     var curMain = document.querySelector(".puppy-cart-main");
                     var curSide = document.querySelector(".puppy-cart-sidebar");
-                    if (main && curMain) curMain.outerHTML = main.outerHTML;
-                    if (side && curSide) curSide.outerHTML = side.outerHTML;
+
+                    if (empty || !main || !curMain) {
+                        window.location.reload();
+                        return false;
+                    }
+
+                    curMain.outerHTML = main.outerHTML;
+                    if (side && curSide) {
+                        curSide.outerHTML = side.outerHTML;
+                    } else if (!side && curSide) {
+                        curSide.remove();
+                    }
+                    return true;
                 }
                 function submitCart(formData, doneMsg) {
                     var form = document.querySelector("form.woocommerce-cart-form");
@@ -234,7 +246,7 @@ function puppy_market_assets() {
                     document.body.appendChild(loading);
                     fetch(form.getAttribute("action"), { method: "POST", body: formData, credentials: "same-origin" })
                         .then(function (r) { return r.text(); })
-                        .then(function (html) { swap(html); if (doneMsg) toast(doneMsg); })
+                        .then(function (html) { if (swap(html) && doneMsg) toast(doneMsg); })
                         .catch(function () { toast("Something went wrong. Please try again."); })
                         .then(function () { if (loading && loading.parentNode) loading.parentNode.removeChild(loading); });
                 }
@@ -283,7 +295,7 @@ function puppy_market_assets() {
                         document.body.appendChild(loading);
                         fetch(href, { method: "GET", credentials: "same-origin" })
                             .then(function (r) { return r.text(); })
-                            .then(function (html) { swap(html); toast("Removed from cart"); })
+                            .then(function (html) { if (swap(html)) toast("Removed from cart"); })
                             .catch(function () { toast("Something went wrong. Please try again."); })
                             .then(function () { if (loading && loading.parentNode) loading.parentNode.removeChild(loading); });
                     }
@@ -298,6 +310,48 @@ function puppy_market_assets() {
     }
 }
 add_action('wp_enqueue_scripts', 'puppy_market_assets');
+
+/**
+ * Empty the cart from the cart-page header. Run before WooCommerce processes
+ * the form's regular update_cart field so the clear action remains atomic.
+ */
+function puppy_market_handle_clear_cart_request() {
+    if (empty($_SERVER['REQUEST_METHOD']) || 'POST' !== strtoupper(sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD']))) || empty($_POST['puppy_clear_cart'])) {
+        return;
+    }
+
+    if (!function_exists('WC') || empty($_POST['puppy-clear-cart-nonce'])) {
+        return;
+    }
+
+    $nonce = sanitize_text_field(wp_unslash($_POST['puppy-clear-cart-nonce']));
+    if (!wp_verify_nonce($nonce, 'puppy-clear-cart')) {
+        return;
+    }
+
+    if (!WC()->cart && function_exists('wc_load_cart')) {
+        wc_load_cart();
+    }
+
+    if (WC()->cart) {
+        WC()->cart->empty_cart();
+    }
+
+    wp_safe_redirect(wc_get_cart_url());
+    exit;
+}
+add_action('wp_loaded', 'puppy_market_handle_clear_cart_request', 5);
+
+/**
+ * Keep WooCommerce extension hooks on the empty-cart screen while replacing
+ * only its default notice with the theme's custom empty state.
+ */
+function puppy_market_remove_default_empty_cart_message() {
+    if (function_exists('wc_empty_cart_message')) {
+        remove_action('woocommerce_cart_is_empty', 'wc_empty_cart_message', 10);
+    }
+}
+add_action('wp', 'puppy_market_remove_default_empty_cart_message', 5);
 
 /**
  * Return the current cart state used by the site-wide add-to-cart drawer.

@@ -31,7 +31,11 @@ $puppy_cart_item_count = WC()->cart->get_cart_contents_count();
 		<div class="puppy-cart-main">
 			<header class="puppy-cart-heading">
 				<h1>Shopping Cart</h1>
-				<span class="puppy-cart-item-count"><?php echo esc_html( $puppy_cart_item_count ); ?> item<?php echo absint( $puppy_cart_item_count ) === 1 ? '' : 's'; ?></span>
+				<div class="puppy-cart-heading-actions">
+					<span class="puppy-cart-item-count"><?php echo esc_html( $puppy_cart_item_count ); ?> item<?php echo absint( $puppy_cart_item_count ) === 1 ? '' : 's'; ?></span>
+					<?php wp_nonce_field( 'puppy-clear-cart', 'puppy-clear-cart-nonce', false ); ?>
+					<button type="submit" class="puppy-cart-clear-button" name="puppy_clear_cart" value="1" aria-label="<?php esc_attr_e( 'Remove all items from cart', 'woocommerce' ); ?>">Clear cart</button>
+				</div>
 			</header>
 
 			<?php if ( WC()->cart->is_empty() ) : ?>
