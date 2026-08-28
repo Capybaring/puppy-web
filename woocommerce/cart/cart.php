@@ -123,13 +123,35 @@ $puppy_cart_item_count = WC()->cart->get_cart_contents_count();
 											echo wp_kses_post( apply_filters( 'woocommerce_cart_item_backorder_notification', '<p class="backorder_notification">' . esc_html__( 'Available on backorder', 'woocommerce' ) . '</p>', $product_id ) );
 										}
 
-										if ( $_product->is_on_sale() ) {
-											printf(
-												'<div class="puppy-cart-promo"><span>%s</span> <a href="%s">Details</a> %s</div>',
-												esc_html__( 'Save an extra 10% with your first order', 'hero-theme' ),
-												esc_url( $product_permalink ),
-												'<span class="puppy-cart-promo-plus">+1 <u>deal</u></span>'
+										$puppy_cart_regular_price = $_product->get_regular_price();
+										$puppy_cart_current_price = $_product->get_price();
+										$puppy_cart_line_saving = 0;
+
+										if ( '' !== $puppy_cart_regular_price && '' !== $puppy_cart_current_price && (float) $puppy_cart_regular_price > (float) $puppy_cart_current_price ) {
+											$puppy_cart_regular_line_total = wc_get_price_to_display(
+												$_product,
+												array(
+													'price' => (float) $puppy_cart_regular_price,
+													'qty'   => (float) $cart_item['quantity'],
+												)
 											);
+											$puppy_cart_current_line_total = wc_get_price_to_display(
+												$_product,
+												array(
+													'price' => (float) $puppy_cart_current_price,
+													'qty'   => (float) $cart_item['quantity'],
+												)
+											);
+											$puppy_cart_line_saving = max( 0, $puppy_cart_regular_line_total - $puppy_cart_current_line_total );
+										}
+
+										if ( $puppy_cart_line_saving > 0 ) {
+											?>
+											<div class="puppy-cart-line-saving">
+												<span class="puppy-cart-line-saving-icon" aria-hidden="true">✓</span>
+												<span><?php esc_html_e( 'You saved', 'hero-theme' ); ?> <strong><?php echo wp_kses_post( wc_price( $puppy_cart_line_saving ) ); ?></strong></span>
+											</div>
+											<?php
 										}
 										?>
 									</td>

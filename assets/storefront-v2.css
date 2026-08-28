@@ -4204,3 +4204,35 @@ body.woocommerce-cart .puppy-cart-empty-benefits small {
     border-left: 0;
   }
 }
+
+
+/* Cart line savings use the product's real regular and current prices. */
+body.woocommerce-cart .puppy-cart-line-saving {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  color: var(--success);
+  background: var(--success-soft);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+body.woocommerce-cart .puppy-cart-line-saving-icon {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--success);
+  font-size: 10px;
+  line-height: 1;
+}
+body.woocommerce-cart .puppy-cart-line-saving strong {
+  font-weight: 600;
+}
