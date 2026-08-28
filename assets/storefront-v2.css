@@ -514,6 +514,15 @@ body.home .care-feature-copy h2 { color: #173a23; font-size: clamp(32px, 3vw, 46
 body.home .care-feature-copy p:not(.eyebrow) { color: #45604d; font-size: 17px; }
 
 /* Data-rich product cards. */
+.product-card-brand {
+  box-sizing: border-box;
+  height: 15px;
+  min-height: 15px;
+  overflow: hidden;
+  line-height: 15px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 body.home .product-card-brand,
 .shop-results .product-card-brand { min-height: 18px; margin: 10px 0 3px; color: var(--primary); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .055em; }
 .product-card-rating,

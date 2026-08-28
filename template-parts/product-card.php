@@ -71,7 +71,7 @@ if ($puppy_card_product->is_type('simple') && $puppy_card_product->is_on_sale() 
     </div>
     <?php endif; ?>
   </div>
-  <?php if ($puppy_card_show_details && $puppy_card_brand_name) : ?><p class="product-card-brand"><?php echo esc_html($puppy_card_brand_name); ?></p><?php endif; ?>
+  <?php if ($puppy_card_show_details) : ?><p class="product-card-brand<?php echo $puppy_card_brand_name ? '' : ' is-empty'; ?>"><?php echo esc_html($puppy_card_brand_name); ?></p><?php endif; ?>
   <h3><a href="<?php echo esc_url($puppy_card_url); ?>"><?php echo esc_html($puppy_card_product->get_name()); ?></a></h3>
   <?php if ($puppy_card_show_description) : ?><p><?php echo esc_html(wp_trim_words($puppy_card_product->get_short_description() ?: $puppy_card_product->get_description(), 10)); ?></p><?php endif; ?>
   <?php if ($puppy_card_show_details && $puppy_card_show_reviews && $puppy_card_review_count > 0 && function_exists('wc_get_rating_html')) : ?>
