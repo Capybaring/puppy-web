@@ -19,7 +19,18 @@
                 $puppy_selected_categories = isset($_GET['puppy_category']) ? array_map('sanitize_title', (array) wp_unslash($_GET['puppy_category'])) : array();
                 $puppy_selected_brands = isset($_GET['puppy_brand']) ? array_map('sanitize_title', (array) wp_unslash($_GET['puppy_brand'])) : array();
                 $puppy_brand_taxonomy = puppy_market_brand_taxonomy();
-                $puppy_brand_terms = get_terms(array('taxonomy' => $puppy_brand_taxonomy, 'hide_empty' => true, 'number' => 8, 'orderby' => 'count', 'order' => 'DESC'));
+                if (is_product_category()) {
+                    $puppy_brand_product_ids = puppy_market_category_product_ids($puppy_term);
+                    $puppy_brand_terms = puppy_market_contextual_filter_terms($puppy_brand_taxonomy, $puppy_brand_product_ids, 8);
+                } else {
+                    $puppy_brand_terms = get_terms(array(
+                        'taxonomy' => $puppy_brand_taxonomy,
+                        'hide_empty' => true,
+                        'number' => 8,
+                        'orderby' => 'count',
+                        'order' => 'DESC',
+                    ));
+                }
                 $puppy_min_price = isset($_GET['puppy_min_price']) ? absint($_GET['puppy_min_price']) : '';
                 $puppy_max_price = isset($_GET['puppy_max_price']) ? absint($_GET['puppy_max_price']) : '';
                 $puppy_on_sale_only = !empty($_GET['puppy_on_sale']);

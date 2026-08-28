@@ -746,27 +746,82 @@ function puppy_market_account_url() {
     return function_exists('wc_get_page_permalink') ? wc_get_page_permalink('myaccount') : home_url('/');
 }
 
+/** Product IDs belonging to a category archive, including its descendants. */
+function puppy_market_category_product_ids($category) {
+    static $category_product_cache = array();
+
+    if (!$category || empty($category->term_id)) return array();
+
+    $category_id = (int) $category->term_id;
+    if (isset($category_product_cache[$category_id])) {
+        return $category_product_cache[$category_id];
+    }
+
+    $category_product_cache[$category_id] = array_map('absint', get_posts(array(
+        'post_type' => 'product',
+        'post_status' => 'publish',
+        'fields' => 'ids',
+        'posts_per_page' => -1,
+        'no_found_rows' => true,
+        'update_post_meta_cache' => false,
+        'update_post_term_cache' => false,
+        'tax_query' => array(array(
+            'taxonomy' => 'product_cat',
+            'field' => 'term_id',
+            'terms' => array($category_id),
+            'include_children' => true,
+        )),
+    )));
+
+    return $category_product_cache[$category_id];
+}
+
+/**
+ * Return terms assigned to a known product set and replace WordPress's global
+ * term count with the count inside that set.
+ */
+function puppy_market_contextual_filter_terms($taxonomy, $product_ids, $limit = 0) {
+    if (!taxonomy_exists($taxonomy) || empty($product_ids)) return array();
+
+    $term_rows = wp_get_object_terms($product_ids, $taxonomy, array(
+        'fields' => 'all_with_object_id',
+        'orderby' => 'none',
+    ));
+    if (is_wp_error($term_rows) || empty($term_rows)) return array();
+
+    $terms = array();
+    foreach ($term_rows as $term_row) {
+        $term_id = (int) $term_row->term_id;
+        if (!isset($terms[$term_id])) {
+            $terms[$term_id] = clone $term_row;
+            $terms[$term_id]->count = 0;
+        }
+        $terms[$term_id]->count++;
+    }
+
+    $terms = array_values($terms);
+    usort($terms, function ($left, $right) {
+        if ((int) $left->count === (int) $right->count) {
+            return strnatcasecmp($left->name, $right->name);
+        }
+        return (int) $right->count - (int) $left->count;
+    });
+
+    return $limit > 0 ? array_slice($terms, 0, $limit) : $terms;
+}
+
 /** Return only global attributes actually assigned to products in this category. */
 function puppy_market_category_filter_attributes($category) {
     if (!$category || empty($category->term_id) || !function_exists('wc_get_attribute_taxonomies')) return array();
-    $product_ids = get_posts(array(
-        'post_type' => 'product', 'post_status' => 'publish', 'fields' => 'ids',
-        'posts_per_page' => -1, 'no_found_rows' => true,
-        'tax_query' => array(array(
-            'taxonomy' => 'product_cat', 'field' => 'term_id',
-            'terms' => array((int) $category->term_id), 'include_children' => true,
-        )),
-    ));
+
+    $product_ids = puppy_market_category_product_ids($category);
     if (empty($product_ids)) return array();
+
     $filters = array();
     foreach (wc_get_attribute_taxonomies() as $attribute) {
         $taxonomy = wc_attribute_taxonomy_name($attribute->attribute_name);
-        if (!taxonomy_exists($taxonomy)) continue;
-        $terms = get_terms(array(
-            'taxonomy' => $taxonomy, 'hide_empty' => true, 'object_ids' => $product_ids,
-            'number' => 12, 'orderby' => 'count', 'order' => 'DESC',
-        ));
-        if (!is_wp_error($terms) && !empty($terms)) {
+        $terms = puppy_market_contextual_filter_terms($taxonomy, $product_ids, 12);
+        if (!empty($terms)) {
             $filters[] = array(
                 'taxonomy' => $taxonomy,
                 'label' => $attribute->attribute_label ?: wc_attribute_label($taxonomy),
@@ -789,15 +844,18 @@ function puppy_market_catalog_query($query) {
         $query->set('orderby', 'post__in');
     }
     $tax_query = (array) $query->get('tax_query');
+    $current_category = is_product_category() ? get_queried_object() : null;
+    $current_category_product_ids = $current_category && !empty($current_category->term_id)
+        ? puppy_market_category_product_ids($current_category)
+        : array();
     $selected_categories = isset($_GET['puppy_category']) ? array_filter(array_map('sanitize_title', (array) wp_unslash($_GET['puppy_category']))) : array();
 
     // A category archive already constrains the catalog to its current term.
     // Only direct children shown by the sidebar are valid additional filters;
     // sibling categories would otherwise be combined with the archive using AND
     // and always produce an empty result.
-    if (!empty($selected_categories) && is_product_category()) {
-        $current_category = get_queried_object();
-        $allowed_category_slugs = $current_category && !empty($current_category->term_id)
+    if (!empty($selected_categories) && $current_category) {
+        $allowed_category_slugs = !empty($current_category->term_id)
             ? get_terms(array(
                 'taxonomy' => 'product_cat',
                 'hide_empty' => false,
@@ -815,11 +873,20 @@ function puppy_market_catalog_query($query) {
     $selected_brands = isset($_GET['puppy_brand']) ? array_filter(array_map('sanitize_title', (array) wp_unslash($_GET['puppy_brand']))) : array();
     if (!empty($selected_brands)) {
         $brand_taxonomy = puppy_market_brand_taxonomy();
-        $brand_terms = get_terms(array('taxonomy' => $brand_taxonomy, 'hide_empty' => false, 'slug' => $selected_brands));
-        if (!is_wp_error($brand_terms) && !empty($brand_terms)) {
-            $tax_query[] = array('taxonomy' => $brand_taxonomy, 'field' => 'slug', 'terms' => $selected_brands, 'operator' => 'IN');
-        } else {
-            $query->set('s', str_replace('-', ' ', sanitize_title(reset($selected_brands))));
+
+        if ($current_category) {
+            $allowed_brand_terms = puppy_market_contextual_filter_terms($brand_taxonomy, $current_category_product_ids);
+            $allowed_brand_slugs = wp_list_pluck($allowed_brand_terms, 'slug');
+            $selected_brands = array_values(array_intersect($selected_brands, $allowed_brand_slugs));
+        }
+
+        if (!empty($selected_brands)) {
+            $brand_terms = get_terms(array('taxonomy' => $brand_taxonomy, 'hide_empty' => false, 'slug' => $selected_brands));
+            if (!is_wp_error($brand_terms) && !empty($brand_terms)) {
+                $tax_query[] = array('taxonomy' => $brand_taxonomy, 'field' => 'slug', 'terms' => $selected_brands, 'operator' => 'IN');
+            } elseif (!$current_category) {
+                $query->set('s', str_replace('-', ' ', sanitize_title(reset($selected_brands))));
+            }
         }
     }
     if (function_exists('wc_get_attribute_taxonomies')) {
@@ -827,6 +894,13 @@ function puppy_market_catalog_query($query) {
             $taxonomy = wc_attribute_taxonomy_name($attribute->attribute_name);
             $key = 'puppy_attr_' . $taxonomy;
             $selected_terms = isset($_GET[$key]) ? array_filter(array_map('sanitize_title', (array) wp_unslash($_GET[$key]))) : array();
+
+            if (!empty($selected_terms) && $current_category && taxonomy_exists($taxonomy)) {
+                $allowed_attribute_terms = puppy_market_contextual_filter_terms($taxonomy, $current_category_product_ids);
+                $allowed_attribute_slugs = wp_list_pluck($allowed_attribute_terms, 'slug');
+                $selected_terms = array_values(array_intersect($selected_terms, $allowed_attribute_slugs));
+            }
+
             if (!empty($selected_terms) && taxonomy_exists($taxonomy)) {
                 $tax_query[] = array('taxonomy' => $taxonomy, 'field' => 'slug', 'terms' => $selected_terms, 'operator' => 'IN');
             }
