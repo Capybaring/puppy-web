@@ -790,6 +790,25 @@ function puppy_market_catalog_query($query) {
     }
     $tax_query = (array) $query->get('tax_query');
     $selected_categories = isset($_GET['puppy_category']) ? array_filter(array_map('sanitize_title', (array) wp_unslash($_GET['puppy_category']))) : array();
+
+    // A category archive already constrains the catalog to its current term.
+    // Only direct children shown by the sidebar are valid additional filters;
+    // sibling categories would otherwise be combined with the archive using AND
+    // and always produce an empty result.
+    if (!empty($selected_categories) && is_product_category()) {
+        $current_category = get_queried_object();
+        $allowed_category_slugs = $current_category && !empty($current_category->term_id)
+            ? get_terms(array(
+                'taxonomy' => 'product_cat',
+                'hide_empty' => false,
+                'parent' => (int) $current_category->term_id,
+                'fields' => 'slugs',
+            ))
+            : array();
+        $allowed_category_slugs = is_wp_error($allowed_category_slugs) ? array() : $allowed_category_slugs;
+        $selected_categories = array_values(array_intersect($selected_categories, $allowed_category_slugs));
+    }
+
     if (!empty($selected_categories)) {
         $tax_query[] = array('taxonomy' => 'product_cat', 'field' => 'slug', 'terms' => $selected_categories, 'operator' => 'IN');
     }
@@ -1070,10 +1089,54 @@ function puppy_market_product_search_sql($search, $query) {
 }
 add_filter('posts_search', 'puppy_market_product_search_sql', 99, 2);
 
-function puppy_market_no_products_message() {
-    echo '<div class="empty-state catalog-empty"><span>🐾</span><h2>No products in this category yet</h2><p>We are adding more essentials. Explore another category for now.</p><a class="button" href="' . esc_url(puppy_market_catalog_url()) . '">View all products</a></div>';
+function puppy_market_catalog_has_active_filters() {
+    foreach ($_GET as $filter_key => $filter_value) {
+        $filter_key = sanitize_key($filter_key);
+        if ($filter_key !== 'catalog_view' && strpos($filter_key, 'puppy_') !== 0) {
+            continue;
+        }
+
+        foreach ((array) $filter_value as $value) {
+            if (trim(sanitize_text_field(wp_unslash($value))) !== '') {
+                return true;
+            }
+        }
+    }
+    return false;
 }
-add_action('woocommerce_no_products_found', 'puppy_market_no_products_message');
+
+function puppy_market_no_products_message() {
+    $has_filters = puppy_market_catalog_has_active_filters();
+    $clear_url = puppy_market_catalog_url();
+
+    if (function_exists('is_product_category') && is_product_category()) {
+        $current_category = get_queried_object();
+        $category_url = $current_category && !empty($current_category->term_id)
+            ? get_term_link($current_category, 'product_cat')
+            : '';
+        if (!is_wp_error($category_url) && $category_url) {
+            $clear_url = $category_url;
+        }
+    }
+
+    $title = $has_filters ? 'No products match these filters' : 'No products in this category yet';
+    $description = $has_filters
+        ? 'Try clearing the filters to see everything available in this category.'
+        : 'We are adding more essentials. Explore another category for now.';
+    $button_label = $has_filters ? 'Clear filters' : 'View all products';
+
+    echo '<div class="catalog-empty" role="status">'
+        . '<span class="catalog-empty-icon" aria-hidden="true">🐾</span>'
+        . '<h2>' . esc_html($title) . '</h2>'
+        . '<p>' . esc_html($description) . '</p>'
+        . '<a class="button" href="' . esc_url($clear_url) . '">' . esc_html($button_label) . '</a>'
+        . '</div>';
+}
+
+// WooCommerce attaches wc_no_products_found() to this hook by default.
+// Remove it so the catalog never renders the plugin's default info notice.
+remove_action('woocommerce_no_products_found', 'wc_no_products_found', 10);
+add_action('woocommerce_no_products_found', 'puppy_market_no_products_message', 10);
 /** Redirect the Contact Us form back to its page with a safe status value. */
 function puppy_market_contact_form_redirect($status) {
     $redirect_url = wp_get_referer();

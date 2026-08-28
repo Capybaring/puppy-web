@@ -28,17 +28,15 @@
                 $puppy_context_root = null;
                 $puppy_context_children = array();
                 if (is_product_category()) {
+                    // Stay inside the current archive. Showing the current
+                    // term's siblings creates filters that cannot match it.
                     $puppy_context_root = $puppy_term;
-                    if (!empty($puppy_term->parent)) {
-                        $puppy_parent_term = get_term((int) $puppy_term->parent, 'product_cat');
-                        if (!is_wp_error($puppy_parent_term) && $puppy_parent_term) {
-                            $puppy_context_root = $puppy_parent_term;
-                        }
-                    }
                     $puppy_context_children = get_terms(array(
                         'taxonomy' => 'product_cat',
                         'hide_empty' => true,
-                        'parent' => (int) $puppy_context_root->term_id,
+                        'parent' => (int) $puppy_term->term_id,
+                        'orderby' => 'name',
+                        'order' => 'ASC',
                     ));
                 }
                 $puppy_context_attributes = is_product_category() && function_exists('puppy_market_category_filter_attributes')
@@ -48,15 +46,17 @@
                 <aside class="shop-sidebar" aria-label="Product filters">
                     <form class="puppy-filter-form" method="get" action="<?php echo esc_url($puppy_filter_action); ?>">
                         <div class="sidebar-section sidebar-filter-heading"><h2>Filter products</h2><a class="sidebar-reset" href="<?php echo esc_url($puppy_filter_action); ?>">Clear filters</a></div>
+                        <?php if (is_shop()) : ?>
                         <fieldset class="sidebar-section puppy-filter-group puppy-pet-filter"><legend>Pet type</legend>
                             <?php foreach ($puppy_categories as $sidebar_category) : if ((int) $sidebar_category->parent !== 0) continue; ?>
-                                <label class="puppy-filter-option"><input type="checkbox" name="puppy_category[]" value="<?php echo esc_attr($sidebar_category->slug); ?>" <?php checked(in_array($sidebar_category->slug, $puppy_selected_categories, true) || ($puppy_context_root && (int) $puppy_context_root->term_id === (int) $sidebar_category->term_id)); ?>><span><?php echo esc_html($sidebar_category->name); ?></span><small><?php echo absint($sidebar_category->count); ?></small></label>
+                                <label class="puppy-filter-option"><input type="checkbox" name="puppy_category[]" value="<?php echo esc_attr($sidebar_category->slug); ?>" <?php checked(in_array($sidebar_category->slug, $puppy_selected_categories, true)); ?>><span><?php echo esc_html($sidebar_category->name); ?></span><small><?php echo absint($sidebar_category->count); ?></small></label>
                             <?php endforeach; ?>
                         </fieldset>
+                        <?php endif; ?>
                         <?php if (!is_wp_error($puppy_context_children) && !empty($puppy_context_children)) : ?>
                         <fieldset class="sidebar-section puppy-filter-group puppy-context-filter"><legend><?php echo esc_html($puppy_context_root->name); ?> categories</legend>
                             <?php foreach ($puppy_context_children as $puppy_child) : ?>
-                                <label class="puppy-filter-option"><input type="checkbox" name="puppy_category[]" value="<?php echo esc_attr($puppy_child->slug); ?>" <?php checked(in_array($puppy_child->slug, $puppy_selected_categories, true) || (int) $puppy_term->term_id === (int) $puppy_child->term_id); ?>><span><?php echo esc_html($puppy_child->name); ?></span><small><?php echo absint($puppy_child->count); ?></small></label>
+                                <label class="puppy-filter-option"><input type="checkbox" name="puppy_category[]" value="<?php echo esc_attr($puppy_child->slug); ?>" <?php checked(in_array($puppy_child->slug, $puppy_selected_categories, true)); ?>><span><?php echo esc_html($puppy_child->name); ?></span><small><?php echo absint($puppy_child->count); ?></small></label>
                             <?php endforeach; ?>
                         </fieldset>
                         <?php endif; ?>

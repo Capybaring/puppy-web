@@ -124,3 +124,55 @@
   }
   .shop-shell .shop-results .product-card-availability { font-size: 11px; }
 }
+
+/* Catalog empty result: replace WooCommerce's default notice with a useful,
+   page-scoped state and a direct way to clear the current filters. */
+.shop-shell .shop-results .catalog-empty {
+  display: flex;
+  min-height: 340px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 30px;
+  padding: 48px 28px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  color: var(--ink);
+  background: #f7f9fc;
+  text-align: center;
+}
+.shop-shell .shop-results .catalog-empty-icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  font-size: 28px;
+}
+.shop-shell .shop-results .catalog-empty h2 {
+  margin: 17px 0 8px;
+  color: var(--ink);
+  font-size: clamp(24px, 3vw, 30px);
+  font-weight: 600;
+  letter-spacing: -.025em;
+  line-height: 1.2;
+}
+.shop-shell .shop-results .catalog-empty p {
+  max-width: 470px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+.shop-shell .shop-results .catalog-empty .button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 0 18px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
