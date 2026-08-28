@@ -67,6 +67,129 @@ function puppy_market_customize_register($wp_customize) {
         )));
     }
 
+    $wp_customize->add_section('puppy_market_about_page', array(
+        'title'       => __('About page', 'puppy-market'),
+        'description' => __('Manage the About page text and its three large image areas. Additional body content can be edited under Pages → About Us.', 'puppy-market'),
+        'priority'    => 40,
+    ));
+
+    $about_media_controls = array(
+        'puppy_market_about_hero_image' => array(
+            'label'       => __('Hero image', 'puppy-market'),
+            'description' => __('Large image on the right of the opening section. Recommended ratio: 4:3.', 'puppy-market'),
+        ),
+        'puppy_market_about_story_image' => array(
+            'label'       => __('Story image', 'puppy-market'),
+            'description' => __('First large image in the alternating story grid. Recommended ratio: 4:3.', 'puppy-market'),
+        ),
+        'puppy_market_about_care_image' => array(
+            'label'       => __('Care image', 'puppy-market'),
+            'description' => __('Second large image in the alternating story grid. Recommended ratio: 4:3.', 'puppy-market'),
+        ),
+    );
+
+    foreach ($about_media_controls as $setting_id => $control) {
+        $wp_customize->add_setting($setting_id, array(
+            'default'           => 0,
+            'sanitize_callback' => 'absint',
+            'transport'         => 'refresh',
+        ));
+        $wp_customize->add_control(new WP_Customize_Media_Control($wp_customize, $setting_id, array(
+            'label'       => $control['label'],
+            'description' => $control['description'],
+            'section'     => 'puppy_market_about_page',
+            'mime_type'   => 'image',
+        )));
+    }
+
+    $about_fields = array(
+        'puppy_market_about_hero_title' => array(
+            'label'    => __('Hero title', 'puppy-market'),
+            'default'  => __('For every day with pets.', 'puppy-market'),
+            'type'     => 'text',
+            'sanitize' => 'sanitize_text_field',
+        ),
+        'puppy_market_about_hero_text' => array(
+            'label'    => __('Hero description', 'puppy-market'),
+            'default'  => __('We make everyday pet shopping feel clearer, more useful and easier to trust.', 'puppy-market'),
+            'type'     => 'textarea',
+            'sanitize' => 'sanitize_textarea_field',
+        ),
+        'puppy_market_about_mission_title' => array(
+            'label'    => __('Mission title', 'puppy-market'),
+            'default'  => __('Pet care should feel simple and personal.', 'puppy-market'),
+            'type'     => 'text',
+            'sanitize' => 'sanitize_text_field',
+        ),
+        'puppy_market_about_mission_text' => array(
+            'label'    => __('Mission description', 'puppy-market'),
+            'default'  => __('From everyday essentials to support after an order, we bring the things pet parents need into one straightforward experience.', 'puppy-market'),
+            'type'     => 'textarea',
+            'sanitize' => 'sanitize_textarea_field',
+        ),
+        'puppy_market_about_essentials_title' => array(
+            'label'    => __('Products block title', 'puppy-market'),
+            'default'  => __('Everything pets need', 'puppy-market'),
+            'type'     => 'text',
+            'sanitize' => 'sanitize_text_field',
+        ),
+        'puppy_market_about_essentials_text' => array(
+            'label'    => __('Products block description', 'puppy-market'),
+            'default'  => __('Food, play, grooming, comfort and care products selected for real routines with pets.', 'puppy-market'),
+            'type'     => 'textarea',
+            'sanitize' => 'sanitize_textarea_field',
+        ),
+        'puppy_market_about_trust_title' => array(
+            'label'    => __('Trust block title', 'puppy-market'),
+            'default'  => __('Clarity you can trust', 'puppy-market'),
+            'type'     => 'text',
+            'sanitize' => 'sanitize_text_field',
+        ),
+        'puppy_market_about_trust_text' => array(
+            'label'    => __('Trust block description', 'puppy-market'),
+            'default'  => __('Useful product information, visible policies and a clear route to support before and after checkout.', 'puppy-market'),
+            'type'     => 'textarea',
+            'sanitize' => 'sanitize_textarea_field',
+        ),
+        'puppy_market_about_services_title' => array(
+            'label'    => __('Services section title', 'puppy-market'),
+            'default'  => __('A little more ease for every pet parent', 'puppy-market'),
+            'type'     => 'text',
+            'sanitize' => 'sanitize_text_field',
+        ),
+        'puppy_market_about_cta_title' => array(
+            'label'    => __('Closing title', 'puppy-market'),
+            'default'  => __('Ready to find something your pet will love?', 'puppy-market'),
+            'type'     => 'text',
+            'sanitize' => 'sanitize_text_field',
+        ),
+        'puppy_market_about_cta_text' => array(
+            'label'    => __('Closing description', 'puppy-market'),
+            'default'  => __('Explore the store or contact our team when you need help choosing the next step.', 'puppy-market'),
+            'type'     => 'textarea',
+            'sanitize' => 'sanitize_textarea_field',
+        ),
+        'puppy_market_about_cta_button_text' => array(
+            'label'    => __('Closing button label', 'puppy-market'),
+            'default'  => __('Explore the store', 'puppy-market'),
+            'type'     => 'text',
+            'sanitize' => 'sanitize_text_field',
+        ),
+    );
+
+    foreach ($about_fields as $setting_id => $field) {
+        $wp_customize->add_setting($setting_id, array(
+            'default'           => $field['default'],
+            'sanitize_callback' => $field['sanitize'],
+            'transport'         => 'refresh',
+        ));
+        $wp_customize->add_control($setting_id, array(
+            'label'   => $field['label'],
+            'section' => 'puppy_market_about_page',
+            'type'    => $field['type'],
+        ));
+    }
+
     $wp_customize->add_section('puppy_market_store_text', array(
         'title'    => __('Store text', 'puppy-market'),
         'priority' => 36,
