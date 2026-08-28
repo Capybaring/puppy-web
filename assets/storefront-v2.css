@@ -1508,7 +1508,10 @@ body.single-product .ipet-pdp-cart-form .stock { display: none !important; }
 .site-header .header-main .header-actions > .header-menu::after { position: absolute; z-index: 0; inset: -20px -10px; content: ""; background: #1e49b7; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
 .site-header .header-main .header-actions > .header-menu:hover::after,
 .site-header .header-main .header-actions > .header-menu:focus-within::after,
-.site-header .header-main .header-actions > .header-menu.is-open::after { opacity: 1; }
+.site-header .header-main .header-actions > .header-menu.is-open::after {
+  opacity: 1;
+  pointer-events: auto;
+}
 .site-header .header-main .header-actions .header-menu-trigger { position: relative; z-index: 2; padding: 0 12px !important; }
 .site-header .header-main .header-account-copy { display: flex; flex-direction: column; justify-content: center; line-height: 1.05; }
 .site-header .header-main .header-account-copy small { margin-bottom: 2px; color: #fff; font-size: 10px; font-weight: 500; }
