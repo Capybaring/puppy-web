@@ -221,7 +221,24 @@ $puppy_cart_item_count = WC()->cart->get_cart_contents_count();
 						</div>
 						<div class="puppy-cart-meta-row">
 							<span><?php echo esc_html( $puppy_cart_item_count ); ?> item<?php echo absint( $puppy_cart_item_count ) === 1 ? '' : 's'; ?></span>
-							<span class="puppy-cart-see-details">See details <span aria-hidden="true">+</span></span>
+							<button type="button" class="puppy-cart-see-details" data-cart-details-toggle aria-expanded="false" aria-controls="puppy-cart-details-panel">See details <span aria-hidden="true">+</span></button>
+						</div>
+						<div class="puppy-cart-details-panel" id="puppy-cart-details-panel" data-cart-details-panel hidden>
+							<?php foreach ( WC()->cart->get_cart() as $puppy_summary_item ) :
+								$puppy_summary_product = isset( $puppy_summary_item['data'] ) ? $puppy_summary_item['data'] : null;
+								if ( ! $puppy_summary_product instanceof WC_Product || ! $puppy_summary_product->exists() ) {
+									continue;
+								}
+								$puppy_summary_quantity = max( 1, (int) $puppy_summary_item['quantity'] );
+							?>
+								<div class="puppy-cart-detail-item">
+									<span class="puppy-cart-detail-copy">
+										<strong><?php echo esc_html( $puppy_summary_product->get_name() ); ?></strong>
+										<small><?php echo esc_html( sprintf( 'Qty %d', $puppy_summary_quantity ) ); ?></small>
+									</span>
+									<span class="puppy-cart-detail-price"><?php echo wp_kses_post( WC()->cart->get_product_subtotal( $puppy_summary_product, $puppy_summary_quantity ) ); ?></span>
+								</div>
+							<?php endforeach; ?>
 						</div>
 
 						<?php if ( WC()->cart->get_coupons() ) : foreach ( WC()->cart->get_coupons() as $puppy_coupon ) : ?>
@@ -246,16 +263,16 @@ $puppy_cart_item_count = WC()->cart->get_cart_contents_count();
 
 						<?php if ( wc_coupons_enabled() ) : ?>
 							<div class="puppy-cart-promo" data-promo-wrap>
-								<div class="puppy-cart-promo-toggle" data-promo-toggle>
+								<button type="button" class="puppy-cart-promo-toggle" data-promo-toggle aria-expanded="false" aria-controls="puppy-cart-promo-panel">
 									<span>Promo code</span>
 									<span class="puppy-cart-promo-chevron" aria-hidden="true">+</span>
-								</div>
-								<div class="puppy-cart-promo-panel" data-promo-panel>
+								</button>
+								<div class="puppy-cart-promo-panel" id="puppy-cart-promo-panel" data-promo-panel>
 									<div class="puppy-cart-promo-field">
-										<input type="text" name="coupon_code" class="puppy-cart-promo-input" id="puppy_coupon_code" value="" placeholder="Enter promo code" />
+										<input type="text" name="coupon_code" class="puppy-cart-promo-input" id="puppy_coupon_code" value="" placeholder="Enter promo code" autocomplete="off" />
 										<button type="submit" class="puppy-cart-promo-apply" name="apply_coupon" value="Apply coupon">Apply</button>
 									</div>
-									<div class="puppy-cart-promo-msg" data-promo-msg></div>
+									<div class="puppy-cart-promo-msg" data-promo-msg aria-live="polite"></div>
 								</div>
 							</div>
 						<?php endif; ?>

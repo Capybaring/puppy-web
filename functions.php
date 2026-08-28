@@ -235,9 +235,27 @@ function puppy_market_assets() {
                     } else if (!side && curSide) {
                         curSide.remove();
                     }
-                    return true;
+                    return doc;
                 }
-                function submitCart(formData, doneMsg) {
+                function showPromoResult(doc, fallbackMessage) {
+                    var notice = doc.querySelector(".woocommerce-error, .woocommerce-message, .woocommerce-info");
+                    var isError = !!(notice && notice.classList.contains("woocommerce-error"));
+                    var message = notice ? notice.textContent.replace(/\\s+/g, " ").trim() : fallbackMessage;
+                    var wrap = document.querySelector("[data-promo-wrap]");
+                    var toggle = document.querySelector("[data-promo-toggle]");
+                    var chevron = toggle ? toggle.querySelector(".puppy-cart-promo-chevron") : null;
+                    var msg = document.querySelector("[data-promo-msg]");
+
+                    if (wrap) wrap.classList.add("is-open");
+                    if (toggle) toggle.setAttribute("aria-expanded", "true");
+                    if (chevron) chevron.textContent = "−";
+                    if (msg) {
+                        msg.textContent = message || (isError ? "This promo code could not be applied." : "Promo code applied.");
+                        msg.className = "puppy-cart-promo-msg " + (isError ? "is-error" : "is-success");
+                    }
+                    if (!isError) toast(message || "Promo code applied");
+                }
+                function submitCart(formData, doneMsg, showCouponFeedback) {
                     var form = document.querySelector("form.woocommerce-cart-form");
                     if (!form) return;
                     var loading = document.createElement("span");
@@ -246,7 +264,15 @@ function puppy_market_assets() {
                     document.body.appendChild(loading);
                     fetch(form.getAttribute("action"), { method: "POST", body: formData, credentials: "same-origin" })
                         .then(function (r) { return r.text(); })
-                        .then(function (html) { if (swap(html) && doneMsg) toast(doneMsg); })
+                        .then(function (html) {
+                            var doc = swap(html);
+                            if (!doc) return;
+                            if (showCouponFeedback) {
+                                showPromoResult(doc, doneMsg);
+                            } else if (doneMsg) {
+                                toast(doneMsg);
+                            }
+                        })
                         .catch(function () { toast("Something went wrong. Please try again."); })
                         .then(function () { if (loading && loading.parentNode) loading.parentNode.removeChild(loading); });
                 }
@@ -276,14 +302,31 @@ function puppy_market_assets() {
                     var fd = new FormData(form);
                     fd.set("apply_coupon", "Apply coupon");
                     fd.delete("update_cart");
-                    submitCart(fd, code.trim() ? "Coupon applied" : "");
+                    submitCart(fd, "Coupon applied", true);
                 });
 
                 document.addEventListener("click", function (e) {
+                    var detailsToggle = e.target.closest ? e.target.closest("[data-cart-details-toggle]") : null;
+                    if (detailsToggle) {
+                        var detailsPanel = document.getElementById(detailsToggle.getAttribute("aria-controls"));
+                        var detailsOpen = detailsToggle.getAttribute("aria-expanded") === "true";
+                        var detailsIcon = detailsToggle.querySelector("[aria-hidden=\"true\"]");
+                        detailsToggle.setAttribute("aria-expanded", detailsOpen ? "false" : "true");
+                        if (detailsPanel) detailsPanel.hidden = detailsOpen;
+                        if (detailsIcon) detailsIcon.textContent = detailsOpen ? "+" : "−";
+                        return;
+                    }
+
                     var wrap = e.target.closest ? e.target.closest("[data-promo-wrap]") : null;
                     if (wrap) {
                         var toggle = e.target.closest("[data-promo-toggle]");
-                        if (toggle) { wrap.classList.toggle("is-open"); return; }
+                        if (toggle) {
+                            var promoOpen = wrap.classList.toggle("is-open");
+                            var promoIcon = toggle.querySelector(".puppy-cart-promo-chevron");
+                            toggle.setAttribute("aria-expanded", promoOpen ? "true" : "false");
+                            if (promoIcon) promoIcon.textContent = promoOpen ? "−" : "+";
+                            return;
+                        }
                     }
                     if (e.target.closest && e.target.closest(".puppy-cart-remove-button")) {
                         e.preventDefault();
