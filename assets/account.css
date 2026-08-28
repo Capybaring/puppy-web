@@ -1506,3 +1506,412 @@ body.ipet-dialog-open {
         animation-iteration-count: 1 !important;
     }
 }
+
+/* My Account: order detail endpoint */
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) > p:first-of-type {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 7px 5px;
+    align-items: center;
+    margin: 0 0 22px !important;
+    padding: 15px 17px !important;
+    border: 1px solid #c9dcfa;
+    border-radius: 11px;
+    color: #486076 !important;
+    background: #f5f8fd;
+    font-size: 13px;
+    line-height: 1.55 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) > p:first-of-type mark {
+    padding: 0 !important;
+    color: var(--account-ink) !important;
+    background: transparent !important;
+    font-weight: 500;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) > p:first-of-type mark.order-status {
+    min-height: 27px;
+    margin-left: 2px;
+    padding: 0 9px !important;
+    color: var(--account-success) !important;
+    background: var(--account-success-soft) !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-order-details,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-order-downloads {
+    margin: 0 0 22px !important;
+    overflow: hidden;
+    border: 1px solid var(--account-line) !important;
+    border-radius: 13px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-order-details__title,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-order-downloads__title {
+    margin: 0 !important;
+    padding: 18px 20px !important;
+    border-bottom: 1px solid var(--account-line-soft);
+    color: var(--account-ink) !important;
+    background: #fff;
+    font-size: 20px !important;
+    font-weight: 500 !important;
+    line-height: 1.3 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-order-downloads table {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    border-collapse: collapse !important;
+    table-layout: fixed;
+    overflow: visible !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details thead,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-order-downloads table thead {
+    background: #f7f9fb !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details th,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details td {
+    padding: 15px 20px !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--account-line-soft) !important;
+    color: var(--account-ink) !important;
+    background: transparent !important;
+    font-weight: 400 !important;
+    line-height: 1.55 !important;
+    vertical-align: top !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details thead th {
+    color: #596573 !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    letter-spacing: .025em;
+    text-transform: uppercase;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-table__product-name {
+    width: 68%;
+    overflow-wrap: anywhere;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-table__product-table,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .product-total {
+    width: 32%;
+    text-align: right !important;
+    white-space: normal;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-table__product-name > a {
+    color: var(--account-ink) !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-table__product-name > a:hover {
+    color: var(--account-primary) !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .product-quantity {
+    display: inline-flex;
+    min-height: 23px;
+    align-items: center;
+    margin-left: 5px;
+    padding: 0 7px;
+    border-radius: 999px;
+    color: #596573;
+    background: #f0f3f6;
+    font-size: 11px;
+    font-weight: 400 !important;
+    white-space: nowrap;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .wc-item-meta {
+    display: grid;
+    gap: 3px;
+    margin: 8px 0 0 !important;
+    padding: 0 !important;
+    color: var(--account-muted) !important;
+    font-size: 12px !important;
+    list-style: none !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .wc-item-meta li,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .wc-item-meta p {
+    margin: 0 !important;
+    color: inherit !important;
+    line-height: 1.45 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .wc-item-meta strong {
+    color: #596573;
+    font-weight: 500 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) tr.product-purchase-note td {
+    padding: 12px 20px !important;
+    color: #486076 !important;
+    background: #f5f8fd !important;
+    font-size: 13px;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) tr.product-purchase-note p {
+    margin: 0 !important;
+    color: inherit !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot th,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot td {
+    padding: 13px 20px !important;
+    background: #fafbfc !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot th {
+    width: 68%;
+    color: #596573 !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    text-align: right !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot td {
+    width: 32%;
+    font-size: 13px !important;
+    text-align: right !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot td .amount {
+    color: var(--account-ink);
+    font-weight: 500 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot tr:last-child:not(.order-actions) th,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot tr:last-child:not(.order-actions) td,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot tr:nth-last-child(2):has(+ .order-actions) th,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot tr:nth-last-child(2):has(+ .order-actions) td {
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+    color: var(--account-ink) !important;
+    background: var(--account-primary-soft) !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot tr.order-actions th {
+    color: var(--account-ink) !important;
+    font-weight: 500 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot tr.order-actions td {
+    white-space: normal;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot tr.order-actions .button {
+    min-height: 38px !important;
+    margin: 2px 0 2px 7px !important;
+    padding: 0 13px !important;
+    font-size: 12px !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-order-details + .woocommerce-OrderUpdates-title,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-OrderUpdates-title {
+    margin: 28px 0 13px !important;
+    font-size: 20px !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) ul.woocommerce-OrderUpdates {
+    display: grid;
+    gap: 10px;
+    margin: 0 0 22px !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-OrderUpdate {
+    margin: 0 !important;
+    padding: 15px 17px !important;
+    border: 1px solid var(--account-line) !important;
+    border-radius: 11px !important;
+    background: #fff !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-OrderUpdate-inner,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-OrderUpdate-text {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-OrderUpdate-inner::before,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-OrderUpdate-inner::after {
+    display: none !important;
+    content: none !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-OrderUpdate-meta {
+    margin: 0 0 6px !important;
+    color: var(--account-muted) !important;
+    font-size: 11px !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-OrderUpdate-description,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-OrderUpdate-description p {
+    margin: 0 !important;
+    color: var(--account-ink) !important;
+    font-size: 13px;
+    line-height: 1.55 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-customer-details {
+    margin: 0 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-customer-details .woocommerce-columns--addresses {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    margin: 0 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-customer-details .woocommerce-columns--addresses::before,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-customer-details .woocommerce-columns--addresses::after {
+    display: none !important;
+    content: none !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-column--billing-address,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-column--shipping-address {
+    float: none !important;
+    width: auto !important;
+    min-width: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+    border: 1px solid var(--account-line) !important;
+    border-radius: 13px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-customer-details .woocommerce-column__title {
+    margin: 0 !important;
+    padding: 17px 19px !important;
+    border-bottom: 1px solid var(--account-line-soft);
+    background: #f7f9fb;
+    font-size: 17px !important;
+    font-weight: 500 !important;
+    line-height: 1.3 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-customer-details address {
+    margin: 0 !important;
+    padding: 18px 19px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    color: var(--account-muted) !important;
+    background: #fff !important;
+    font-style: normal !important;
+    line-height: 1.75 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-customer-details address p {
+    margin: 12px 0 0 !important;
+    padding: 11px 0 0 !important;
+    border-top: 1px solid var(--account-line-soft);
+    color: #596573 !important;
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-customer-details address p + p {
+    margin-top: 10px !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-customer-details--phone::before,
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-customer-details--email::before {
+    display: none !important;
+    content: none !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .order-again {
+    margin: 0 0 22px !important;
+}
+
+body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .order-again .button {
+    min-width: 150px;
+}
+
+@media (max-width: 767px) {
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) {
+        overflow-x: visible !important;
+    }
+
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details,
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-order-downloads table {
+        min-width: 0 !important;
+    }
+
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-customer-details .woocommerce-columns--addresses {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 520px) {
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) > p:first-of-type {
+        display: block !important;
+        padding: 14px !important;
+    }
+
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) > p:first-of-type mark.order-status {
+        display: flex;
+        width: max-content;
+        margin: 8px 0 0;
+    }
+
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-order-details__title,
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-order-downloads__title {
+        padding: 16px !important;
+        font-size: 18px !important;
+    }
+
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details th,
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details td {
+        padding: 13px 12px !important;
+        font-size: 12px !important;
+    }
+
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-table__product-name {
+        width: 64%;
+    }
+
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .woocommerce-table__product-table,
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) .product-total {
+        width: 36%;
+    }
+
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot th,
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot td {
+        padding: 12px !important;
+        font-size: 12px !important;
+    }
+
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot tr.order-actions th,
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot tr.order-actions td {
+        display: block;
+        width: 100%;
+        text-align: left !important;
+    }
+
+    body.woocommerce-account .woocommerce-MyAccount-content:has(.woocommerce-order-details) table.woocommerce-table--order-details tfoot tr.order-actions .button {
+        margin: 4px 7px 4px 0 !important;
+    }
+}
+
