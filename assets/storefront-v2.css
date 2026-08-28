@@ -1519,6 +1519,15 @@ body.single-product .ipet-pdp-cart-form .stock { display: none !important; }
 .site-header .header-main .header-menu.is-open .header-dropdown-chevron { transform: rotate(225deg) translate(-2px, -2px); }
 .site-header .header-main .header-dropdown { top: calc(100% + 20px); padding: 0; border: 0; border-radius: 0 0 9px 9px; box-shadow: 0 7px 14px rgba(20, 28, 37, .28); }
 .site-header .header-main .header-dropdown::before { top: -8px; right: 25px; width: 16px; height: 16px; border: 0; background: #fff; }
+.site-header .header-main .header-dropdown::after {
+  position: absolute;
+  top: -20px;
+  right: -10px;
+  left: -10px;
+  height: 20px;
+  content: "";
+  background: transparent;
+}
 
 .site-header .header-main .account-dropdown { width: 300px; }
 .site-header .header-main .account-dropdown.is-guest { padding: 24px; }
