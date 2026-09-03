@@ -39,18 +39,18 @@ function puppy_market_payment_methods() {
 /** Register the native Customizer controls used by the storefront. */
 function puppy_market_customize_register($wp_customize) {
     $wp_customize->add_section('puppy_market_home_media', array(
-        'title'       => __('Homepage media', 'puppy-market'),
-        'description' => __('Upload or select homepage images and video from the WordPress Media Library.', 'puppy-market'),
+        'title'       => __('首页媒体', 'puppy-market'),
+        'description' => __('从 WordPress 媒体库上传或选择首页使用的图片和视频。', 'puppy-market'),
         'priority'    => 35,
     ));
 
     $media_controls = array(
-        'puppy_market_home_slide_1_image' => array('label' => __('Carousel image 1', 'puppy-market'), 'mime_type' => 'image'),
-        'puppy_market_home_slide_2_image' => array('label' => __('Carousel image 2', 'puppy-market'), 'mime_type' => 'image'),
-        'puppy_market_home_slide_3_image' => array('label' => __('Carousel image 3', 'puppy-market'), 'mime_type' => 'image'),
-        'puppy_market_home_video'         => array('label' => __('Homepage promotional video', 'puppy-market'), 'mime_type' => 'video'),
-        'puppy_market_home_video_poster'  => array('label' => __('Promotional video poster', 'puppy-market'), 'mime_type' => 'image'),
-        'puppy_market_home_care_image'    => array('label' => __('Care feature image', 'puppy-market'), 'mime_type' => 'image'),
+        'puppy_market_home_slide_1_image' => array('label' => __('轮播图片 1', 'puppy-market'), 'mime_type' => 'image'),
+        'puppy_market_home_slide_2_image' => array('label' => __('轮播图片 2', 'puppy-market'), 'mime_type' => 'image'),
+        'puppy_market_home_slide_3_image' => array('label' => __('轮播图片 3', 'puppy-market'), 'mime_type' => 'image'),
+        'puppy_market_home_video'         => array('label' => __('首页宣传视频', 'puppy-market'), 'mime_type' => 'video'),
+        'puppy_market_home_video_poster'  => array('label' => __('宣传视频封面', 'puppy-market'), 'mime_type' => 'image'),
+        'puppy_market_home_care_image'    => array('label' => __('关怀服务区域图片', 'puppy-market'), 'mime_type' => 'image'),
     );
 
     foreach ($media_controls as $setting_id => $control) {
@@ -68,23 +68,23 @@ function puppy_market_customize_register($wp_customize) {
     }
 
     $wp_customize->add_section('puppy_market_about_page', array(
-        'title'       => __('About page', 'puppy-market'),
-        'description' => __('Manage the About page text and its three large image areas. Additional body content can be edited under Pages → About Us.', 'puppy-market'),
+        'title'       => __('关于我们页面', 'puppy-market'),
+        'description' => __('管理“关于我们”页面的文字和三处大图区域。其他正文内容可在“页面 → About Us”中编辑。', 'puppy-market'),
         'priority'    => 40,
     ));
 
     $about_media_controls = array(
         'puppy_market_about_hero_image' => array(
-            'label'       => __('Hero image', 'puppy-market'),
-            'description' => __('Large image on the right of the opening section. Recommended ratio: 4:3.', 'puppy-market'),
+            'label'       => __('首屏图片', 'puppy-market'),
+            'description' => __('开场区域右侧的大图，建议比例为 4:3。', 'puppy-market'),
         ),
         'puppy_market_about_story_image' => array(
-            'label'       => __('Story image', 'puppy-market'),
-            'description' => __('First large image in the alternating story grid. Recommended ratio: 4:3.', 'puppy-market'),
+            'label'       => __('品牌故事图片', 'puppy-market'),
+            'description' => __('品牌故事交错布局中的第一张大图，建议比例为 4:3。', 'puppy-market'),
         ),
         'puppy_market_about_care_image' => array(
-            'label'       => __('Care image', 'puppy-market'),
-            'description' => __('Second large image in the alternating story grid. Recommended ratio: 4:3.', 'puppy-market'),
+            'label'       => __('关怀理念图片', 'puppy-market'),
+            'description' => __('品牌故事交错布局中的第二张大图，建议比例为 4:3。', 'puppy-market'),
         ),
     );
 
@@ -104,73 +104,73 @@ function puppy_market_customize_register($wp_customize) {
 
     $about_fields = array(
         'puppy_market_about_hero_title' => array(
-            'label'    => __('Hero title', 'puppy-market'),
+            'label'    => __('首屏标题', 'puppy-market'),
             'default'  => __('For every day with pets.', 'puppy-market'),
             'type'     => 'text',
             'sanitize' => 'sanitize_text_field',
         ),
         'puppy_market_about_hero_text' => array(
-            'label'    => __('Hero description', 'puppy-market'),
+            'label'    => __('首屏说明', 'puppy-market'),
             'default'  => __('We make everyday pet shopping feel clearer, more useful and easier to trust.', 'puppy-market'),
             'type'     => 'textarea',
             'sanitize' => 'sanitize_textarea_field',
         ),
         'puppy_market_about_mission_title' => array(
-            'label'    => __('Mission title', 'puppy-market'),
+            'label'    => __('品牌使命标题', 'puppy-market'),
             'default'  => __('Pet care should feel simple and personal.', 'puppy-market'),
             'type'     => 'text',
             'sanitize' => 'sanitize_text_field',
         ),
         'puppy_market_about_mission_text' => array(
-            'label'    => __('Mission description', 'puppy-market'),
+            'label'    => __('品牌使命说明', 'puppy-market'),
             'default'  => __('From everyday essentials to support after an order, we bring the things pet parents need into one straightforward experience.', 'puppy-market'),
             'type'     => 'textarea',
             'sanitize' => 'sanitize_textarea_field',
         ),
         'puppy_market_about_essentials_title' => array(
-            'label'    => __('Products block title', 'puppy-market'),
+            'label'    => __('商品区域标题', 'puppy-market'),
             'default'  => __('Everything pets need', 'puppy-market'),
             'type'     => 'text',
             'sanitize' => 'sanitize_text_field',
         ),
         'puppy_market_about_essentials_text' => array(
-            'label'    => __('Products block description', 'puppy-market'),
+            'label'    => __('商品区域说明', 'puppy-market'),
             'default'  => __('Food, play, grooming, comfort and care products selected for real routines with pets.', 'puppy-market'),
             'type'     => 'textarea',
             'sanitize' => 'sanitize_textarea_field',
         ),
         'puppy_market_about_trust_title' => array(
-            'label'    => __('Trust block title', 'puppy-market'),
+            'label'    => __('信任保障区域标题', 'puppy-market'),
             'default'  => __('Clarity you can trust', 'puppy-market'),
             'type'     => 'text',
             'sanitize' => 'sanitize_text_field',
         ),
         'puppy_market_about_trust_text' => array(
-            'label'    => __('Trust block description', 'puppy-market'),
+            'label'    => __('信任保障区域说明', 'puppy-market'),
             'default'  => __('Useful product information, visible policies and a clear route to support before and after checkout.', 'puppy-market'),
             'type'     => 'textarea',
             'sanitize' => 'sanitize_textarea_field',
         ),
         'puppy_market_about_services_title' => array(
-            'label'    => __('Services section title', 'puppy-market'),
+            'label'    => __('服务区域标题', 'puppy-market'),
             'default'  => __('A little more ease for every pet parent', 'puppy-market'),
             'type'     => 'text',
             'sanitize' => 'sanitize_text_field',
         ),
         'puppy_market_about_cta_title' => array(
-            'label'    => __('Closing title', 'puppy-market'),
+            'label'    => __('页面结尾标题', 'puppy-market'),
             'default'  => __('Ready to find something your pet will love?', 'puppy-market'),
             'type'     => 'text',
             'sanitize' => 'sanitize_text_field',
         ),
         'puppy_market_about_cta_text' => array(
-            'label'    => __('Closing description', 'puppy-market'),
+            'label'    => __('页面结尾说明', 'puppy-market'),
             'default'  => __('Explore the store or contact our team when you need help choosing the next step.', 'puppy-market'),
             'type'     => 'textarea',
             'sanitize' => 'sanitize_textarea_field',
         ),
         'puppy_market_about_cta_button_text' => array(
-            'label'    => __('Closing button label', 'puppy-market'),
+            'label'    => __('页面结尾按钮文字', 'puppy-market'),
             'default'  => __('Explore the store', 'puppy-market'),
             'type'     => 'text',
             'sanitize' => 'sanitize_text_field',
@@ -191,7 +191,7 @@ function puppy_market_customize_register($wp_customize) {
     }
 
     $wp_customize->add_section('puppy_market_store_text', array(
-        'title'    => __('Store text', 'puppy-market'),
+        'title'    => __('商店通用文字', 'puppy-market'),
         'priority' => 36,
     ));
 
@@ -202,7 +202,7 @@ function puppy_market_customize_register($wp_customize) {
     ));
 
     $wp_customize->add_control('puppy_market_pdp_promotion_text', array(
-        'label'   => __('Product page promotion', 'puppy-market'),
+        'label'   => __('商品详情页促销文字', 'puppy-market'),
         'section' => 'puppy_market_store_text',
         'type'    => 'text',
     ));
@@ -214,15 +214,15 @@ function puppy_market_customize_register($wp_customize) {
     ));
 
     $wp_customize->add_control('puppy_market_footer_tagline', array(
-        'label'       => __('Footer description', 'puppy-market'),
-        'description' => __('Leave blank to use the site tagline from Settings → General.', 'puppy-market'),
+        'label'       => __('页脚简介', 'puppy-market'),
+        'description' => __('留空时使用“设置 → 常规”中的站点副标题。', 'puppy-market'),
         'section'     => 'puppy_market_store_text',
         'type'        => 'textarea',
     ));
 
     $wp_customize->add_section('puppy_market_payment_methods', array(
-        'title'       => __('Payment methods', 'puppy-market'),
-        'description' => __('Manage the payment badges shown on product pages, the cart and the footer.', 'puppy-market'),
+        'title'       => __('支付方式', 'puppy-market'),
+        'description' => __('管理显示在商品详情页、购物车和页脚中的支付方式标识。', 'puppy-market'),
         'priority'    => 37,
     ));
 
@@ -233,40 +233,40 @@ function puppy_market_customize_register($wp_customize) {
     ));
 
     $wp_customize->add_control('puppy_market_payment_methods', array(
-        'label'       => __('Accepted payment methods', 'puppy-market'),
-        'description' => __('Enter one name per line, or separate names with commas. Leave blank to hide the payment badges.', 'puppy-market'),
+        'label'       => __('支持的支付方式', 'puppy-market'),
+        'description' => __('每行输入一种支付方式，也可以使用英文逗号分隔；留空则隐藏支付方式标识。', 'puppy-market'),
         'section'     => 'puppy_market_payment_methods',
         'type'        => 'textarea',
     ));
 
     $wp_customize->add_section('puppy_market_home_assurance', array(
-        'title'       => __('Homepage service assurance', 'puppy-market'),
-        'description' => __('Edit the assurance card and the four fixed service controls. Icons and layout stay theme-managed.', 'puppy-market'),
+        'title'       => __('首页服务保障', 'puppy-market'),
+        'description' => __('编辑保障卡片和四个固定服务入口；图标与布局由主题统一管理。', 'puppy-market'),
         'priority'    => 37,
     ));
 
     $assurance_fields = array(
         'puppy_market_assurance_title' => array(
-            'label'    => __('Assurance card title', 'puppy-market'),
+            'label'    => __('保障卡片标题', 'puppy-market'),
             'default'  => __('Shop with confidence', 'puppy-market'),
             'type'     => 'text',
             'sanitize' => 'sanitize_text_field',
         ),
         'puppy_market_assurance_text' => array(
-            'label'    => __('Assurance card description', 'puppy-market'),
+            'label'    => __('保障卡片说明', 'puppy-market'),
             'default'  => __('Clear support, protected checkout and straightforward help before and after every order.', 'puppy-market'),
             'type'     => 'textarea',
             'sanitize' => 'sanitize_textarea_field',
         ),
         'puppy_market_assurance_button_text' => array(
-            'label'    => __('Assurance button text', 'puppy-market'),
+            'label'    => __('保障按钮文字', 'puppy-market'),
             'default'  => __('Contact us', 'puppy-market'),
             'type'     => 'text',
             'sanitize' => 'sanitize_text_field',
         ),
         'puppy_market_assurance_button_url' => array(
-            'label'       => __('Assurance button URL', 'puppy-market'),
-            'description' => __('Leave blank to use the Contact page.', 'puppy-market'),
+            'label'       => __('保障按钮链接', 'puppy-market'),
+            'description' => __('留空时使用 Customer Care 页面。', 'puppy-market'),
             'default'     => '',
             'type'        => 'url',
             'sanitize'    => 'esc_url_raw',
@@ -305,7 +305,7 @@ function puppy_market_customize_register($wp_customize) {
             'transport'         => 'refresh',
         ));
         $wp_customize->add_control($title_setting, array(
-            'label'   => sprintf(__('Service %d title', 'puppy-market'), $service_index),
+            'label'   => sprintf(__('服务 %d 标题', 'puppy-market'), $service_index),
             'section' => 'puppy_market_home_assurance',
             'type'    => 'text',
         ));
@@ -316,7 +316,7 @@ function puppy_market_customize_register($wp_customize) {
             'transport'         => 'refresh',
         ));
         $wp_customize->add_control($description_setting, array(
-            'label'   => sprintf(__('Service %d description', 'puppy-market'), $service_index),
+            'label'   => sprintf(__('服务 %d 说明', 'puppy-market'), $service_index),
             'section' => 'puppy_market_home_assurance',
             'type'    => 'textarea',
         ));
@@ -327,20 +327,20 @@ function puppy_market_customize_register($wp_customize) {
             'transport'         => 'refresh',
         ));
         $wp_customize->add_control($url_setting, array(
-            'label'       => sprintf(__('Service %d URL', 'puppy-market'), $service_index),
-            'description' => __('Leave blank to use the theme default page.', 'puppy-market'),
+            'label'       => sprintf(__('服务 %d 链接', 'puppy-market'), $service_index),
+            'description' => __('留空时使用主题默认页面。', 'puppy-market'),
             'section'     => 'puppy_market_home_assurance',
             'type'        => 'url',
         ));
     }
 
     $wp_customize->add_section('puppy_market_home_product_sections', array(
-        'title'       => __('Homepage product sections', 'puppy-market'),
-        'description' => __('Choose items in the exact order they should appear. Leave every position in a group empty to keep its automatic selection. Once one position is selected, empty positions in that group are skipped.', 'puppy-market'),
+        'title'       => __('首页商品区域', 'puppy-market'),
+        'description' => __('请选择商品及其准确显示顺序。某一组的所有位置都留空时，将继续自动选择商品；一旦选择了其中一个位置，该组内留空的位置会被跳过。', 'puppy-market'),
         'priority'    => 38,
     ));
 
-    $empty_choice = array(0 => __('— Empty / automatic when all are empty —', 'puppy-market'));
+    $empty_choice = array(0 => __('— 留空 / 全部留空时自动选择 —', 'puppy-market'));
     $top_category_choices = $empty_choice;
     $all_category_choices = $empty_choice;
 
@@ -390,19 +390,19 @@ function puppy_market_customize_register($wp_customize) {
     $homepage_position_groups = array(
         array(
             'prefix'  => 'puppy_market_home_shop_for_',
-            'label'   => __('Shop for', 'puppy-market'),
+            'label'   => __('按宠物选购', 'puppy-market'),
             'count'   => 7,
             'choices' => $top_category_choices,
         ),
         array(
             'prefix'  => 'puppy_market_home_best_seller_',
-            'label'   => __('Best sellers', 'puppy-market'),
+            'label'   => __('畅销商品', 'puppy-market'),
             'count'   => 5,
             'choices' => $product_choices,
         ),
         array(
             'prefix'  => 'puppy_market_home_popular_category_',
-            'label'   => __('Popular categories', 'puppy-market'),
+            'label'   => __('热门分类', 'puppy-market'),
             'count'   => 6,
             'choices' => $all_category_choices,
         ),
@@ -417,7 +417,7 @@ function puppy_market_customize_register($wp_customize) {
                 'transport'         => 'refresh',
             ));
             $wp_customize->add_control($setting_id, array(
-                'label'   => sprintf(__('%1$s — position %2$d', 'puppy-market'), $homepage_position_group['label'], $position),
+                'label'   => sprintf(__('%1$s — 位置 %2$d', 'puppy-market'), $homepage_position_group['label'], $position),
                 'section' => 'puppy_market_home_product_sections',
                 'type'    => 'select',
                 'choices' => $homepage_position_group['choices'],
@@ -426,44 +426,44 @@ function puppy_market_customize_register($wp_customize) {
     }
 
     $wp_customize->add_section('puppy_market_footer_social', array(
-        'title'       => __('Footer social links', 'puppy-market'),
-        'description' => __('The four platform icons always remain visible. Leave a URL empty to show its icon without making it clickable.', 'puppy-market'),
+        'title'       => __('页脚社交媒体链接', 'puppy-market'),
+        'description' => __('四个平台图标始终显示。链接留空时只显示图标，不提供点击跳转。', 'puppy-market'),
         'priority'    => 40,
     ));
 
     $footer_social_fields = array(
         'puppy_market_footer_social_title' => array(
-            'label'    => __('Section title', 'puppy-market'),
+            'label'    => __('区域标题', 'puppy-market'),
             'default'  => __('Stay connected', 'puppy-market'),
             'type'     => 'text',
             'sanitize' => 'sanitize_text_field',
         ),
         'puppy_market_footer_social_description' => array(
-            'label'    => __('Section description', 'puppy-market'),
+            'label'    => __('区域说明', 'puppy-market'),
             'default'  => __('Follow along for pet care tips, new arrivals and everyday favorites.', 'puppy-market'),
             'type'     => 'textarea',
             'sanitize' => 'sanitize_textarea_field',
         ),
         'puppy_market_footer_facebook_url' => array(
-            'label'    => __('Facebook URL', 'puppy-market'),
+            'label'    => __('Facebook 链接', 'puppy-market'),
             'default'  => '',
             'type'     => 'url',
             'sanitize' => 'esc_url_raw',
         ),
         'puppy_market_footer_youtube_url' => array(
-            'label'    => __('YouTube URL', 'puppy-market'),
+            'label'    => __('YouTube 链接', 'puppy-market'),
             'default'  => '',
             'type'     => 'url',
             'sanitize' => 'esc_url_raw',
         ),
         'puppy_market_footer_instagram_url' => array(
-            'label'    => __('Instagram URL', 'puppy-market'),
+            'label'    => __('Instagram 链接', 'puppy-market'),
             'default'  => '',
             'type'     => 'url',
             'sanitize' => 'esc_url_raw',
         ),
         'puppy_market_footer_tiktok_url' => array(
-            'label'    => __('TikTok URL', 'puppy-market'),
+            'label'    => __('TikTok 链接', 'puppy-market'),
             'default'  => '',
             'type'     => 'url',
             'sanitize' => 'esc_url_raw',
@@ -478,27 +478,27 @@ function puppy_market_customize_register($wp_customize) {
         ));
         $wp_customize->add_control($setting_id, array(
             'label'       => $field['label'],
-            'description' => $field['type'] === 'url' ? __('Leave blank to disable this icon link.', 'puppy-market') : '',
+            'description' => $field['type'] === 'url' ? __('留空时禁用该图标的跳转。', 'puppy-market') : '',
             'section'     => 'puppy_market_footer_social',
             'type'        => $field['type'],
         ));
     }
 
     $wp_customize->add_section('puppy_market_footer_bottom', array(
-        'title'       => __('Footer bottom text', 'puppy-market'),
-        'description' => __('Customize the two small text items at the very bottom. Use {year} for the current year and {site_name} for the site title. Leave a field blank to hide it.', 'puppy-market'),
+        'title'       => __('页脚底部文字', 'puppy-market'),
+        'description' => __('自定义页脚最底部的两段小字。使用 {year} 表示当前年份，使用 {site_name} 表示站点标题；字段留空时隐藏对应文字。', 'puppy-market'),
         'priority'    => 41,
     ));
 
     $footer_bottom_fields = array(
         'puppy_market_footer_copyright_text' => array(
-            'label'       => __('Copyright text', 'puppy-market'),
-            'description' => __('Available placeholders: {year} and {site_name}.', 'puppy-market'),
+            'label'       => __('版权文字', 'puppy-market'),
+            'description' => __('可用占位符：{year} 和 {site_name}。', 'puppy-market'),
             'default'     => __('© {year} {site_name}. All rights reserved.', 'puppy-market'),
         ),
         'puppy_market_footer_credit_text' => array(
-            'label'       => __('Right-side text', 'puppy-market'),
-            'description' => __('Leave blank to remove the right-side text.', 'puppy-market'),
+            'label'       => __('右侧文字', 'puppy-market'),
+            'description' => __('留空时隐藏右侧文字。', 'puppy-market'),
             'default'     => __('Powered by WordPress and WooCommerce', 'puppy-market'),
         ),
     );
@@ -518,53 +518,53 @@ function puppy_market_customize_register($wp_customize) {
     }
 
     $wp_customize->add_section('puppy_market_contact_page', array(
-        'title'       => __('Customer care page', 'puppy-market'),
-        'description' => __('Manage customer care channels and page text. Edit the common questions under Pages → Returns & Support.', 'puppy-market'),
+        'title'       => __('客户服务页面', 'puppy-market'),
+        'description' => __('管理客户服务渠道和页面文字。常见问题可在“页面 → Returns & Support”中编辑。', 'puppy-market'),
         'priority'    => 39,
     ));
 
     $contact_fields = array(
         'puppy_market_contact_email' => array(
-            'label'    => __('Customer support email', 'puppy-market'),
+            'label'    => __('客户服务邮箱', 'puppy-market'),
             'default'  => sanitize_email(get_option('admin_email')),
             'type'     => 'email',
             'sanitize' => 'sanitize_email',
         ),
         'puppy_market_business_email' => array(
-            'label'       => __('Business and wholesale email', 'puppy-market'),
-            'description' => __('Leave blank to use the customer support email for business form submissions.', 'puppy-market'),
+            'label'       => __('商务及批发邮箱', 'puppy-market'),
+            'description' => __('留空时使用客户服务邮箱作为商务联系邮箱。', 'puppy-market'),
             'default'     => '',
             'type'        => 'email',
             'sanitize'    => 'sanitize_email',
         ),
         'puppy_market_contact_phone' => array(
-            'label'       => __('Support phone', 'puppy-market'),
-            'description' => __('Leave blank to show the Phone channel as unavailable.', 'puppy-market'),
+            'label'       => __('客服电话', 'puppy-market'),
+            'description' => __('留空时，电话联系渠道将显示为不可用。', 'puppy-market'),
             'default'     => '',
             'type'        => 'text',
             'sanitize'    => 'sanitize_text_field',
         ),
         'puppy_market_contact_chat_url' => array(
-            'label'       => __('Live chat URL', 'puppy-market'),
-            'description' => __('Add the URL supplied by your live-chat provider. Leave blank to show Chat as unavailable.', 'puppy-market'),
+            'label'       => __('在线聊天链接', 'puppy-market'),
+            'description' => __('填写在线聊天服务商提供的链接；留空时，在线聊天渠道将显示为不可用。', 'puppy-market'),
             'default'     => '',
             'type'        => 'url',
             'sanitize'    => 'esc_url_raw',
         ),
         'puppy_market_contact_response_text' => array(
-            'label'    => __('Availability or response text', 'puppy-market'),
+            'label'    => __('服务时间或回复说明', 'puppy-market'),
             'default'  => __('Our customer care team will follow up as soon as possible.', 'puppy-market'),
             'type'     => 'textarea',
             'sanitize' => 'sanitize_textarea_field',
         ),
         'puppy_market_returns_hero_title' => array(
-            'label'    => __('Customer care title', 'puppy-market'),
+            'label'    => __('客户服务页面标题', 'puppy-market'),
             'default'  => __('How can we help?', 'puppy-market'),
             'type'     => 'text',
             'sanitize' => 'sanitize_text_field',
         ),
         'puppy_market_returns_hero_text' => array(
-            'label'    => __('Customer care description', 'puppy-market'),
+            'label'    => __('客户服务页面说明', 'puppy-market'),
             'default'  => __('Choose a help topic to find the most useful answer, or contact the customer care team in the way that works best for you.', 'puppy-market'),
             'type'     => 'textarea',
             'sanitize' => 'sanitize_textarea_field',
